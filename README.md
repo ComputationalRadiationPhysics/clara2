@@ -29,4 +29,4 @@ Software License
 
 *Clara2* is licensed under the **GPLv3+**. You can use any of our *libraries* with
 **GPLv3+ or LGPLv3+** (they are *dual licensed*).
-Please refer to our [LICENSE.md](LICENSE.md)
+Please refer to our [LICENSE](LICENSE)
