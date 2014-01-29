@@ -27,10 +27,10 @@ matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 
 
-omega_max = 7.0e19    
-theta_max = 2.5
-tickfontsize=18
-labelfontsize=28
+omega_max = 7.0e19 #max frequency   
+theta_max = 2.5 #max angle norm. to gamma
+tickfontsize=18 #plot font
+labelfontsize=28 #plot font
 
 plt.figure(0, figsize=(15, 15))
 SP = plt.subplot(111, autoscale_on=False, xlim=(0, omega_max), ylim=(0, theta_max))
