@@ -211,7 +211,7 @@ int all_directions(const unsigned int trace_id, const char arg[])
       printf("calculate direction: %4d -> theta: %3.5f , phi: %3.5f \n", direction_index, my_theta, my_phi);
 
       /* 
-       * compute the spectra for all directions 
+       * compute the spectra for a single direction 
        * and trow an error if something goes wrong
        */
       if((single_trace(data, linenumber, omega, all_spec[direction_index].spectrum, N_spectrum, my_theta, my_phi))!=0)
