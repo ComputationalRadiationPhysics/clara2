@@ -49,37 +49,49 @@
 
 
 
-
+/**
+ * function that calculates spectra in different directions for
+ * a single particle trace
+ *
+ * @ param trace_id a unique id which which the trajctopry file 
+ *                  can be identified 
+ * @ param arg  a string telling wether a "binary" or "asci" 
+ *              output should be used
+ * @ return error code
+ **/
 int all_directions(const unsigned int trace_id, const char arg[])
 {
 
   using namespace std;
 
 
-  // ------ start time measurement ------------------
+  /* ------ start time measurement ------------------ */
   struct timeval t1, t2;
   gettimeofday(&t1, NULL);
 
 
 
-  // ------------ constants -------------------------------
-  const double omega_max = 3.0e19;  // maximum of ploted frequency Hz
-  const double theta_max = 1.14594939; // maximum of theta in degree
-  const unsigned int N_spectrum = 2048; // number of frequencies
-  const unsigned int N_theta = 120;     // number of directions in theta
-  const unsigned int N_phi = 2;         // number of directions in phi
-  const unsigned int N_trace = 2000;    // maximum number of traces
+  /* ------------ constants ------------------------------- */
+  const double omega_max = 3.0e19;      /* maximum of ploted frequency Hz */
+  const double theta_max = 1.14594939;  /* maximum of theta in degree */
+  const unsigned int N_spectrum = 2048; /* number of frequencies "omega"*/
+  const unsigned int N_theta = 120;     /* number of directions in first angle "theta" */
+  const unsigned int N_phi = 2;         /* number of directions in second angle "phi" */
+  const unsigned int N_trace = 2000;    /* maximum number of traces */
   const unsigned int N_direction = N_theta*N_phi; // number of all directions
 
-  // ---------- get trace ID -----------------
+  /* ---------- get trace ID ----------------- */
 
+  /* check whether the id of the trace "trace_id" is larger than the given N_trace value */
   if(!(trace_id <= N_trace))
     {
       std::cout << "trace-ID is out of range (MAX = " << N_trace << ")" << std::endl;
       return 1;
     }
 
-  // -------- get store info -----------
+  /* -------- get store info ----------- */
+  /* since output can be stored as binary file or as asci file, here the selected option
+   * is checked or an error is thrown in case the selction was wrong */
   bool asci_output;
   std::string store_str = arg;
   if(!store_str.compare("asci"))
@@ -102,7 +114,7 @@ int all_directions(const unsigned int trace_id, const char arg[])
 
 
 
-  // ------- create all thetas --------------------------
+  /* ------- set up/compute all angles thetas ------------------ */
   double theta[N_theta];
   for(unsigned i=0; i< N_theta; ++i)
     {
@@ -110,14 +122,13 @@ int all_directions(const unsigned int trace_id, const char arg[])
     }
 
 
-  // ------- create all phis ----------------------------
+  /* ------- set up/compute all angles phis ---------------------- */
   double phi[N_phi] = {0.0, 90.0};
 
 
 
 
-  /* ----- create spectrum for all ------ */
-  double omega[N_spectrum];
+  /* allocate memory for all spectra */
   struct spectrum_container
   {
     double spectrum[N_spectrum];
@@ -125,20 +136,33 @@ int all_directions(const unsigned int trace_id, const char arg[])
   spectrum_container* all_spec = new spectrum_container[N_theta*N_phi];
   
 
+
+  /* compute the frequency array "omega" and fill spectra with zeros */
+  double omega[N_spectrum];
   const double my_delta_omega = omega_max/N_spectrum;
   for(unsigned i=0; i<N_spectrum; ++i)
     {
-      omega[i] = i * my_delta_omega;
+      /* compute frqueny */
+      omega[i] = i * my_delta_omega; 
+
+      /* initialise spectra with zeros */
       for(unsigned j=0; j<N_direction; ++j)
-	all_spec[j].spectrum[i] = 0.0;
+        all_spec[j].spectrum[i] = 0.0; 
     }
 
 
 
-  // ------- location of data -------------------------
+  /* ------- location of data ----------------------- */
+
+  /* TO DO: SIMPLIFY THIS BY USING SPRINTF() */
+  /* set directory where to find the data: */
   const char directory[] = "/net/cns/projects/HPLsim/xray/debus/ELBEThomson/basicRun2/";
+  /* set name of trajectory file before index appears in file name: */
   const char prefix[] = "trace_";
+  /* set name of file after index is used */
   const char postfix[] = ".txt";
+
+  /* join all parts together and store path to file in "filename" */
   char filename[256];
   if(sprintf(filename, 
 	     "%s%s%04d%s",
@@ -147,48 +171,64 @@ int all_directions(const unsigned int trace_id, const char arg[])
 	     trace_id,
 	     postfix) > 254)
     {
+      /* throw warning when buffer is to small for path name */
       std::cerr << "buffer  to small!!! " << std::endl;
       throw "Buffer to small!";
     }
+  /* print out path naem in order to check it in output files */
   std::cout << "check: filename: " << filename << std::endl;
 
 
  
-  // ------------------ load trace from file ---------------------------   
+  /* -------- load trace from file ------- */
     
-    if(!file_exists(filename)) 
-      return 1;
-    std::cout << "load file: " << filename << std::endl;
-    const unsigned linenumber = linecounter(filename); // get lines of data    
-    one_line* data = new one_line[linenumber]; // get memory for data
-    load_txt(filename, linenumber, data);
+  /* check if given file exists */
+  if(!file_exists(filename)) 
+    return 1;
+
+  /* output to inform user that file is loaded */
+  std::cout << "load file: " << filename << std::endl;
+
+  /* create memory */
+  const unsigned linenumber = linecounter(filename); /* get lines of data */
+  one_line* data = new one_line[linenumber]; /* get memory for data */
+  /* run function that fills data from file into "data": */
+  load_txt(filename, linenumber, data); 
 
 
   
 
 
-  // --------- calculate spectrum of one trace for all direction ----------
+  /* --------- calculate spectrum of one trace for all direction ---------- */
 
 
-    //  #pragma omp parallel for num_threads(4) schedule(dynamic, 1) 
+  /* in case of additional parallelsation using OpenMP uncomment this: */
+  /* #pragma omp parallel for num_threads(4) schedule(dynamic, 1) */
   for(unsigned direction_index = 0; direction_index< N_direction; ++direction_index)
     {
       const double my_theta = theta[direction_index % N_theta];
       const double my_phi   = phi[direction_index/N_theta];
       printf("calculate direction: %4d -> theta: %3.5f , phi: %3.5f \n", direction_index, my_theta, my_phi);
 
+      /* 
+       * compute the spectra for all directions 
+       * and trow an error if something goes wrong
+       */
       if((single_trace(data, linenumber, omega, all_spec[direction_index].spectrum, N_spectrum, my_theta, my_phi))!=0)
-	{
-	  std::cerr << "error occured in single_trace function" << std::endl;
-	  throw "error in single_trace function";
-	}
+        {
+          std::cerr << "error occured in single_trace function" << std::endl;
+          throw "error in single_trace function";
+        }
     }
 
 
 
 
-  // ------- outputfile -------------------------------
+  /* ------- outputfile ------------------------------ */
+  /* allocate memory for name of output file */
   char outputfilename[256];
+
+  /* fill output file for each trace_id based on template */
   if(sprintf(outputfilename, 
 	     "my_spectrum_trace%06d.dat",
 	     trace_id) > 254)
@@ -196,65 +236,79 @@ int all_directions(const unsigned int trace_id, const char arg[])
       std::cerr << "buffer  to small!!! " << std::endl;
       throw "Buffer to small!";
     }
+  /* print name of output file */
   std::cout << "check: output-filename: " << outputfilename << std::endl;
 
 
 
-  // --- file output -------------
+  /* --- file output ------------- */
 
+  /* store spectral data either as binary or as asci data */
   if(asci_output)
     {
-      // ---- ASCI output file ------------------------//
-      ofstream my_output(outputfilename);
-      if(my_output.is_open())
-	{
-	  for(unsigned j=0; j<N_direction; ++j)
-	    {
-	      for(unsigned i=0; i<N_spectrum; ++i)
-		{
-		  my_output << all_spec[j].spectrum[i] << " \t";
-		}
-	      my_output << std::endl;
-	    }
-	  my_output.close();
-	}
-      else
-	{
-	  std::cerr << "error writing output" << std::endl;
-	  throw "error output";
-	}
+      /* ---- ASCI output file ------------------------ */
+      ofstream my_output(outputfilename); /* create file */
+      if(my_output.is_open()) /* check if it is open */
+        {
+          for(unsigned j=0; j<N_direction; ++j) /* for all directions */
+            {
+              for(unsigned i=0; i<N_spectrum; ++i) /* for all frequencies */
+                {
+                  /* print spectral data seperated by tabs */
+                  my_output << all_spec[j].spectrum[i] << " \t";
+                }
+              /* separate each direction by a newline */
+              my_output << std::endl;
+            }
+          /* close output file */
+          my_output.close();
+        }
+      else /* if output file is not open create a warning */
+        {
+          std::cerr << "error writing output" << std::endl;
+          throw "error output";
+        }
     }
-  else
+  else /* in case binary output was choosen */
     {
-      // ----- binary output file --------
+      /* ----- binary output file -------- */
+      /* allocate memory to store spectral and directional data at once */
       double* output_data = new double[N_spectrum*N_direction];
-      for(unsigned j=0, output_index=0; j<N_direction; ++j)
-	{
-	  for(unsigned i=0; i<N_spectrum; ++i)
-	    {
-	      output_data[output_index] = all_spec[j].spectrum[i];
-	      output_index++;
-	    }
-	}
-      store_data(output_data, N_spectrum*N_direction*sizeof(double), 
-		 outputfilename);
 
-      delete[] output_data;
+      /* 
+       * "output_index" is the counter for the array behind "output_data" 
+       * it is inizialsed with zero and increased by one for each stored value
+       */
+      for(unsigned j=0, output_index=0; j<N_direction; ++j) /* for all directions */
+        {
+          for(unsigned i=0; i<N_spectrum; ++i) /* fora ll frequencies */
+            {
+              /* fill output-data-container with computed spectral data */ 
+              output_data[output_index] = all_spec[j].spectrum[i];
+
+              /* increase "output_ibdex" by one to address new memory 
+               *  location in next loop cycle */
+              output_index++; 
+            }
+        }
+      /* store (uncompressed) collected data using clara2's gzib_lib.hpp */
+      store_data(output_data, N_spectrum*N_direction*sizeof(double), 
+                 outputfilename);
+      
+      delete[] output_data; /* free allocated memory after output */
     }
 
 
 
 
-
-
-
-  delete[] all_spec;
-  delete[] data;
+  delete[] all_spec; /* free spectral adat */
+  delete[] data; /* free traces */
 
 
     
 
-  // ---- end time measurement and output ------------
+  /* ---- end time measurement and output ------------ */
+  /* print used compute time for information */
   gettimeofday(&t2, NULL);
   const long runtime = (t2.tv_sec - t1.tv_sec)*1000000 + (t2.tv_usec - t1.tv_usec);
   std::cout << "time nedded: " << (double)runtime * 1.0e-6 
@@ -264,8 +318,7 @@ int all_directions(const unsigned int trace_id, const char arg[])
 	    << " sek" << std::endl;
 
 
-
-
+  /* return NULL after all went well for this trajectory */
   return 0;
 }
 
