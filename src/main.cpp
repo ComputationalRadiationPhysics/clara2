@@ -33,6 +33,11 @@ int main(void)
 
   int numtasks, rank;
 
+  /** the function 'start_array()' calls the parallelization procedure
+   * defined in 'parallel_jobs.h'. The variables 'numtasks' and 'rank'
+   * are set by this function and allow to use the parallel distrubuted 
+   * indexes to be used.
+   **/
   if(start_array(&numtasks, &rank) != 0)
     return 1;
 
@@ -40,35 +45,56 @@ int main(void)
   //    do some work here
   //////////////////////////////////////////////////
   
-  char * pHost;
+  /* hostname of the machine this task is running on */
+  char * pHost; 
   pHost = getenv("MYHOSTNAME");
 
+
+  /* template for standard and error output file names */
   const char output_file[] = "my_output.txt-%d";
   const char error_file[] = "my_error.txt-%d";
 
 
-  int return_value;
-  char dump[1024] ={0};
+  int return_value; /* return value for 'all_directions()' */
+  char dump[1024] ={0}; /* used for final filenames stderr stdout */
 
-  const unsigned int N_max = 2001;
-  unsigned int i;
+  const unsigned int N_max = 2001; /* max number of trajectories */
+  unsigned int i; /* index */
   for(i=rank; i<N_max; i += numtasks)
     {
+      /** this for loop runs over all tasks assigned to the mpi/array process
+       * it starts with its first assigned id which is its rank. Then it 
+       * comnplets more tasks by going in strides of the total number of 
+       * processes to the next task. This is done untill N_max is reached.
+       **/
+
+      /* print info on tasks performed to stdout */
       printf("this is job %5d of %5d jobs in the array (on %s = rank: %d)\n", i, N_max, pHost, rank);
       
+      /* redirect output stdout to file */
       sprintf(dump, output_file, i);
       freopen(dump, "w", stdout);
+      /* redirect output stderr to file */
       sprintf(dump, error_file, i);
       freopen(dump, "w", stderr);
 
+
+      /* calculate the radiation of a single trajectory for all 
+       * directions of interest */
       return_value = all_directions(i, "binary");
       
+      /* set output back to stdout stderr 
+      * ISSUE: THIS DOES NOT WORK !!! 
+      */
       fclose(stdout);
       fclose(stderr);
       freopen("/dev/tty", "w", stdout);
       freopen("/dev/tty", "w", stderr);
 
 
+      /* this commented-out section is a method to stop the calculation if a certain 
+       * file is found on the hard drive - currently not used
+       */
 
       /*
       if(check_break())
@@ -86,6 +112,7 @@ int main(void)
   //    work is done
   //////////////////////////////////////////////////
   
+  /* clean up parallization if needed */
   end_array();
  
 
