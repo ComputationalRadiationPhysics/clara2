@@ -80,6 +80,12 @@ int main()
   double omega[N_omega]; /* allocate memory for reading omega values in */
 
 
+
+
+  /* compute directions: theta and phi */
+  /* The real values of theta and phi are needed because they are used
+   * for naming the files. */
+
   const unsigned N_theta = 120; /* number of different theta angles */
   /* To DO: this can not be read from input file but from a 
    *  genral param file  associated with the simulation - ISSUE #8 */
@@ -93,13 +99,13 @@ int main()
       theta[i] = (double)i / N_theta * theta_max;
     }
 
-
   const unsigned N_phi = 2; /* number of different phi angles */
   /* To DO: this can not be read from input file but from a 
    *  genral param file  associated with the simulation - ISSUE #8 */
 
   /* set phi angles */
   double phi[N_phi] = {0.0, 90.0};
+
 
 
 
@@ -114,83 +120,106 @@ int main()
 
 
 
-  // -------- begin load data -------- //
+  /* -------- begin load data -------- */
 
-  char buffer[10];
+  
+  char buffer[10]; /* allocate memory for direction-id */
+
+  /* run through all directions */
   for(unsigned i=0; i< N_phi*N_theta; ++i)
     {
+      /* string with correct format for theta: */
       sprintf(buffer, "%3.5f", theta[i%N_theta]);
-      std::string theta_st = buffer; // string with correct format for theta
+      std::string theta_st = buffer; 
+
+      /* string with correct format for phi: */
       sprintf(buffer, "%3.5f", phi[i/N_theta]);
-      std::string phi_st = buffer; // string with correct format for phi
+      std::string phi_st = buffer; 
+
+      /* create file name for single direction (theta and phi) */
       std::string filename = "my_output_theta=" + theta_st + "_phi=" + phi_st + ".dat";
-      if(!(file_exists(filename.c_str()))) // check if file exists
-	std::cout << "  ERROR: file " << filename << " does not exists" << std::endl;
-      else // file exists:
-	{
-	  std::ifstream data(filename.c_str()); // load file
-	  std::cout << "loading file: " << filename << std::endl;
-	  if(i==0) // for fist file save also omega values
-	    {
-	      for(unsigned j=0; j<N_omega; ++j)
-		data >> omega[j] >> data_phi_0[i][j];
-	    }
-	  else if(i<N_theta) // for rest of phi=0
-	    {
-	      double dummy;
-	      for(unsigned j=0; j<N_omega; ++j)
-		{
-		  data >> dummy >> data_phi_0[i][j];
-		  if(dummy != omega[j]) // check if frequencies are equal
-		    std::cout << "  ERROR: frequency discrepancy: " << filename
-			      << " - " << omega[j] << " != " << dummy << std::endl;
-		}
-	    }
-	  else // all files for phi=90 --> same procedure
-	    {
-	      double dummy;
-	      for(unsigned j=0; j<N_omega; ++j)
-		{
-		  data >> dummy >> data_phi_90[i%N_theta][j];
-		  if(dummy != omega[j])
-		    std::cout << "  ERROR: frequency discrepancy: " << filename
-			      << " - " << omega[j] << " != " << dummy << std::endl;
-		}
-	    }
-	  data.close();
-	}
+
+      /* check if inpute file exists and load it*/
+      if(!(file_exists(filename.c_str())))
+        std::cout << "  ERROR: file " << filename << " does not exists" << std::endl;
+      else /* file exists */
+        {
+          /* connect to file */
+          std::ifstream data(filename.c_str()); 
+
+          /* verbose information to users which file is loaded */ 
+          std::cout << "loading file: " << filename << std::endl;
+
+          /* branch for different files: */
+          if(i==0) /* with the fist file omega values are collected */
+            {
+              /* read omega AND spectra data from file */
+              for(unsigned j=0; j<N_omega; ++j)
+                data >> omega[j] >> data_phi_0[i][j];
+            }
+          else if(i<N_theta) /* for all other files of phi=0 */
+            {
+              double omega_temp; /* variable to temporarily store omega */ 
+              for(unsigned j=0; j<N_omega; ++j)
+                {
+                  /* read spectra and omega (again) */
+                  data >> omega_temp >> data_phi_0[i][j];
+
+                  /* check if previeously stored omegas are equal to 
+                   * those stored in the other files. If they are not
+                   * equal write warning to screen. (but do not stop 
+                   * program) */
+                  if(omega_temp != omega[j])
+                    std::cout << "  ERROR: frequency discrepancy: " << filename
+                              << " - " << omega[j] << " != " << omega_temp << std::endl;
+                }
+            }
+          else /* for all files with phi=90 --> same procedure */
+            {
+              double omega_temp; /* temporary variable for omega */
+              /* go through data in files (see above's code */
+              for(unsigned j=0; j<N_omega; ++j)
+                {
+                  data >> omega_temp >> data_phi_90[i%N_theta][j];
+                  if(omega_temp != omega[j])
+                    std::cout << "  ERROR: frequency discrepancy: " << filename
+                              << " - " << omega[j] << " != " << omega_temp << std::endl;
+                }
+            }
+          data.close(); /* close the file of thze current direction */
+        }
     } 
+  
+
+  /* -------- end load data --------- */
 
 
-  // -------- end load data --------- //
-
-
-
+  /* store matrix-like spectral data for first phi 
+   * tabs separate the values of differnt frequencies
+   * and newlines separate different directions. */
   std::ofstream output_0("matrix_phi_0.dat");
-  for(unsigned i=0; i<N_theta; ++i)
+  for(unsigned i=0; i<N_theta; ++i) /* all theta */
     {
-      for (unsigned j=0; j<N_omega; ++j)
-	output_0 << data_phi_0[i][j] << " \t";
+      for (unsigned j=0; j<N_omega; ++j) /* all omega */
+        output_0 << data_phi_0[i][j] << " \t";
       output_0 << std::endl;
     }
 
 
+  /* store matrix-like spectral data for second phi 
+   * tabs separate the values of differnt frequencies
+   * and newlines separate different directions. */
   std::ofstream output_90("matrix_phi_90.dat");
-  for(unsigned i=0; i<N_theta; ++i)
+  for(unsigned i=0; i<N_theta; ++i) /* all theta */
     {
-      for (unsigned j=0; j<N_omega; ++j)
-	output_90 << data_phi_90[i][j] << " \t";
+      for (unsigned j=0; j<N_omega; ++j) /* all omega */
+        output_90 << data_phi_90[i][j] << " \t";
       output_90 << std::endl;
     }
 
 
 
-
-
-
-
-
-  
+  /* verbose information for the user: program is finished */
   std::cout << "Done" << std::endl;
   return 0;
 }
