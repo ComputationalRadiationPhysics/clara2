@@ -29,7 +29,7 @@
  * trajectories and all directions.
  *
  * SHOULD THIS STILL BE INCLUDED IN THE CODE? - ISSUE #17
- */
+ **/
 
 
 
@@ -41,13 +41,14 @@
 #include <cmath>
 
 
-/* TO DO: this should be in a separate file - ISSUE #15 */
+/** TO DO: this should be in a separate file - ISSUE #15 **/
+
 /**
  * This function checks if a file exists on the hard drive.
  *
  * @param filename string containg the path and filename to bechecked
  * @return Returns true if file exists, otherwise false.
- */
+ **/
 bool file_exists(const char *filename)
 {
   std::ifstream infile(filename);
@@ -56,40 +57,59 @@ bool file_exists(const char *filename)
 
 
 
-
-
-
+/**
+ * This program combines files with spectra for differnt directions 
+ * to a single files containing all spectra for directions.
+ *
+ * @return only 0 is return - no error code yet  
+ **/
 int main()
 {
 
+  /* verbose output to inform user that the program is running */
   std::cout << "Convert single file data to matrix: " << std::flush;
 
-  // ----------- set parameters ------------ //
-  
-  const unsigned N_omega = 2048; // could be read from linenumber input file
-  double omega[N_omega];
+  /* ----------- set parameters ------------ */
+  /* in this section, all parameters are set that need to be changed 
+   * in order to set up the collection process. */
+
+  const unsigned N_omega = 2048; /* number of frequencies */
+  /* To DO: could be read from linenumber input file or from a 
+   *  genral param file  associated with the simulation - ISSUE #8 */
+
+  double omega[N_omega]; /* allocate memory for reading omega values in */
 
 
-  const unsigned N_theta = 120; // number of different theta angles
-  double theta[N_theta];
-  double theta_max =  1.14594939 /** 120*/ ; // degree = 1.0/gamma
+  const unsigned N_theta = 120; /* number of different theta angles */
+  /* To DO: this can not be read from input file but from a 
+   *  genral param file  associated with the simulation - ISSUE #8 */
+
+  double theta[N_theta]; /* allocate memory for directions */
+
+  /* compute directions (theta): */
+  double theta_max =  1.14594939; /* = 1.0/gamma in degree */
   for(unsigned i=0; i<N_theta; ++i)
     {
       theta[i] = (double)i / N_theta * theta_max;
     }
 
-  const unsigned N_phi = 2; // number of different phi angles
+
+  const unsigned N_phi = 2; /* number of different phi angles */
+  /* To DO: this can not be read from input file but from a 
+   *  genral param file  associated with the simulation - ISSUE #8 */
+
+  /* set phi angles */
   double phi[N_phi] = {0.0, 90.0};
 
 
 
+  /* allocate memory for collecting spectra for differnt directions */
+  double data_phi_0[N_theta][N_omega]; /* matrix data  for phi=0 degrees */
+  double data_phi_90[N_theta][N_omega]; /* matrix data  for phi=90 degrees */
 
-  double data_phi_0[N_theta][N_omega]; // matrix data  for phi=0 degrees
-  double data_phi_90[N_theta][N_omega];// matrix data  for phi=90 degrees
 
 
-
-  // -------- end set parameters -------- //
+  /* -------- end set parameters -------- */
 
 
 
