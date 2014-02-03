@@ -18,3 +18,4 @@
 # the executables of the project
 executable
 process_data
+convert_to_matrix
