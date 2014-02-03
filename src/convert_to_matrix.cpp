@@ -19,6 +19,20 @@
  */
 
 
+/**
+ * This is a no longer used program's code that
+ * that was needed when a single MPI task calculated the
+ * radiation for only a single direction but for several 
+ * particle traces. It collected all the results for 
+ * different directions and created a single matrix-like
+ * output that contained the radiation spectra from all
+ * trajectories and all directions.
+ *
+ * SHOULD THIS STILL BE INCLUDED IN THE CODE? - ISSUE #17
+ */
+
+
+
 
 #include <iostream>
 #include <string>
@@ -27,12 +41,22 @@
 #include <cmath>
 
 
-
+/* TO DO: this should be in a separate file - ISSUE #15 */
+/**
+ * This function checks if a file exists on the hard drive.
+ *
+ * @param filename string containg the path and filename to bechecked
+ * @return Returns true if file exists, otherwise false.
+ */
 bool file_exists(const char *filename)
 {
   std::ifstream infile(filename);
   return infile;
 }
+
+
+
+
 
 
 int main()
