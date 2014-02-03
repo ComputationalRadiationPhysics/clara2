@@ -29,7 +29,7 @@
  * trajectories and all directions.
  *
  * SHOULD THIS STILL BE INCLUDED IN THE CODE? - ISSUE #17
- **/
+ */
 
 
 
@@ -41,14 +41,13 @@
 #include <cmath>
 
 
-/** TO DO: this should be in a separate file - ISSUE #15 **/
-
+/* TO DO: this should be in a separate file - ISSUE #15 */
 /**
  * This function checks if a file exists on the hard drive.
  *
  * @param filename string containg the path and filename to bechecked
  * @return Returns true if file exists, otherwise false.
- **/
+ */
 bool file_exists(const char *filename)
 {
   std::ifstream infile(filename);
@@ -57,12 +56,9 @@ bool file_exists(const char *filename)
 
 
 
-/**
- * This program combines files with spectra for differnt directions 
- * to a single files containing all spectra for directions.
- *
- * @return only 0 is return - no error code yet  
- **/
+
+
+
 int main()
 {
 
