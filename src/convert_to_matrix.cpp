@@ -88,6 +88,12 @@ int main()
   /* The real values of theta and phi are needed because they are used
    * for naming the files. */
 
+
+
+  /* compute directions: theta and phi */
+  /* The real values of theta and phi are needed because they are used
+   * for naming the files. */
+
   const unsigned N_theta = 120; /* number of different theta angles */
   /* To DO: this can not be read from input file but from a 
    *  genral param file  associated with the simulation - ISSUE #8 */
@@ -107,7 +113,6 @@ int main()
 
   /* set phi angles */
   double phi[N_phi] = {0.0, 90.0};
-
   const unsigned N_phi = 2; /* number of different phi angles */
   /* To DO: this can not be read from input file but from a 
    *  genral param file  associated with the simulation - ISSUE #8 */
@@ -119,6 +124,7 @@ int main()
   /* allocate memory for collecting spectra for differnt directions */
   double data_phi_0[N_theta][N_omega]; /* matrix data  for phi=0 degrees */
   double data_phi_90[N_theta][N_omega]; /* matrix data  for phi=90 degrees */
+
 
   /* allocate memory for collecting spectra for differnt directions */
   double data_phi_0[N_theta][N_omega]; /* matrix data  for phi=0 degrees */
