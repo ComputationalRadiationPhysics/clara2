@@ -29,7 +29,7 @@
  * trajectories and all directions.
  *
  * SHOULD THIS STILL BE INCLUDED IN THE CODE? - ISSUE #17
- */
+ **/
 
 
 
@@ -41,13 +41,14 @@
 #include <cmath>
 
 
-/* TO DO: this should be in a separate file - ISSUE #15 */
+/** TO DO: this should be in a separate file - ISSUE #15 **/
+
 /**
  * This function checks if a file exists on the hard drive.
  *
  * @param filename string containg the path and filename to bechecked
  * @return Returns true if file exists, otherwise false.
- */
+ **/
 bool file_exists(const char *filename)
 {
   std::ifstream infile(filename);
@@ -56,9 +57,12 @@ bool file_exists(const char *filename)
 
 
 
-
-
-
+/**
+ * This program combines files with spectra for differnt directions 
+ * to a single files containing all spectra for directions.
+ *
+ * @return only 0 is return - no error code yet  
+ **/
 int main()
 {
 
@@ -72,6 +76,8 @@ int main()
   const unsigned N_omega = 2048; /* number of frequencies */
   /* To DO: could be read from linenumber input file or from a 
    *  genral param file  associated with the simulation - ISSUE #8 */
+
+  double omega[N_omega]; /* allocate memory for reading omega values in */
 
   double omega[N_omega]; /* allocate memory for reading omega values in */
 
@@ -102,8 +108,17 @@ int main()
   /* set phi angles */
   double phi[N_phi] = {0.0, 90.0};
 
+  const unsigned N_phi = 2; /* number of different phi angles */
+  /* To DO: this can not be read from input file but from a 
+   *  genral param file  associated with the simulation - ISSUE #8 */
+
+  /* set phi angles */
+  double phi[N_phi] = {0.0, 90.0};
 
 
+  /* allocate memory for collecting spectra for differnt directions */
+  double data_phi_0[N_theta][N_omega]; /* matrix data  for phi=0 degrees */
+  double data_phi_90[N_theta][N_omega]; /* matrix data  for phi=90 degrees */
 
   /* allocate memory for collecting spectra for differnt directions */
   double data_phi_0[N_theta][N_omega]; /* matrix data  for phi=0 degrees */
