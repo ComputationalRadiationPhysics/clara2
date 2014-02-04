@@ -95,6 +95,7 @@ int read_data(void* data,
 
 
 
+/* TO DO: is compresion realy used in the code? - ISSUE #5 */
 /**
  * write data to file using compression
  *
@@ -128,6 +129,7 @@ int compress_data(void* data,
 
 
 
+/* TO DO: is compresion realy used in the code? - ISSUE #5 */
 /**
  * append data to a compressed file
  *
@@ -156,6 +158,7 @@ int compress_data_append(void* data,
 
 
 
+/* TO DO: is this function still necessary? - ISSUE #5 */
 /**
  * specific function to create a gzFile to access 
  * data from the "bubbleStressTest" simulation
