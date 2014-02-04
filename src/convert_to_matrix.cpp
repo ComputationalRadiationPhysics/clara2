@@ -79,9 +79,6 @@ int main()
 
   double omega[N_omega]; /* allocate memory for reading omega values in */
 
-  double omega[N_omega]; /* allocate memory for reading omega values in */
-
-
 
 
   /* compute directions: theta and phi */
@@ -113,17 +110,6 @@ int main()
 
   /* set phi angles */
   double phi[N_phi] = {0.0, 90.0};
-  const unsigned N_phi = 2; /* number of different phi angles */
-  /* To DO: this can not be read from input file but from a 
-   *  genral param file  associated with the simulation - ISSUE #8 */
-
-  /* set phi angles */
-  double phi[N_phi] = {0.0, 90.0};
-
-
-  /* allocate memory for collecting spectra for differnt directions */
-  double data_phi_0[N_theta][N_omega]; /* matrix data  for phi=0 degrees */
-  double data_phi_90[N_theta][N_omega]; /* matrix data  for phi=90 degrees */
 
 
   /* allocate memory for collecting spectra for differnt directions */
