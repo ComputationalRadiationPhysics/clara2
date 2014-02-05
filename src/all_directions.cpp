@@ -53,11 +53,11 @@
  * function that calculates spectra in different directions for
  * a single particle trace
  *
- * @ param trace_id a unique id which which the trajctopry file 
- *                  can be identified 
- * @ param arg  a string telling wether a "binary" or "asci" 
- *              output should be used
- * @ return error code
+ * @param trace_id a unique id which which the trajctopry file 
+ *                 can be identified 
+ * @param arg  a string telling wether a "binary" or "asci" 
+ *             output should be used
+ * @return error code
  **/
 int all_directions(const unsigned int trace_id, const char arg[])
 {
