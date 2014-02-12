@@ -88,7 +88,7 @@ private:
   double* frequency;
 
 
-  // set frequency methodes:
+  // set frequency methods:
   inline void set_frequency(const double omega_max);
   inline void set_frequency(const double* omega);
 

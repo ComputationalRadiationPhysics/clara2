@@ -66,7 +66,7 @@ public:
         return *this;
     } 
     
-    //! \brief setting new futre value and moving data down (now --> old, ...)
+    //! \brief setting new future value and moving data down (now --> old, ...)
     //! @param next new future value 
     void next(T next)
     {
