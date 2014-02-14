@@ -1,0 +1,63 @@
+# Copyright 2014 Alexander Debus
+#
+# This file is part of Clara 2.
+#
+# Clara 2 is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Clara 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Clara 1.
+# If not, see <http://www.gnu.org/licenses/>.
+#
+
+# GPT Test: Propagating Gaussian Electron Bunch in strong laser field
+
+accuracy(12) ;
+
+# Define beam parameters
+LaserFWHMtoRMS = 1.0/(sqrt(2*log(2))) ;		# other exponent, other FWHM to RMS conversion factor
+lambda = 0.8e-6 ;							# wavelength of laser pulse
+w0 = 32.5431e-6 * LaserFWHMtoRMS ;				# focal spot waist size (diameter) for ideal beam
+tau = 100.0e-15 * LaserFWHMtoRMS ;			# laser pulse length, much longer than the interaction
+#bandwidth = 60.0e-9*LaserFWHMtoRMS ;		# laser spectral bandwidth in nm (FWHM)
+
+JoulesPerPulse = 1.0/50 ;				# Laser Energy in one pulse [J]
+# laser strength parameter a0=0.855e-9*sqrt(Intensity[W/cm^2])*lambda[µm]
+# calculated Peak-a0 for a Gaussian laser beam
+a0 = lambda*(-qe)/(me*c*c*2*pi) * sqrt( JoulesPerPulse/( sqrt(pi/2)*pi/4*eps0*c*w0*w0*tau ) ) ;
+
+delay = 200.0e-15 ;						# simulation time at which the laser pulse reaches its focus
+read_out_step = lambda/c/80 ;			# 1/80th of a fundamental wavelength should be sampled
+dtstart=read_out_step;
+dtmin=read_out_step;
+dtmax=read_out_step;
+sim_duration = 4*read_out_step*4000 ;			# simulates for 4*4000 readouts
+time=0.0*sim_duration ;
+startz= -c*delay ;							# starting point for the electrons, so they reach the laser focus at z=0
+zmin= c*( delay - time - 2*sim_duration - 3*tau ) ;
+zmax= c*( delay - time + 3*tau ) ;
+
+# Start initial beam
+setfile("beam","test2.gdf") ;
+
+# For the Classical Radiation Simulator it is easier if the electrons propagate in x-direction.
+settransform("wcs",startz,0,0, 0,0,-1, 0,1,0,"beam") ;
+# zminmax_mod("wcs", 0,0,0, 0,0,-1, 0,1,0,zmin,zmax,time) ;
+
+# Add the high power laser pulse
+hplaser02("wcs",0,0,0,0,0,1,0,1,0,a0,lambda,w0,tau,delay);	# head collision of bunch and laser
+
+# Spacecharge model
+#spacecharge3Dmesh() ;						# mesh based space-charge algorithm for low energy spread bunches
+#spacecharge3D() ;							# full 3D point-to-point relativistic self-fields
+
+# Specify output
+tout(0,sim_duration,sim_duration/4) ;
+clara2Analyzer("wcs","I") ;
