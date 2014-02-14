@@ -20,7 +20,7 @@ gps.c: elemlist
 	@echo Please rerun make.
 
 gpt: gps.o $(ELEMOBJSO) ../kernel/elems.a ../kernel/gps.a ../kernel/gdf.a ../kernel/utils.a
-	$(CXX) $(TARGET_ARCH) -o $@ gps.o $(ELEMOBJSO) /home/debus/clara2/src/mainClara2.o /home/debus/clara2/src/include/detector_dft.o $(LDFLAGS) $(CPPFLAGS) -lpthread ../kernel/elems.a ../kernel/gps.a ../kernel/gdf.a ../kernel/utils.a
+	$(CXX) $(TARGET_ARCH) -o $@ gps.o $(ELEMOBJSO) /home/debus/clara2/src/mainClara2.o /home/debus/clara2/src/include/detector_dft.o $(LDFLAGS) $(CPPFLAGS) -fopenmp -lpthread ../kernel/elems.a ../kernel/gps.a ../kernel/gdf.a ../kernel/utils.a
 	$(CP) gpt ../bin
 
 clean:

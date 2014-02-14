@@ -82,12 +82,11 @@ class mainClara2 {
 		~mainClara2();
 		
 		/* ------------ constants ------------------------------- */
-		static const double omega_max = 3.0e19;   				/* maximum of ploted frequency Hz */
-		static const double theta_max = 1.14594939*M_PI/180;  	/* maximum of theta in rad */
+		static const double omega_max = 1.2e21;   				/* maximum of ploted frequency Hz */
+		static const double theta_max = 2.5/300;			  	/* maximum of theta in rad */
 		static const unsigned int N_spectrum = 2048;			/* number of frequencies "omega"*/
 		static const unsigned int N_theta = 120; 				/* number of directions in first angle "theta" */
 		static const unsigned int N_phi = 2;       		 		/* number of directions in second angle "phi" */
-		//static const unsigned int N_trace = 2000;				/* maximum number of traces */
 		static const unsigned int N_direction = N_theta*N_phi; 	/* number of all directions */
 		
 		///Init Clara2. Has to be called before any other function.

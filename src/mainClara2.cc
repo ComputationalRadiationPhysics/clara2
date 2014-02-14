@@ -20,9 +20,8 @@ extern "C" int clara2_init() {
 
 extern "C" int clara2_calculate(int numpar, double time, double dt)
 {
-	if (mainClara2::getInstance()->calculate(numpar, time, dt) == 0)
-		return true;
-	else return false;
+	mainClara2::getInstance()->calculate(numpar, time, dt);
+	return true;
 }
 
 extern "C" void outputData()
@@ -60,12 +59,14 @@ bool mainClara2::calculate(int numpar, double time, double dt) {
 	alive = 0;
 	pars_clara2 = 0; //Number of particles calculated using Clara2 (output)
 
+	printf("OpenMP 4.0: %d devices available.\n", omp_get_num_devices() );
 	//Iterate over all particles
 	///\todo Check whether gcc3 (GPT) is compatible to gcc4 (OpenMP)...
 	//#pragma omp parallel for private(i)
-	#pragma omp target data map( all_spec )
+	#pragma omp target data map( all_spec ) map( to: pars[0:numpar], pars_old[0:numpar]  )
 	for (int i = 0; i < numpar; i++)
 	{
+		//printf("OpenMP: %d executes on host device.\n", omp_is_initial_device() );
 		//Check if we have a problem
 		if (pars[i].ID >= NUMPARS_SUPPORTED) {
 			fprintf( stderr, "pars[%d].ID=%d >= NUMPARS_SUPPORTED=%d\n", i, pars[i].ID, NUMPARS_SUPPORTED);
@@ -115,6 +116,7 @@ bool mainClara2::calculate(int numpar, double time, double dt) {
 		#pragma omp teams distribute parallel for schedule(dynamic, 1)
 		for(unsigned direction_index = 0; direction_index< N_direction; ++direction_index)
 		{
+			//printf("OpenMP 4.0: %d executes on host device.\n", omp_is_initial_device() );
 			const double my_theta = theta[direction_index % N_theta];
 			const double my_phi   = phi[direction_index/N_theta];
 			
