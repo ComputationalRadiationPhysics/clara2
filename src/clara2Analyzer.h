@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Alexander Debus
+ * Copyright 2014 Alexander Debus, Lucas Clemente (flint)
  *
  * This file is part of Clara 2.
  *
