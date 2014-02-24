@@ -1,19 +1,34 @@
-//***************************************************************************//
-//  clara2Analyzer.h
-//***************************************************************************//
-//
-//  Copyright: (C) 2014 by Alexander Debus
-//  Email    : a.debus@hzdr.de
-//  Authors  : Alexander Debus, Lucas Clemente (GPT Template)
-//
-//***************************************************************************//
+/**
+ * Copyright 2014 Alexander Debus
+ *
+ * This file is part of Clara 2.
+ *
+ * Clara 2 is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Clara 2 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Clara 2.
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
 
 #pragma once
+
 
 #include <stdio.h>
 #include <math.h>
 #include <omp.h>
 
+
+
+/* only include elem.h if not loaded previously */
 #ifndef INCLUDED_ELEM
 #define INCLUDED_ELEM
 #include "elem.h"
