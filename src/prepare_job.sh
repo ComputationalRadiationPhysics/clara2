@@ -65,7 +65,7 @@ source $MODULES2LOAD
 echo "#PBS -q "$QUEUE > $SUBMITFILE
 echo "#PBS -l walltime="$WALLTIME >> $SUBMITFILE
 echo "#PBS -N "$JOBNAME >> $SUBMITFILE
-echo "#PBS -m n -M r.pausch@hzdr.de" >> $SUBMITFILE
+echo "#PBS -m n -M x.lastname@hzdr.de" >> $SUBMITFILE
 echo "#PBS -d ." >> $SUBMITFILE
 echo "#PBS -e ./error.txt" >> $SUBMITFILE
 echo "#PBS -o ./output.txt" >> $SUBMITFILE
