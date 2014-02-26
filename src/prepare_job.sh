@@ -91,8 +91,8 @@ echo  "" >> $SUBMITFILE
 # in case of MPI parallelisation
 if [ $DECISION -eq 1 ]
 then
-    echo -n "mpiexec --display-map -mca plm rsh -mca btl openib,self,sm -n " >> $SUBMITFILE
-    echo  $(echo $NUMBERNODES " * " $NUMBERCORES | bc )" ./executable" >> $SUBMITFILE
+    echo -n "mpiexec --prefix $MPIHOME -tag-output --display-map -x LIBRARY_PATH -x LD_LIBRARY_PATH -n " >> $SUBMITFILE
+    echo  $(echo $NUMBERNODES " * " $NUMBERCORES | bc )" ./executable  |  tee output.log" >> $SUBMITFILE
     make
     make MPI
 else
