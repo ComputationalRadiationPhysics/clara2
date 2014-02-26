@@ -32,6 +32,7 @@
 JOBNAME=MPI_lib1
 SUBMITFILE=submit.sh
 QUEUE=laser
+MODULES2LOAD=clara2_hypnos.modules
 
 WALLTIME=02:00:00
 
@@ -56,6 +57,10 @@ case  $DECISION in
        exit 1 ;;
 esac
 
+
+source $MODULES2LOAD
+
+
 # generate submit file (the same for MPI and PBS-array jobs)
 echo "#PBS -q "$QUEUE > $SUBMITFILE
 echo "#PBS -l walltime="$WALLTIME >> $SUBMITFILE
@@ -78,7 +83,9 @@ else
     echo "export ARRAYMAX" >> $SUBMITFILE
 fi
 
-# add newline to submit file
+# add newline to submit file and load modules
+echo  "" >> $SUBMITFILE
+echo  "source " $MODULES2LOAD >> $SUBMITFILE
 echo  "" >> $SUBMITFILE
 
 # in case of MPI parallelisation
@@ -86,10 +93,12 @@ if [ $DECISION -eq 1 ]
 then
     echo -n "mpiexec --display-map -mca plm rsh -mca btl openib,self,sm -n " >> $SUBMITFILE
     echo  $(echo $NUMBERNODES " * " $NUMBERCORES | bc )" ./executable" >> $SUBMITFILE
+    make
     make MPI
 else
     # in case of PBS-array paparllelisation
     echo  " ./executable" >> $SUBMITFILE    
+    make
     make ARRAY
 fi
 
