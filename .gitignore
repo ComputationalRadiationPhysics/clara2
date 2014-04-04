@@ -11,3 +11,11 @@
 *.lai
 *.la
 *.a
+
+# emacs backups
+*~
+
+# the executables of the project
+executable
+process_data
+convert_to_matrix
