@@ -25,6 +25,7 @@ CFLAGS = -Wall -O3
 COBJ = -c
 OMP = -fopenmp
 ZIP = -lz
+GPTDIR = /home/debus/gpt
 
 MPIFLAG= -D__PARALLEL_SETTING__=1
 ARRAYFLAG= -D__PARALLEL_SETTING__=2
@@ -36,14 +37,13 @@ MPICC=mpic++
 CFLAGFORTRAN = #-DCHECK_FOR_FORTRAN_ERROR 
 # in case one need to check for FORTRAN output errors
 
-
-
 all: subsystem MPI process convert_to_matrix
+
+GPTclara2: subsystem clara2Analyzer.o
 
 subsystem: 
 	$(MAKE) -C ./include/
-
-
+	
 MPI: MPI_main all_directions.o ./include/libDetector.a single_trace.o
 	$(MPICC) $(CFLAGS) $(OMP) $(ZIP) main.o all_directions.o single_trace.o ./include/libDetector.a -o executable
 
@@ -67,7 +67,16 @@ single_trace.o: single_trace.hpp single_trace.cpp ./include/detector_e_field.hpp
 all_directions.o: all_directions.cpp all_directions.hpp single_trace.hpp ./include/vector.hpp ./include/string_manipulation.hpp
 	$(CC) $(CFLAGS) $(COBJ) $(OMP) $(ZIP) -I./include/ all_directions.cpp
 
-
+mainClara2.o: mainClara2.cc ./include/vector.hpp ./include/detector_dft.hpp
+	$(CC) $(CFLAGS) $(COBJ) $(OMP) $(ZIP) -I./include/ -I$(GPTDIR)/kernel mainClara2.cc
+	
+clara2Analyzer.o: clara2Analyzer.c clara2Analyzer.h mainClara2.o mainClara2.hh mainClara2.cc
+	cp clara2Analyzer.c clara2Analyzer.h $(GPTDIR)/elems
+	cp mainClara2.hh mainClara2.o $(GPTDIR)/elems
+	test "`cat $(GPTDIR)/elems/elemlist | grep "clara2Analyzer clara2Analyzer"`" = "" && echo "clara2Analyzer clara2Analyzer" >> $(GPTDIR)/elems/elemlist &> /dev/null
+	rm $(GPTDIR)/elems/clara2Analyzer.o &> /dev/null
+	$(MAKE) -C $(GPTDIR)/elems
+	
 # How do I include the detector.hpp <-- vector.hpp dependency
 
 
