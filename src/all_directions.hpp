@@ -28,7 +28,7 @@
  *
  * @param trace_id a unique id which which the trajctopry file 
  *                  can be identified 
- * @param arg  a string telling wether a "binary" or "asci" 
+ * @param arg  a string telling wether a "binary" or "ascii" 
  *              output should be used
  * @return error code
  **/

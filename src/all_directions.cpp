@@ -55,7 +55,7 @@
  *
  * @param trace_id a unique id which which the trajctopry file 
  *                 can be identified 
- * @param arg  a string telling wether a "binary" or "asci" 
+ * @param arg  a string telling wether a "binary" or "ascii" 
  *             output should be used
  * @return error code
  **/
@@ -90,24 +90,24 @@ int all_directions(const unsigned int trace_id, const char arg[])
     }
 
   /* -------- get store info ----------- */
-  /* since output can be stored as binary file or as asci file, here the selected option
+  /* since output can be stored as binary file or as ascii file, here the selected option
    * is checked or an error is thrown in case the selction was wrong */
-  bool asci_output;
+  bool ascii_output;
   std::string store_str = arg;
-  if(!store_str.compare("asci"))
+  if(!store_str.compare("ascii"))
     {
-      asci_output = true;
-      std::cout << "ASCI output" << std::endl;
+      ascii_output = true;
+      std::cout << "ASCII output" << std::endl;
     }
   else if(!store_str.compare("binary"))
     {    
-      asci_output = false;
+      ascii_output = false;
       std::cout << "binary output" << std::endl;
     }
   else
     {
-      std::cerr << "2nd argument needs to be binary or asci" << std::endl;
-      throw "bin_asci";  
+      std::cerr << "2nd argument needs to be binary or ascii" << std::endl;
+      throw "bin_ascii";  
     }
 
 
@@ -243,10 +243,10 @@ int all_directions(const unsigned int trace_id, const char arg[])
 
   /* --- file output ------------- */
 
-  /* store spectral data either as binary or as asci data */
-  if(asci_output)
+  /* store spectral data either as binary or as ascii data */
+  if(ascii_output)
     {
-      /* ---- ASCI output file ------------------------ */
+      /* ---- ASCII output file ------------------------ */
       ofstream my_output(outputfilename); /* create file */
       if(my_output.is_open()) /* check if it is open */
         {
