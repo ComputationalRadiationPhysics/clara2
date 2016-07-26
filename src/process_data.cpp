@@ -70,22 +70,22 @@ int main(int argc, char * const argv[])
 
 
   // -------- get store info -----------
-  bool asci_input;
+  bool ascii_input;
   std::string store_str = argv[1];
-  if(!store_str.compare("asci"))
+  if(!store_str.compare("ascii"))
     {
-      asci_input = true;
-      std::cout << "ASCI input" << std::endl;
+      ascii_input = true;
+      std::cout << "ASCII input" << std::endl;
     }
   else if(!store_str.compare("binary"))
     {    
-      asci_input = false;
+      ascii_input = false;
       std::cout << "binary input" << std::endl;
     }
   else
     {
-      std::cerr << "2nd argument needs to be binary or asci" << std::endl;
-      throw "bin_asci";  
+      std::cerr << "2nd argument needs to be binary or ascii" << std::endl;
+      throw "bin_ascii";  
     }
 
 
@@ -100,19 +100,19 @@ int main(int argc, char * const argv[])
       sprintf(filename, input_pattern, index_files);
 
       // ------ read input file ------
-      if(asci_input)
+      if(ascii_input)
 	{
-	  // ---- files loaded have ASCI  format -------
+	  // ---- files loaded have ASCII  format -------
 	  FILE* pFile = fopen(filename, "r");
 	  if(pFile == NULL)
 	    {
-	      std::cout << "abort asci file " << index_files 
+	      std::cout << "abort ascii file " << index_files 
 			<< "/" << index_files_last << std::endl; 
 	      continue;
 	    }
 	  else
 	    {
-	      std::cout << "load asci file " << index_files 
+	      std::cout << "load ascii file " << index_files 
 			<< "/" << index_files_last << std::endl;
 	    }
 
