@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Richard Pausch
+ * Copyright 2014-2016 Richard Pausch, Joy
  *
  * This file is part of Clara 2.
  *
@@ -53,9 +53,9 @@
  * function that calculates spectra in different directions for
  * a single particle trace
  *
- * @param trace_id a unique id which which the trajctopry file 
+ * @param trace_id a unique id which which the trajectory file 
  *                 can be identified 
- * @param arg  a string telling wether a "binary" or "ascii" 
+ * @param arg  a string telling whether a "binary" or "ascii" 
  *             output should be used
  * @return error code
  **/
@@ -91,7 +91,7 @@ int all_directions(const unsigned int trace_id, const char arg[])
 
   /* -------- get store info ----------- */
   /* since output can be stored as binary file or as ascii file, here the selected option
-   * is checked or an error is thrown in case the selction was wrong */
+   * is checked or an error is thrown in case the selection was wrong */
   bool ascii_output;
   std::string store_str = arg;
   if(!store_str.compare("ascii"))
@@ -142,10 +142,10 @@ int all_directions(const unsigned int trace_id, const char arg[])
   const double my_delta_omega = omega_max/N_spectrum;
   for(unsigned i=0; i<N_spectrum; ++i)
     {
-      /* compute frqueny */
+      /* compute frequency */
       omega[i] = i * my_delta_omega; 
 
-      /* initialise spectra with zeros */
+      /* initialize spectra with zeros */
       for(unsigned j=0; j<N_direction; ++j)
         all_spec[j].spectrum[i] = 0.0; 
     }
@@ -175,7 +175,7 @@ int all_directions(const unsigned int trace_id, const char arg[])
       std::cerr << "buffer  to small!!! " << std::endl;
       throw "Buffer to small!";
     }
-  /* print out path naem in order to check it in output files */
+  /* print out path name in order to check it in output files */
   std::cout << "check: filename: " << filename << std::endl;
 
 
@@ -202,7 +202,7 @@ int all_directions(const unsigned int trace_id, const char arg[])
   /* --------- calculate spectrum of one trace for all direction ---------- */
 
 
-  /* in case of additional parallelsation using OpenMP uncomment this: */
+  /* in case of additional parallelization using OpenMP uncomment this: */
   /* #pragma omp parallel for num_threads(4) schedule(dynamic, 1) */
   for(unsigned direction_index = 0; direction_index< N_direction; ++direction_index)
     {
@@ -254,7 +254,7 @@ int all_directions(const unsigned int trace_id, const char arg[])
             {
               for(unsigned i=0; i<N_spectrum; ++i) /* for all frequencies */
                 {
-                  /* print spectral data seperated by tabs */
+                  /* print spectral data separated by tabs */
                   my_output << all_spec[j].spectrum[i] << " \t";
                 }
               /* separate each direction by a newline */
@@ -269,7 +269,7 @@ int all_directions(const unsigned int trace_id, const char arg[])
           throw "error output";
         }
     }
-  else /* in case binary output was choosen */
+  else /* in case binary output was chosen */
     {
       /* ----- binary output file -------- */
       /* allocate memory to store spectral and directional data at once */
@@ -277,7 +277,7 @@ int all_directions(const unsigned int trace_id, const char arg[])
 
       /* 
        * "output_index" is the counter for the array behind "output_data" 
-       * it is inizialsed with zero and increased by one for each stored value
+       * it is initialized with zero and increased by one for each stored value
        */
       for(unsigned j=0, output_index=0; j<N_direction; ++j) /* for all directions */
         {
@@ -301,7 +301,7 @@ int all_directions(const unsigned int trace_id, const char arg[])
 
 
 
-  delete[] all_spec; /* free spectral adat */
+  delete[] all_spec; /* free spectral data */
   delete[] data; /* free traces */
 
 
@@ -311,11 +311,11 @@ int all_directions(const unsigned int trace_id, const char arg[])
   /* print used compute time for information */
   gettimeofday(&t2, NULL);
   const long runtime = (t2.tv_sec - t1.tv_sec)*1000000 + (t2.tv_usec - t1.tv_usec);
-  std::cout << "time nedded: " << (double)runtime * 1.0e-6 
-	    << " sek" << std::endl;
+  std::cout << "time needed: " << (double)runtime * 1.0e-6 
+	    << " sec" << std::endl;
   std::cout << "time per direction (and trace): " 
 	    << (double)runtime / (double)(N_theta*N_phi) * 1.0e-6
-	    << " sek" << std::endl;
+	    << " sec" << std::endl;
 
 
   /* return NULL after all went well for this trajectory */
