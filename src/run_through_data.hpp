@@ -49,17 +49,17 @@ template<typename DET>
 void run_through_data(const one_line* data, const unsigned linenumber, const unsigned N_angle,
 		      DET detector)
 {
-    /* ---------- storing data : comparable to real data stream (not loke a file here) --- */
+    /* ---------- storing data : comparable to real data stream (not like a file here) --- */
     
     // USING: SI-UNITS !!!
 
-    //Zeiten s --> s
+    //time s --> s
   Discrete<double> time_fill(data[0].intern_data[6] /* *1.E-15 */ ,
 			     data[1].intern_data[6] /* *1.E-15 */ ,
 			     data[2].intern_data[6] /* *1.E-15 */ ,
 			     data[3].intern_data[6] /* *1.E-15 */ );
     
-    //Ort: in m  --> m
+    //position: in m  --> m
   Discrete<R_vec> location( R_vec(data[0].intern_data[0] /* *1.E-2 */ , 
 				  data[0].intern_data[1] /* *1.E-2 */ , 
 				  data[0].intern_data[2] /* *1.E-2 */ ),
@@ -74,7 +74,7 @@ void run_through_data(const one_line* data, const unsigned linenumber, const uns
 				  data[3].intern_data[2] /* *1.E-2 */  ),
                              &time_fill);  
     
-    //Impuls: beta*gamma  --> phy::m_e*beta_times_gamma(beta)*phy:c --> kg*m/s
+    //momentum: beta*gamma  --> phy::m_e*beta_times_gamma(beta)*phy:c --> kg*m/s
 	double btom = phy::m_e*phy::c;
 	Discrete<R_vec> momentum( btom*beta_times_gamma(R_vec(data[0].intern_data[3], 
 							  data[0].intern_data[4], 

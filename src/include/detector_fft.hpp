@@ -36,14 +36,14 @@
 #ifndef DETECTOR_FFT_RPAUSCH
 #define DETECTOR_FFT_RPAUSCH
 
-//! \brief class for a point-like detector storing the signal externaly
+//! \brief class for a point-like detector storing the signal externally
 class Detector_fft
 {
 public:
   //! \brief constructor for a point-like detector
   /*! 
      @param n_unit   = unit vector in direction of energy deposition
-     @param delta_t  = timestep of odint
+     @param delta_t  = time step of odint
   */
   Detector_fft(R_vec n_unit, unsigned N_data);
 
@@ -80,7 +80,7 @@ private:
   //data:
   
   const R_vec n_unit;
-  // delta_t; // neccesairy for integration
+  // delta_t; // necessary for integration
   const unsigned N_data;
 
   //public:  // --> better to private !!!

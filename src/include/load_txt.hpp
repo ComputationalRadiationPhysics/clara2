@@ -39,7 +39,7 @@ using namespace std;
 /*! @param target a 'const char*' containing file location */
 unsigned linecounter(const char* target) 
 {
-    unsigned counter = 0; // linecounter
+    unsigned counter = 0; // line counter
     std::ifstream file(target); // target file
     while (!file.eof()) {
         if (file.get() == '\n') { ++counter; }
@@ -69,7 +69,7 @@ void load_txt( const char target[], const unsigned linenumber, one_line* data)
         for(unsigned j=1; storage[j] != '\0'; ++j){ // ignoring a first sign
 	  if (storage[j] == '-' && storage[j-1] != 'e'){
 	    std::string str1, str2;
-	    str1 = storage.substr(0, j); // string befor error
+	    str1 = storage.substr(0, j); // string before error
 	    str2 = storage.substr(j);    // string after error
 	    storage = str1 + 'e' + str2; // corrected output
 	  }

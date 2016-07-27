@@ -35,7 +35,7 @@ int main(void)
 
   /** the function 'start_array()' calls the parallelization procedure
    * defined in 'parallel_jobs.h'. The variables 'numtasks' and 'rank'
-   * are set by this function and allow to use the parallel distrubuted 
+   * are set by this function and allow to use the parallel distributed 
    * indexes to be used.
    **/
   if(start_array(&numtasks, &rank) != 0)
@@ -64,8 +64,8 @@ int main(void)
     {
       /** this for loop runs over all tasks assigned to the mpi/array process
        * it starts with its first assigned id which is its rank. Then it 
-       * comnplets more tasks by going in strides of the total number of 
-       * processes to the next task. This is done untill N_max is reached.
+       * completes more tasks by going in strides of the total number of 
+       * processes to the next task. This is done until N_max is reached.
        **/
 
       /* print info on tasks performed to stdout */
@@ -112,7 +112,7 @@ int main(void)
   //    work is done
   //////////////////////////////////////////////////
   
-  /* clean up parallization if needed */
+  /* clean up parallelization if needed */
   end_array();
  
 

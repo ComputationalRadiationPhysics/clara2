@@ -37,14 +37,14 @@
 #define DETECTOR_E_FIELD_RPAUSCH
 
 
-//! \brief class for a point-like detector storing the signal externaly
+//! \brief class for a point-like detector storing the signal externally
 class Detector_e_field
 {
 public:
     //! \brief constructor for a point-like detector
     /*! @param detector = location of the detector 
      @param delta_t  = timestep of odint
-	 @param N_sig     = number of datapoints of signal to store
+	 @param N_sig     = number of data points of signal to store
 	 @param start_sig = start index of signal
      signal    = pointer to signal struct array (signal at detector)    
      */
@@ -78,7 +78,7 @@ public:
 
 	
 // data:
-    const double delta_t;  /// length of timesteps
+    const double delta_t;  /// length of time steps
     Large_index_storage<R_vec> signal;         /// E_field at detector
 	
 	
@@ -89,18 +89,18 @@ private:
     int counter;
 
 	
-	//methodes
+	//methods
     
     //! \brief simple interpolation between two values (f.e. location, speed)
-    /*! @param r_0   = value at startpoint
-     @param r_1   = value at endpoint (one timestep later)
+    /*! @param r_0   = value at start point
+     @param r_1   = value at endpoint (one time step later)
      @param t     = time as interpolation parameter (0 < t < delta_t)
      */ 
     template<typename V>
     V interpol(V r_0, V r_1, double t); // interpolation between 
 	// 2 points
     
-    /*! \brief calculates Lienard Wiechert Potation (more precise the 
+    /*! \brief calculates Lienard Wiechert Potential (more precise the 
      $\vec E$-field */ 
     /*! @param e_R      = unit vector in the from the electron to the detector
 	 @param beta     = beta vector of the electron 

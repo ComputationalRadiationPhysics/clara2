@@ -66,7 +66,7 @@ public:
         return *this;
     } 
     
-    //! \brief setting new futre value and moving data down (now --> old, ...)
+    //! \brief setting new future value and moving data down (now --> old, ...)
     //! @param next new future value 
     void next(T next)
     {
@@ -112,10 +112,10 @@ private:
 
 
 /*!
- * \brief a class provinding additional methods for relativistic physics\n
+ * \brief a class providing additional methods for relativistic physics\n
  * returns Discrete objects for gamma and beta\n
  * and also provides functors for calculating single values of gamma and beta\n
- * Energie = sqrt(p^2*c^2+m_0^2*c^4) = GAMMA*m
+ * Energy = sqrt(p^2*c^2+m_0^2*c^4) = GAMMA*m
  * \vec beta = (\vec v)/c  with \vec v = SPEED = (\vec p)/m(v) 
  * = (\vec p)/(m_0 * gamma)  
  */
@@ -124,7 +124,7 @@ class More_discrete
 public:
     //! \brief constructor 
     /*! @param Det is a reference to a detector class from which one gets:
-        -> stepwidth: the length of the timestep between to steps */
+        -> step width: the length of the time step between to steps */
     More_discrete(Discrete<double>* h)
         : stepwidth(h) {}
     
