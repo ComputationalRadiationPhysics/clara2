@@ -46,7 +46,7 @@
 /**
  * This function checks if a file exists on the hard drive.
  *
- * @param filename string containg the path and filename to bechecked
+ * @param filename string containing the path and filename to be checked
  * @return Returns true if file exists, otherwise false.
  **/
 bool file_exists(const char *filename)
@@ -58,7 +58,7 @@ bool file_exists(const char *filename)
 
 
 /**
- * This program combines files with spectra for differnt directions 
+ * This program combines files with spectra for different directions 
  * to a single files containing all spectra for directions.
  *
  * @return only 0 is return - no error code yet  
@@ -75,7 +75,7 @@ int main()
 
   const unsigned N_omega = 2048; /* number of frequencies */
   /* To DO: could be read from linenumber input file or from a 
-   *  genral param file  associated with the simulation - ISSUE #8 */
+   *  general param file  associated with the simulation - ISSUE #8 */
 
   double omega[N_omega]; /* allocate memory for reading omega values in */
 
@@ -93,7 +93,7 @@ int main()
 
   const unsigned N_theta = 120; /* number of different theta angles */
   /* To DO: this can not be read from input file but from a 
-   *  genral param file  associated with the simulation - ISSUE #8 */
+   *  general param file  associated with the simulation - ISSUE #8 */
 
   double theta[N_theta]; /* allocate memory for directions */
 
@@ -106,13 +106,13 @@ int main()
 
   const unsigned N_phi = 2; /* number of different phi angles */
   /* To DO: this can not be read from input file but from a 
-   *  genral param file  associated with the simulation - ISSUE #8 */
+   *  general param file  associated with the simulation - ISSUE #8 */
 
   /* set phi angles */
   double phi[N_phi] = {0.0, 90.0};
 
 
-  /* allocate memory for collecting spectra for differnt directions */
+  /* allocate memory for collecting spectra for different directions */
   double data_phi_0[N_theta][N_omega]; /* matrix data  for phi=0 degrees */
   double data_phi_90[N_theta][N_omega]; /* matrix data  for phi=90 degrees */
 
@@ -142,7 +142,7 @@ int main()
       /* create file name for single direction (theta and phi) */
       std::string filename = "my_output_theta=" + theta_st + "_phi=" + phi_st + ".dat";
 
-      /* check if inpute file exists and load it*/
+      /* check if input file exists and load it*/
       if(!(file_exists(filename.c_str())))
         std::cout << "  ERROR: file " << filename << " does not exists" << std::endl;
       else /* file exists */
@@ -168,7 +168,7 @@ int main()
                   /* read spectra and omega (again) */
                   data >> omega_temp >> data_phi_0[i][j];
 
-                  /* check if previeously stored omegas are equal to 
+                  /* check if previously stored omegas are equal to 
                    * those stored in the other files. If they are not
                    * equal write warning to screen. (but do not stop 
                    * program) */
@@ -189,7 +189,7 @@ int main()
                               << " - " << omega[j] << " != " << omega_temp << std::endl;
                 }
             }
-          data.close(); /* close the file of thze current direction */
+          data.close(); /* close the file of the current direction */
         }
     } 
   
@@ -198,7 +198,7 @@ int main()
 
 
   /* store matrix-like spectral data for first phi 
-   * tabs separate the values of differnt frequencies
+   * tabs separate the values of different frequencies
    * and newlines separate different directions. */
   std::ofstream output_0("matrix_phi_0.dat");
   for(unsigned i=0; i<N_theta; ++i) /* all theta */
@@ -210,7 +210,7 @@ int main()
 
 
   /* store matrix-like spectral data for second phi 
-   * tabs separate the values of differnt frequencies
+   * tabs separate the values of different frequencies
    * and newlines separate different directions. */
   std::ofstream output_90("matrix_phi_90.dat");
   for(unsigned i=0; i<N_theta; ++i) /* all theta */

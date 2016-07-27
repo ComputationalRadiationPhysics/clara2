@@ -206,7 +206,7 @@ inline Vector<double, 3> Vector<double, 3>::cross(const Vector<double, 3>& v) co
 
 
 template< typename T, unsigned N>  /// Vector * Vector
-inline double operator * (const Vector<T, N>& a , const Vector<double, 3>& b ) /// Skalarprodukt
+inline double operator * (const Vector<T, N>& a , const Vector<double, 3>& b ) /// scalar product
 {
     return a.dot(b);
 }

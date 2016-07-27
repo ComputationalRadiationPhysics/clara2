@@ -49,7 +49,7 @@ Detector_fft::~Detector_fft()
 
 
 
-// add to spectrum methodes:
+// add to spectrum methods:
 
 void Detector_fft::add_to_spectrum(const R_vec r, 
 				   const R_vec beta,
@@ -86,7 +86,7 @@ void Detector_fft::add_to_spectrum(const R_vec r,
 		      - beta*dot_gamma))) / util::cube(gamma - p_wave*n_unit)
                     * gamma;
  
-  assert(counter < spek_length); // --> still necessairy? probably not
+  assert(counter < spek_length); // --> still necessary? probably not
 
   time[counter] = t_part - (n_unit*r)/phy::c;
   data[counter] = fou;
@@ -95,7 +95,7 @@ void Detector_fft::add_to_spectrum(const R_vec r,
 }
 
 
-// calculate spectrum methode:
+// calculate spectrum method:
 
 void Detector_fft::calc_spectrum()
 {
@@ -126,12 +126,12 @@ double Detector_fft::get_spectrum(unsigned a, unsigned b)
   switch(b){
   case 0:
     return frequency[a];
-    break; //neccesairy?
+    break; //necessary?
   case 1:
     return spektrum_mag[a];
     break;
   default:
-    std::cerr << "Wrong access to spektrum (fft, momentum)!" << std::endl;
+    std::cerr << "Wrong access to spectrum (fft, momentum)!" << std::endl;
     std::cerr << b << " is larger than 1." << std::endl;
     assert(false);
     break;

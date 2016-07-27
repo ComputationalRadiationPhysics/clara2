@@ -23,18 +23,18 @@
 
 #include "detector_e_field.hpp"
 
-//! \brief calculates retardated signal at detector
+//! \brief calculates retarded signal at detector
 /*! @param r_0      = position one time step before last step
  @param r_1      = position at last time step
  @param p_0      = momentum one time step before last step
  @param p_1      = momentum at last time step
  @param dot_p_0  = dp/dt one time step before last step
  @param dot_p_1  = dp/dt at last time step
- @param beta_0   = v/c = beta one time step befor last step
+ @param beta_0   = v/c = beta one time step before last step
  @param beta_1   = v/c = beta at last time step
- @param gamma_0  = gamma one time step befor last step
+ @param gamma_0  = gamma one time step before last step
  @param gamma_1  = gamma at last time step
- @param dot_gamma_0 = d gamma/dt one time step befor last step
+ @param dot_gamma_0 = d gamma/dt one time step before last step
  @param dot_gamma_1 = d gamma/dt at last time step
  @param t_part_0 = time at the electron one time step before last step
  */ 
@@ -158,15 +158,15 @@ void Detector_e_field::place(const R_vec r_0, const R_vec r_1,
     
     else
     {
-        std::cout << "Unbekannter Fehler " << std::endl;
+        std::cout << "unknown error " << std::endl;
         assert(false);
     }    
 }
 
 
 //! \brief simple interpolation between two values (f.e. location, speed)
-/*! @param r_0   = value at startpoint
- @param r_1   = value at endpoint (one timestep later)
+/*! @param r_0   = value at start point
+ @param r_1   = value at endpoint (one time step later)
  @param t     = time as interpolation parameter (0 < t < delta_t)
  */ 
 template<typename V>
@@ -180,7 +180,7 @@ V Detector_e_field::interpol(V r_0, V r_1, double t)
 
 
 
-/*! \brief calculates Lienard Wiechert Potation (more precise the 
+/*! \brief calculates Lienard Wiechert Potential (more precise the 
  $\vec E$-field */ 
 /*! @param e_R      = unit vector in the from the electron to the detector
  @param beta     = beta vector of the electron 

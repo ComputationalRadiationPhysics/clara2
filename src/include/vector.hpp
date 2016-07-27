@@ -32,7 +32,7 @@
 /**
  * \brief  Vector class by Richard 
  *  
- *  This class provied operations like: +, -, *, %, /, =, +=, [], mag() \n
+ *  This class provides operations like: +, -, *, %, /, =, +=, [], mag() \n
  *  usage: Vector<datatype, size> \n
  *  short for Vector<double, 3> --> R_vec
  */
@@ -42,7 +42,7 @@ class Vector{
 
 public:
 // constructor, destructor:
-    /// basic constructor settting everything to zero
+    /// basic constructor setting everything to zero
     inline Vector();     
     
     //! \brief special constructor for 3D
@@ -51,10 +51,10 @@ public:
         @param z third coordinate */
     inline Vector(double x, double y=0., double z=0.);
 
-    /// copy constructor --> not neccesairy
+    /// copy constructor --> not necessary
     
     /// destructor
-    inline ~Vector() {}  // not neccesary
+    inline ~Vector() {}  // not necessary
     
 
 // Getters and Setters: 
@@ -109,7 +109,7 @@ private:
 };
 
 
-// Member function spezialization:
+// Member function specialization:
 
 
 /// 3D cross product
@@ -146,7 +146,7 @@ inline std::ostream & operator << (std::ostream & os, const Vector<T,N> & v);
 /*! \var typedef Vector<double, 3> R_vec
  \brief A type definition for a 3D double vector.
  
- Because in physics this is the most widly used vector, there is a special 
+ Because in physics this is the most widely used vector, there is a special 
  typedef for it.
  */
 

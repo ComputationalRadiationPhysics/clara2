@@ -41,7 +41,7 @@ template<typename T>
 inline T& Large_index_storage<T>::operator[](unsigned i)
 {
   if (!((i>=start) && (i<start+N))) {
-    std::cout << "Index falsch: " << i << " -> " 
+    std::cout << "Index false: " << i << " -> " 
 	      << start << " - " << start+N<<std::endl;
     assert(false); // aborts a wrong access to data
   }
