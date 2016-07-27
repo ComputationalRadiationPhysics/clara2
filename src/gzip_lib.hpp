@@ -95,14 +95,14 @@ int read_data(void* data,
 
 
 
-/* TO DO: is compresion realy used in the code? - ISSUE #5 */
+/* TO DO: is compression really used in the code? - ISSUE #5 */
 /**
  * write data to file using compression
  *
  * @param data pointer to data that should be stored on disk
  * @param size number of bytes that are in data and should be 
  *             put in the file
- * @param filename pointer to char-array containg path and
+ * @param filename pointer to char-array containing path and
  *                 filename of the file to put data in
  * @param number "unsigned int" that  is written to the 
  *               beginning of the file
@@ -129,14 +129,14 @@ int compress_data(void* data,
 
 
 
-/* TO DO: is compresion realy used in the code? - ISSUE #5 */
+/* TO DO: is compression really used in the code? - ISSUE #5 */
 /**
  * append data to a compressed file
  *
  * @param data pointer to data that should be stored on disk
  * @param size number of bytes that are in data and should be 
  *             put in the file
- * @param filename pointer to char-array containg path and
+ * @param filename pointer to char-array containing path and
  *                 filename of the file to append data to
  * @return returns zero in case of success, no error handling
  **/
@@ -198,12 +198,12 @@ void create_gzFile(gzFile& pFile,
   pFile = gzopen(filename, "rb"); 
 
   /* verify if file was created correctly */
-  if(pFile == NULL) /* if error occured */
+  if(pFile == NULL) /* if error occurred */
     {
       pFile = gzopen(filename, "rb"); /* try again */
       if(pFile == NULL) // try again
         {
-          /* if second attempt failes too throw error */
+          /* if second attempt fails too throw error */
           std::cerr << "Could not open file" << std::endl;
           /* TO DO: error handling - ISSUE #20 */
           throw "no file found";

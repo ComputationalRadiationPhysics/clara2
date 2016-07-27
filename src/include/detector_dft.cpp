@@ -58,7 +58,7 @@ Detector_dft::~Detector_dft()
 }
 
 
-// add to spectrum methodes:
+// add to spectrum methods:
 
 void Detector_dft::add_to_spectrum(const R_vec r, 
 				   const R_vec beta,
@@ -112,7 +112,7 @@ void Detector_dft::add_to_spectrum(const R_vec r,
 }
 
 
-// calculate spectrum methode:
+// calculate spectrum method:
 
 void Detector_dft::calc_spectrum()
 {
@@ -141,7 +141,7 @@ double Detector_dft::get_spectrum(unsigned a, unsigned b)
       return spektrum_mag[a];
       break;
     default:
-      std::cout << "Wrong access to spektrum (dft, beta)!" << std::endl;
+      std::cout << "Wrong access to spectrum (dft, beta)!" << std::endl;
       std::cout << b << " is larger than 2." << std::endl;
       assert(false);
       break;
@@ -158,7 +158,7 @@ double Detector_dft::energy()
 }
 
 
-// set frequency methodes:
+// set frequency methods:
 
 inline void Detector_dft::set_frequency(const double omega_max)  
 {

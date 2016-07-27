@@ -34,14 +34,14 @@
 #ifndef DETECTOR_DFT_RPAUSCH
 #define DETECTOR_DFT_RPAUSCH
 
-//! \brief class for a point-like detector storing the signal externaly
+//! \brief class for a point-like detector storing the signal externally
 class Detector_dft
 {
 public:
     //! \brief constructor for a spectral detector
     /*! 
        @param n_unit   = unit vector in direction of energy deposition
-       @param delta_t  = timestep of odint
+       @param delta_t  = time step of odint
      */
   Detector_dft(R_vec n_unit, double delta_t, const unsigned spek_length,
 	       const double omega_max);
@@ -88,7 +88,7 @@ private:
   double* frequency;
 
 
-  // set frequency methodes:
+  // set frequency methods:
   inline void set_frequency(const double omega_max);
   inline void set_frequency(const double* omega);
 

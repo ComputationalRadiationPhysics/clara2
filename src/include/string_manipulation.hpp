@@ -30,7 +30,7 @@
 
 void formating(std::string& index_s, const std::string& digits_s)
 {
- // ugly formating:
+ // ugly formatting:
   unsigned index_u = atoi(index_s.c_str());  // make a number
   unsigned digits_u = atoi(digits_s.c_str());// make a number
   
@@ -42,10 +42,10 @@ void formating(std::string& index_s, const std::string& digits_s)
 
   std::string format = ("%0" + digits_s + "d"); // format style
   char* index_c = new char[digits_u+5]; // create char dummy
-  sprintf(index_c, format.c_str(), index_u); // confert frum unsigned to char
-  index_s = index_c; // confert char to string
-  delete[] index_c; // delte char dummy
-  // end formating
+  sprintf(index_c, format.c_str(), index_u); // convert from unsigned to char
+  index_s = index_c; // convert char to string
+  delete[] index_c; // delete char dummy
+  // end formatting
 }
 
 

@@ -32,7 +32,7 @@
  * \brief  storage class by Richard 
  *  
  * this class provides a storage systems for large arrays for which
- * there only a few non zero values, which are additionaly close together \n
+ * there only a few non zero values, which are additionally close together \n
  * usage: Large_index_storage<datatype> n
  */
 
@@ -43,7 +43,7 @@ class Large_index_storage
 public:
 // constructor, destructor:
     //! \brief constructor 
-    /*! @param N number of posible non zero values (just single segment)
+    /*! @param N number of possible non zero values (just single segment)
         @param start starting point of array f.e. x[start - x] x >0 --> is not
                 defined */
   inline Large_index_storage(const unsigned N, const unsigned start);

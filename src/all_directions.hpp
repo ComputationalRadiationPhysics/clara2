@@ -26,9 +26,9 @@
  * function that calculates spectra in different directions for
  * a single particle trace
  *
- * @param trace_id a unique id which which the trajctopry file 
+ * @param trace_id a unique id which which the trajectory file 
  *                  can be identified 
- * @param arg  a string telling wether a "binary" or "ascii" 
+ * @param arg  a string telling whether a "binary" or "ascii" 
  *              output should be used
  * @return error code
  **/

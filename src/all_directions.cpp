@@ -72,7 +72,7 @@ int all_directions(const unsigned int trace_id, const char arg[])
 
 
   /* ------------ constants ------------------------------- */
-  const double omega_max = 3.0e19;      /* maximum of ploted frequency Hz */
+  const double omega_max = 3.0e19;      /* maximum of plotted frequency Hz */
   const double theta_max = 1.14594939;  /* maximum of theta in degree */
   const unsigned int N_spectrum = 2048; /* number of frequencies "omega"*/
   const unsigned int N_theta = 120;     /* number of directions in first angle "theta" */
@@ -286,7 +286,7 @@ int all_directions(const unsigned int trace_id, const char arg[])
               /* fill output-data-container with computed spectral data */ 
               output_data[output_index] = all_spec[j].spectrum[i];
 
-              /* increase "output_ibdex" by one to address new memory 
+              /* increase "output_index" by one to address new memory 
                *  location in next loop cycle */
               output_index++; 
             }
