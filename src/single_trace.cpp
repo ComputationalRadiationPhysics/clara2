@@ -50,7 +50,7 @@ int single_trace(const one_line* data,
 {
   ////////////////////////////////////////////////////////////
   /* CHANGE THIS: */
-  /* this are the remainings of the old program
+  /* this are the remaining of the old program
    * structure, where several directions were calculated 
    * right here - ISSUE #12 */
 
@@ -77,7 +77,7 @@ int single_trace(const one_line* data,
    * that "observes" the emitted radiation in the far field */
 
   /* creating different angles: */
-  /* TO DO: SINCE ONLY A SINGLE DIRECION IS CALCULATED IN THIS FUNCTION
+  /* TO DO: SINCE ONLY A SINGLE DIRECTION IS CALCULATED IN THIS FUNCTION
    * THE ARRAY SETUP IS OBSOLETE  - ISSUE #12 */
   R_vec looking_vector[N_angle_theta * N_angle_phi];
   double angle_theta[N_angle_theta];
@@ -109,7 +109,7 @@ int single_trace(const one_line* data,
 
 
   /* -------- FFT ------------- */
-  /* this performs the radiation calulation
+  /* this performs the radiation calculation
   * (for a single trace and a single direction)
   * using the FFT algorithm */
 
@@ -125,7 +125,7 @@ int single_trace(const one_line* data,
     }
   
 
-  /* convert trajectory data to meaningfull values */
+  /* convert trajectory data to meaning full values */
   /* TO DO: FUNCTION CALLED FOR EACH DIRECTION - ISSUE #14 */
   run_through_data(data, linenumber, N_angle_theta*N_angle_phi, detector_fft); 
 
@@ -154,7 +154,7 @@ int single_trace(const one_line* data,
   /* create DFT detectors (using omega[i] from FFT) to be on the exact same frequency */
   for(unsigned i=0; i<N_angle_theta*N_angle_phi ; ++i)
     {    
-      /* number of (usefull) frequencies from FFT */
+      /* number of (use-full) frequencies from FFT */
       unsigned dummy_N =  (*detector_fft[i]).half_frequency();
 
       /* get frequencies from FFT */
@@ -163,7 +163,7 @@ int single_trace(const one_line* data,
                                          dummy_N, dummy_omega);
     }
 
-  /* convert trajectory data to meaningfull values */
+  /* convert trajectory data to meaningful values */
   /* TO DO: FUNCTION CALLED FOR EACH DIRECTION - ISSUE #14 */
   run_through_data(data, linenumber, N_angle_theta*N_angle_phi, detector_dft); 
   

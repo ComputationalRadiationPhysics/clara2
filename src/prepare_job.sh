@@ -24,7 +24,7 @@
 #---------------------------------------------------------------
 # INFO:
 # Running this shell script generates a submit file either
-# for a MPI parallelsation or a PBS-Array-Job parallelsation.
+# for a MPI parallelization or a PBS-Array-Job parallelization.
 #---------------------------------------------------------------
 
 
@@ -36,7 +36,7 @@ MODULES2LOAD=clara2_hypnos.modules
 
 WALLTIME=02:00:00
 
-# Jobstructure:
+# Job structure:
 # for MPI:
 NUMBERNODES=4
 NUMBERCORES=32
@@ -71,7 +71,7 @@ echo "#PBS -e ./error.txt" >> $SUBMITFILE
 echo "#PBS -o ./output.txt" >> $SUBMITFILE
 echo  "" >> $SUBMITFILE
 
-# in case of a MPI parallelisation:
+# in case of a MPI parallelization:
 if [ $DECISION -eq 1 ]
 then
     echo "#PBS -l nodes="$NUMBERNODES":ppn="$NUMBERCORES >> $SUBMITFILE
@@ -96,7 +96,7 @@ then
     make
     make MPI
 else
-    # in case of PBS-array paparllelisation
+    # in case of PBS-array parallelization
     echo  " ./executable" >> $SUBMITFILE    
     make
     make ARRAY

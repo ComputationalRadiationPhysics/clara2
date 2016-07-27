@@ -17,7 +17,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #
 
-# make the detectorclass correctly
+# make the detector class correctly
 
 CC = g++
 CFLAGS = -Wall -O3 -c

@@ -109,7 +109,7 @@ void fft(T* data, unsigned long nn)
     T tempr, tempi;
     // data  data
  
-    // reverse-binary reindexing
+    // reverse-binary re-indexing
     n = nn<<1;
     j=1;
     for (i=1; i<n; i+=2) {
