@@ -93,42 +93,49 @@ void interpolation_int(Detector_fft* fft,
     
   //in between:
   for(unsigned  i=0; i<N_new; ++i)
+  {
+    double x_high;
+    double x_low;
+    if(i==0)
     {
-      double x_high;
-      double x_low;
-      if(i==0)
-	{
-	  x_high = 0.5 * (x_new[i] + x_new[i+1]);
-	  x_low  = x_new[i];
-	}
-      else if(i==N_new-1)
+      x_high = 0.5 * (x_new[i] + x_new[i+1]);
+      x_low  = x_new[i];
+    }
+    else if(i==N_new-1)
 	{
 	  x_high = x_new[i];
 	  x_low  = 0.5 * (x_new[i-1] +  x_new[i]);
 	}
-      else
-	{
-	  x_high = 0.5 * (x_new[i] + x_new[i+1]);
-	  x_low  = 0.5 * (x_new[i-1] +  x_new[i]);
-	}
+    else
+    {
+      x_high = 0.5 * (x_new[i] + x_new[i+1]);
+      x_low  = 0.5 * (x_new[i-1] +  x_new[i]);
+    }
 
       
-      unsigned counter=0;
-      double sum = 0.0;
+    unsigned counter=0;
+    double sum = 0.0;
 
 
-      while(fft->get_spectrum(j, 0) >= x_low && fft->get_spectrum(j, 0) <= x_high && j<N_old)
-	{
-	  counter++;
-	  sum += fft->get_spectrum(j, 1);
-	  ++j;
+    while(fft->get_spectrum(j, 0) >= x_low && fft->get_spectrum(j, 0) <= x_high && j<N_old)
+    {
+      counter++;
+      sum += fft->get_spectrum(j, 1);
+      ++j;
 	}
-	
-      y_new[i] += sum/counter;
-      //std::cout << "  ->" << counter << std::flush;
-      total_counter += counter;
 
+    if (counter == 0) // this avoids a NaN if the bin does not contain any data
+    {
+      y_new[i] += 0.0;
     }
+    else
+    {
+      y_new[i] += sum/counter;
+    }
+    //std::cout << "  ->" << counter << std::flush;
+    total_counter += counter;
+
+  }
   //std::cout << std::endl << " total: " << total_counter << std::endl;
   //std::cout << "omega_max " << "old: " << fft->get_spectrum(N_old-1, 0) 
   //	    << "  new: " << x_new[N_new-1]  << std::endl;
