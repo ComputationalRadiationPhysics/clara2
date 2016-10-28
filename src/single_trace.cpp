@@ -159,7 +159,7 @@ int single_trace(const one_line* data,
 
       /* get frequencies from FFT */
       double* dummy_omega = (*detector_fft[i]).frequency;
-      detector_dft[i] = new Detector_dft((looking_vector[i]), stepwidth, 
+      detector_dft[i] = new Detector_dft((looking_vector[i]), 
                                          dummy_N, dummy_omega);
     }
 
