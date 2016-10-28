@@ -77,6 +77,8 @@ void Detector_dft::add_to_spectrum(const R_vec r,
 		                  (t_part - (n_unit*r)/phy::c));
       for (unsigned i=0; i<3; ++i)
 	{
+        // this is the (local) Nyquist limiter 
+        if(frequency[a] < 0.75 * M_PI / (delta_t*(1.0 - beta * n_unit)) )
 	  (spektrum[a])[i] += fou1b[i]*fou2*delta_t;
 	}
 
@@ -105,6 +107,8 @@ void Detector_dft::add_to_spectrum(const R_vec r,
 				  (t_part - (n_unit*r)/phy::c));
       for (unsigned i=0; i<3; ++i)
 	{
+        // this is the (local) Nyquist limiter 
+        if(frequency[a] < 0.75 * M_PI / (delta_t*(1.0 - beta * n_unit)) )
 	  (spektrum[a])[i] += fou1_complex[i]*fou2*delta_t;
 	}
 
