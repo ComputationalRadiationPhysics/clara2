@@ -43,10 +43,10 @@ public:
        @param n_unit   = unit vector in direction of energy deposition
        @param delta_t  = time step of odint
      */
-  Detector_dft(R_vec n_unit, double delta_t, const unsigned spek_length,
+  Detector_dft(R_vec n_unit, const unsigned spek_length,
 	       const double omega_max);
 
-  Detector_dft(R_vec n_unit, double delta_t, const unsigned spek_length,
+  Detector_dft(R_vec n_unit, const unsigned spek_length,
 	       const double* omega);
 
 
@@ -55,7 +55,8 @@ public:
   void add_to_spectrum(const R_vec r_0, 
 		       const R_vec beta_0,
 		       const R_vec dot_beta_0,
-		       const double t_part_0);
+               const double t_part_0,
+               const double delta_t);
 	
   void add_to_spectrum(const R_vec r_0, 
 		       const R_vec p_0, 
@@ -63,7 +64,8 @@ public:
 		       const R_vec beta_0,
 		       const double gamma_0,
 		       const double dot_gamma_0,
-		       const double t_part_0);
+               const double t_part_0,
+               const double delta_t);
 
   void calc_spectrum();
 
@@ -76,7 +78,6 @@ public:
 private:
   // data:		
   const R_vec n_unit;
-  const double delta_t;
   const  unsigned spek_length;
 
 

@@ -25,9 +25,9 @@
 
 // Constructors and Destructors:
 
-Detector_dft::Detector_dft(R_vec n_unit, double delta_t, const unsigned spek_length,
+Detector_dft::Detector_dft(R_vec n_unit, const unsigned spek_length,
 			   const double omega_max)
-  : n_unit(n_unit.unit_vec()), delta_t(delta_t), spek_length(spek_length),
+  : n_unit(n_unit.unit_vec()),  spek_length(spek_length),
     spektrum(0), spektrum_mag(0), frequency(0)
 {
   spektrum = new Vector<std::complex<double>, 3>[spek_length];
@@ -37,9 +37,9 @@ Detector_dft::Detector_dft(R_vec n_unit, double delta_t, const unsigned spek_len
   set_frequency(omega_max); 
 }
 
-Detector_dft::Detector_dft(R_vec n_unit, double delta_t, const unsigned spek_length,
+Detector_dft::Detector_dft(R_vec n_unit,  const unsigned spek_length,
 			   const double* omega)
-  : n_unit(n_unit.unit_vec()), delta_t(delta_t), spek_length(spek_length),
+  : n_unit(n_unit.unit_vec()),  spek_length(spek_length),
     spektrum(0), spektrum_mag(0), frequency(0)
 {
   spektrum = new Vector<std::complex<double>, 3>[spek_length];
@@ -63,7 +63,8 @@ Detector_dft::~Detector_dft()
 void Detector_dft::add_to_spectrum(const R_vec r, 
 				   const R_vec beta,
 				   const R_vec dot_beta,
-				   const double t_part)
+                   const double t_part,
+                   const double delta_t)
 {
   const R_vec fou1a = (n_unit%((n_unit-beta)%dot_beta)) 	
                         / util::square(1. - beta * n_unit);
@@ -89,7 +90,8 @@ void Detector_dft::add_to_spectrum(const R_vec r,
 				   const R_vec beta,
 				   const double gamma,
 				   const double dot_gamma,
-				   const double t_part)
+                   const double t_part,
+                   const double delta_t)
 {		
   const R_vec     p_wave = p/(phy::m_e*phy::c);
   const R_vec dot_p_wave = dot_p/(phy::m_e*phy::c);
