@@ -98,9 +98,11 @@ int single_trace(const one_line* data,
       for (unsigned b=0; b<N_angle_phi; ++b)
         {
           looking_vector[a*N_angle_phi+b] 
-            = R_vec(std::cos(angle_theta[a]) ,
-                    std::sin(angle_theta[a]) * std::cos(angle_phi[b])  , 
-                    std::sin(angle_theta[a]) * std::sin(angle_phi[b]) );
+            = R_vec(
+                    std::sin(angle_theta[a]) * std::cos(angle_phi[b])  , // x axis
+                    std::sin(angle_theta[a]) * std::sin(angle_phi[b]),
+		    std::cos(angle_theta[a])  // z axis
+ 		  );
         }
     }
 
