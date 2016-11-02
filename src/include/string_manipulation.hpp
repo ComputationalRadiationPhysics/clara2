@@ -25,20 +25,21 @@
 #include <cstdlib>
 #include <cstdio>
 
-#ifndef formating_rpausch
-#define formating_rpausch
+#pragma once
 
-void formating(std::string& index_s, const std::string& digits_s)
+void formating(std::string& index_s,
+               const std::string& digits_s)
 {
- // ugly formatting:
+  // ugly formatting:
   unsigned index_u = atoi(index_s.c_str());  // make a number
   unsigned digits_u = atoi(digits_s.c_str());// make a number
-  
+
   unsigned dummy=1;
   for(unsigned i = 0; i< digits_u; ++i)
     dummy *=10;
 
-  if(index_u >= dummy) std::cout << " WARNING: index too large" << std::endl;
+  if(index_u >= dummy)
+    std::cout << " WARNING: index too large" << std::endl;
 
   std::string format = ("%0" + digits_s + "d"); // format style
   char* index_c = new char[digits_u+5]; // create char dummy
@@ -60,5 +61,3 @@ unsigned get_unsigned(std::string txt)
 {
   return (unsigned)atoi(txt.c_str());
 }
-
-#endif

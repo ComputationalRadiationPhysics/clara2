@@ -20,34 +20,27 @@
 
 
 
-// GLOBAL Variables   
+// GLOBAL Variables
 
-#ifndef PHYSICS_UNITS_RPAUSCH
-#define PHYSICS_UNITS_RPAUSCH
+#pragma once
 
 namespace phy
 {
 
-const double c = 299792458.; 
-      /// speed of light [m/s]
-    
-const double q = 1.602177E-19; 
-      /// charge [ C = A*s ] 
+  const double c = 299792458.;
+  /// speed of light [m/s]
 
-/*
-const double charge_e = 4.803204272E-10; 
-      /// charge [ g^1/2 cm^3/2 s^-1 ] 
-*/
+  const double q = 1.602177E-19;
+  /// charge [ C = A*s ]
 
-const double m_e = 9.1093E-31;
-      /// mass of the electron [kg]
+  /*
+    const double charge_e = 4.803204272E-10;
+    /// charge [ g^1/2 cm^3/2 s^-1 ]
+    */
 
-const double epsilon_0 = 8.854188E-12;
-/// 
+  const double m_e = 9.1093E-31;
+  /// mass of the electron [kg]
 
-
+  const double epsilon_0 = 8.854188E-12;
+  /// vacuum permittivity [F/m]
 }
-
-
-#endif
-

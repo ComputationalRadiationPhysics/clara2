@@ -27,16 +27,17 @@
 
 //basic constructor
 template< typename T, unsigned N>
-inline Vector<T, N>::Vector()     
+inline Vector<T, N>::Vector()
 {
-  for (unsigned i=0; i<N; ++i) {
+  for (unsigned i=0; i<N; ++i)
     data[i] = T(0.0);
-  }
 }
 
 // constructor for 3D
 template< typename T, unsigned N>
-inline Vector<T, N>::Vector(double x, double y, double z)
+inline Vector<T, N>::Vector(double x,
+                            double y,
+                            double z)
 {
   assert( N==3 ); // better via template? one more dummy function
   data[0]=x;
@@ -44,7 +45,7 @@ inline Vector<T, N>::Vector(double x, double y, double z)
   data[2]=z;
 }
 
-       
+
 
 
 ////////////////////////////////////////////////
@@ -52,15 +53,15 @@ inline Vector<T, N>::Vector(double x, double y, double z)
 
 // access data
 template< typename T, unsigned N>
-inline T & Vector<T, N>::operator[](unsigned i) 
+inline T & Vector<T, N>::operator[](unsigned i)
 {
   assert(i<N);
   return data[i];
 }
 
 // access data
-template< typename T, unsigned N> 
-const inline T & Vector<T, N>::operator[](unsigned i) const 
+template< typename T, unsigned N>
+const inline T & Vector<T, N>::operator[](unsigned i) const
 {
   assert(i<N);
   return data[i];
@@ -68,72 +69,72 @@ const inline T & Vector<T, N>::operator[](unsigned i) const
 
 
 
-/////////////////////////////////////////////////////   
+/////////////////////////////////////////////////////
 // Calculations:
-    
+
 /// addition
-template< typename T, unsigned N> 
-inline Vector<T, N> Vector<T, N>::operator+ (const  Vector& v) const  
+template< typename T, unsigned N>
+inline Vector<T, N> Vector<T, N>::operator+ (const  Vector& v) const
 {
   Vector back;
-  for (unsigned i=0; i<N; ++i) 
-    {
-      back[i] = data[i] + v.data[i];
-    }
+  for (unsigned i=0; i<N; ++i)
+  {
+    back[i] = data[i] + v.data[i];
+  }
   return back;
 }
 
 /// subtraction
-template< typename T, unsigned N> 
-inline Vector<T, N> Vector<T, N>::operator- (const Vector& v) const  
+template< typename T, unsigned N>
+inline Vector<T, N> Vector<T, N>::operator- (const Vector& v) const
 {
   Vector back;
-  for (unsigned i=0; i<N; ++i) 
-    {
-      back[i] = data[i] - v.data[i];
-    }
+  for (unsigned i=0; i<N; ++i)
+  {
+    back[i] = data[i] - v.data[i];
+  }
   return back;
 }
-    
+
 /// magnitude
-template< typename T, unsigned N> 
-inline T Vector<T, N>::mag() const  
-{ 
+template< typename T, unsigned N>
+inline T Vector<T, N>::mag() const
+{
   T sqr_magnitude=0;
-  for (unsigned i=0; i<N; ++i) 
-    {
-      sqr_magnitude += data[i] * data[i];
-    }
-  return std::sqrt(sqr_magnitude); 
+  for (unsigned i=0; i<N; ++i)
+  {
+    sqr_magnitude += data[i] * data[i];
+  }
+  return std::sqrt(sqr_magnitude);
 }
 
 /// scalar product
-template< typename T, unsigned N> 
-inline T Vector<T, N>::dot(const Vector& v) const  
+template< typename T, unsigned N>
+inline T Vector<T, N>::dot(const Vector& v) const
 {
   T result=0;
-  for (unsigned i=0; i<N; ++i) 
-    {
-      result += data[i] * v[i];
-    }
+  for (unsigned i=0; i<N; ++i)
+  {
+    result += data[i] * v[i];
+  }
   return result;
 }
-    
+
 ///  multiplication with scalar
-template< typename T, unsigned N> 
-inline Vector<T, N> Vector<T, N>::dot(const T a) const  
+template< typename T, unsigned N>
+inline Vector<T, N> Vector<T, N>::dot(const T a) const
 {
   Vector result;
-  for (unsigned i=0; i<N; ++i) 
-    {
-      result[i] = a* data[i];
-    }
+  for (unsigned i=0; i<N; ++i)
+  {
+    result[i] = a* data[i];
+  }
   return result;
 }
-    
+
 /// cross-product-warning
-template< typename T, unsigned N> 
-inline Vector<T, N> Vector<T, N>::cross(const Vector& v) const  
+template< typename T, unsigned N>
+inline Vector<T, N> Vector<T, N>::cross(const Vector& v) const
 {
   std::cout << std::endl <<
     "---------------------------" << std::endl <<
@@ -143,22 +144,22 @@ inline Vector<T, N> Vector<T, N>::cross(const Vector& v) const
   Vector dummy;
   return dummy;
 }
-        
+
 /// assign addition
-template< typename T, unsigned N> 
-inline Vector<T, N> & Vector<T, N>::operator += (const Vector& v) 
+template< typename T, unsigned N>
+inline Vector<T, N> & Vector<T, N>::operator += (const Vector& v)
 {
-  for (unsigned i=0; i<N; ++i) 
-    {
-      data[i] += v[i];
-    }
+  for (unsigned i=0; i<N; ++i)
+  {
+    data[i] += v[i];
+  }
   return *this;
 }
 
 
-template< typename T, unsigned N> 
+template< typename T, unsigned N>
 inline Vector<T, N> Vector<T, N>::unit_vec()
-{ 
+{
   return *this / mag() ;
 }
 
@@ -166,7 +167,7 @@ inline Vector<T, N> Vector<T, N>::unit_vec()
 
 
 // make real vector complex
-template< typename T, unsigned N> 
+template< typename T, unsigned N>
 Vector<std::complex<T>, N> Vector<T, N>::make_complex() const
 {
   Vector<std::complex<T>, N> result;
@@ -177,27 +178,27 @@ Vector<std::complex<T>, N> Vector<T, N>::make_complex() const
 }
 
 // make complex vector real
-template< typename T, unsigned N> 
+template< typename T, unsigned N>
 Vector<double, N> Vector<T, N>::abs() const
 {
   Vector<double, N> result;
   for(unsigned i = 0; i< N; ++i)
     result[i] = std::abs(data[i]);
-  
+
   return result;
 }
 
 
 /// 3D cross product
 template<>
-inline Vector<double, 3> Vector<double, 3>::cross(const Vector<double, 3>& v) const    
+inline Vector<double, 3> Vector<double, 3>::cross(const Vector<double, 3>& v) const
 {
-    Vector<double, 3> result;
-    result[0] = data[1]*v[2]-v[1]*data[2];
-    result[1] = data[2]*v[0]-v[2]*data[0];
-    result[2] = data[0]*v[1]-v[0]*data[1];
-    
-    return result;
+  Vector<double, 3> result;
+  result[0] = data[1]*v[2]-v[1]*data[2];
+  result[1] = data[2]*v[0]-v[2]*data[0];
+  result[2] = data[0]*v[1]-v[0]*data[1];
+
+  return result;
 }
 
 
@@ -206,47 +207,53 @@ inline Vector<double, 3> Vector<double, 3>::cross(const Vector<double, 3>& v) co
 
 
 template< typename T, unsigned N>  /// Vector * Vector
-inline double operator * (const Vector<T, N>& a , const Vector<double, 3>& b ) /// scalar product
+inline double operator * (const Vector<T, N>& a ,
+                          const Vector<double, 3>& b ) /// scalar product
 {
-    return a.dot(b);
+  return a.dot(b);
 }
 
 template< typename T, unsigned N>  /// Vector * scalar
-inline Vector<T,N> operator * (const Vector<T, N> & v, const double a)
+inline Vector<T,N> operator * (const Vector<T, N> & v,
+                               const double a)
 {
-    return v.dot(a);
+  return v.dot(a);
 }
 
 template< typename T, unsigned N>  /// scalar * Vector
-inline Vector<T,N> operator * (const double a, const Vector<T, N> & v)
+inline Vector<T,N> operator * (const double a,
+                               const Vector<T, N> & v)
 {
-    return v.dot(a);
+  return v.dot(a);
 }
 
 template< typename T, unsigned N>  /// Vector / scalar
-inline Vector<T,N> operator / (const Vector<T, N> & v, const double a)
+inline Vector<T,N> operator / (const Vector<T, N> & v,
+                               const double a)
 {
-    return v.dot(1/a);
+  return v.dot(1/a);
 }
 
 template< typename T, unsigned N>  /// cross product --> Vector % Vector
-inline Vector<T,N> operator % (const Vector<T,N> & a, const Vector<T,N> & b)  // cross-product
+inline Vector<T,N> operator % (const Vector<T,N> & a,
+                               const Vector<T,N> & b)  // cross-product
 {
-    return a.cross(b);
+  return a.cross(b);
 }
 
 
 //! \brief output stream used on vector object
-/*! @param os output stream 
- @param v vector  */
+/*! @param os output stream
+    @param v vector  */
 template< typename T, unsigned N>  /// print Vector
-inline std::ostream & operator << (std::ostream & os, const Vector<T,N> & v)
+inline std::ostream & operator << (std::ostream & os,
+                                   const Vector<T,N> & v)
 {
-    os << "(" ;
-    for (unsigned i=0; i<(N-1); ++i) {
-        os << v[i] << " , ";
-    }
-    os << v[N-1] << ")"; 
-    return os;
+  os << "(" ;
+  for (unsigned i=0; i<(N-1); ++i)
+  {
+    os << v[i] << " , ";
+  }
+  os << v[N-1] << ")";
+  return os;
 }
-

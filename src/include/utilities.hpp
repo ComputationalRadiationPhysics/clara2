@@ -19,42 +19,35 @@
  */
 
 
+#pragma once
 
-#ifndef UTILITIES_RPAUSCH
-#define UTILITIES_RPAUSCH
+namespace util
+{
 
-namespace util {
+  //goal: to increase readability of code
 
-    //goal: to increase readability of code
-    
-    template<typename A> /// a generic square function
-    inline A square(A a )
-    {
-        return a*a;
-    }
-    
-    template<typename A, typename R> /// a more generic square function
-    inline R square(A a )
-    {
-        return a*a;
-    }
-    
+  template<typename A> /// a generic square function
+  inline A square(A a )
+  {
+    return a*a;
+  }
 
-    template<typename A> /// a generic cube function
-    inline A cube(A a)
-    {
-        return a*a*a;
-    }
+  template<typename A, typename R> /// a more generic square function
+  inline R square(A a )
+  {
+    return a*a;
+  }
 
-    template<typename A, typename R> /// a more generic cube function
-    inline R cube(A a)
-    {
-        return a*a*a;
-    }
-    
+  template<typename A> /// a generic cube function
+  inline A cube(A a)
+  {
+    return a*a*a;
+  }
+
+  template<typename A, typename R> /// a more generic cube function
+  inline R cube(A a)
+  {
+    return a*a*a;
+  }
+
 }
-
-#endif
-
-
-

@@ -23,15 +23,10 @@
 
 #include <fstream>
 
-#ifndef IMPORT_FROM_FILE_RPAUSCH
-#define IMPORT_FROM_FILE_RPAUSCH
-
+#pragma once
 
 //! \brief simple container to store data from the Clara trace
 /*! usage: one_line x[number of data lines]; then x[i].intern_data[0-6] */
 struct one_line {
-    double intern_data[7]; // simple data structure to handle 7 doubles per line
+  double intern_data[7]; // simple data structure to handle 7 doubles per line
 };
-
-#endif
-

@@ -19,15 +19,19 @@
  */
 
 
-
-
 #include "detector_fft.hpp"
 
 
 // Constructor and Destructor:
-Detector_fft::Detector_fft(R_vec n_unit, unsigned N_data)
-  : n_unit(n_unit.unit_vec()), N_data(N_data), counter(0),
-    time(0), data(0), spektrum_mag(0), frequency(0)
+Detector_fft::Detector_fft(R_vec n_unit,
+                           unsigned N_data)
+  : n_unit(n_unit.unit_vec()),
+    N_data(N_data),
+    counter(0),
+    time(0),
+    data(0),
+    spektrum_mag(0),
+    frequency(0)
 {
   spek_length = power_of_two(N_data);
 
@@ -47,18 +51,16 @@ Detector_fft::~Detector_fft()
 }
 
 
-
-
 // add to spectrum methods:
 
-void Detector_fft::add_to_spectrum(const R_vec r, 
-				   const R_vec beta,
-				   const R_vec dot_beta,
-				   const double t_part,
-				   const double delta_t)
-{	
-  const R_vec fou1 = (n_unit%((n_unit-beta)%dot_beta)) 	
-                        / util::cube(1. - beta * n_unit);
+void Detector_fft::add_to_spectrum(const R_vec r,
+                                   const R_vec beta,
+                                   const R_vec dot_beta,
+                                   const double t_part,
+                                   const double delta_t)
+{
+  const R_vec fou1 = (n_unit%((n_unit-beta)%dot_beta))
+                     / util::cube(1. - beta * n_unit);
 
   assert(counter < spek_length); // --> still necessary? probably not
 
@@ -69,23 +71,23 @@ void Detector_fft::add_to_spectrum(const R_vec r,
 }
 
 
-void Detector_fft::add_to_spectrum(const R_vec r, 
-				   const R_vec p, 
-				   const R_vec dot_p,
-				   const R_vec beta,
-				   const double gamma,
-				   const double dot_gamma,
-				   const double t_part,
-				   const double delta_t)
-{	
-	
+void Detector_fft::add_to_spectrum(const R_vec r,
+                                   const R_vec p,
+                                   const R_vec dot_p,
+                                   const R_vec beta,
+                                   const double gamma,
+                                   const double dot_gamma,
+                                   const double t_part,
+                                   const double delta_t)
+{
+
   const R_vec     p_wave = p/(phy::m_e*phy::c);
   const R_vec dot_p_wave = dot_p/(phy::m_e*phy::c);
 
-  const R_vec fou = (n_unit%((gamma*n_unit - p_wave)%(dot_p_wave 
-		      - beta*dot_gamma))) / util::cube(gamma - p_wave*n_unit)
-                    * gamma;
- 
+  const R_vec fou = (n_unit%((gamma*n_unit - p_wave)%(dot_p_wave
+                      - beta*dot_gamma))) / util::cube(gamma - p_wave*n_unit)
+                     * gamma;
+
   assert(counter < spek_length); // --> still necessary? probably not
 
   time[counter] = t_part - (n_unit*r)/phy::c;
@@ -101,25 +103,20 @@ void Detector_fft::calc_spectrum()
 {
   for (unsigned i= counter; i<spek_length; ++i)
     time[i] = time[counter-1];
-	
-  const double factor = util::square(phy::q)/
-              (16.*util::cube(M_PI)*phy::epsilon_0*phy::c);
 
-  
+  const double factor = util::square(phy::q)
+                        / (16.*util::cube(M_PI)*phy::epsilon_0*phy::c);
+
   ned_FFT<double, R_vec> analyse(spek_length, time, data);
-  //std::cout << "       delta_t_ret = " << analyse.delta_t << std::endl;
-
 
   for(unsigned i=0; i<spek_length; ++i)
-    {      
-      frequency[i] = analyse.omega[i];
-      spektrum_mag[i] = factor * 
-	util::square(analyse.spektrum[i] * analyse.delta_t);
-    }
+  {
+    frequency[i] = analyse.omega[i];
+    spektrum_mag[i] = factor * util::square(analyse.spektrum[i] * analyse.delta_t);
+  }
 }
 
 
-	
 double Detector_fft::get_spectrum(unsigned a, unsigned b)
 {
   assert(a < (spek_length)   );
@@ -144,6 +141,7 @@ double Detector_fft::energy()
   double result = 0;
   for (unsigned i = 0; i < half_frequency(); ++i)
     result += spektrum_mag[i];
+
   result *= (frequency[7] - frequency[6]);
   return result;
 }
@@ -153,4 +151,3 @@ unsigned Detector_fft::half_frequency()
 {
   return spek_length>>1;
 }
-
