@@ -23,14 +23,12 @@
 
 #include <iostream>
 #include<cassert>
-//#include "detector.hpp"
 
-#ifndef LARGE_INDEX_STORAGE_RPAUSCH
-#define LARGE_INDEX_STORAGE_RPAUSCH
+#pragma once
 
 /**
- * \brief  storage class by Richard 
- *  
+ * \brief  storage class by Richard
+ *
  * this class provides a storage systems for large arrays for which
  * there only a few non zero values, which are additionally close together \n
  * usage: Large_index_storage<datatype> n
@@ -41,32 +39,28 @@ template<typename T>
 class Large_index_storage
 {
 public:
-// constructor, destructor:
-    //! \brief constructor 
-    /*! @param N number of possible non zero values (just single segment)
-        @param start starting point of array f.e. x[start - x] x >0 --> is not
-                defined */
-  inline Large_index_storage(const unsigned N, const unsigned start);
-    
+  // constructor, destructor:
+  //! \brief constructor
+  /*! @param N number of possible non zero values (just single segment)
+      @param start starting point of array f.e. x[start - x] x >0 --> is not
+                   defined */
+  inline Large_index_storage(const unsigned N,
+                             const unsigned start);
+
   inline ~Large_index_storage();
 
-    //! \brief direct access to data, returns reference 
-    /*! \param i is equivalent to x[i] */
+  //! \brief direct access to data, returns reference
+  /*! \param i is equivalent to x[i] */
   inline T& operator[](unsigned i);
 
-    //! \brief returns stored data and zero if not in [start, start + N -1]  
-    /*! \param i is equivalent to x[i] */
+  //! \brief returns stored data and zero if not in [start, start + N -1]
+  /*! \param i is equivalent to x[i] */
   inline T operator()(unsigned i);
 
 private:
-    const unsigned N, start;
-    T* signal;
-
+  const unsigned N, start;
+  T* signal;
 
 };
 
 #include "large_index_storage.tpp"
-
-
-#endif
-

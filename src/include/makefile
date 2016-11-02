@@ -23,14 +23,11 @@ CC = g++
 CFLAGS = -Wall -O3 -c
 
 
-all: libDetector.a 
+all: libDetector.a
 
-libDetector.a: detector_e_field.o  detector_dft.o detector_fft.o 
+libDetector.a: detector_e_field.o  detector_dft.o detector_fft.o
 	rm -f libDetector.a
-	ar cr libDetector.a detector_e_field.o detector_dft.o detector_fft.o 
-
-#copy: libDetector.a
-#	cp libDetector.a ..
+	ar cr libDetector.a detector_e_field.o detector_dft.o detector_fft.o
 
 
 # E_field detector:
@@ -44,7 +41,6 @@ detector_dft.o: detector_dft.cpp detector_dft.hpp vector.hpp utilities.hpp
 # Fast Fourier Transformation detectors:
 detector_fft.o: detector_fft.cpp detector_fft.hpp vector.hpp utilities.hpp fft_ned.hpp
 	$(CC) $(CFLAGS) detector_fft.cpp
-
 
 
 # How do I include the detector.hpp <-- vector.hpp dependency

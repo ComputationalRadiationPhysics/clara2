@@ -19,44 +19,44 @@
  */
 
 
-
 #include "large_index_storage.hpp"
 
 
-
 template< typename T>
-inline Large_index_storage<T>::Large_index_storage(const unsigned N, const unsigned start)
-  : N(N), start(start), signal(new T[N]) 
+inline Large_index_storage<T>::Large_index_storage(const unsigned N,
+                                                   const unsigned start)
+  : N(N),
+    start(start),
+    signal(new T[N])
 { }
-    
+
 template<typename T>
 inline Large_index_storage<T>:: ~Large_index_storage()
 {
   delete[] signal;
 }
 
-//! \brief direct access to data, returns reference 
+//! \brief direct access to data, returns reference
 /*! \param i is equivalent to x[i] */
 template<typename T>
 inline T& Large_index_storage<T>::operator[](unsigned i)
 {
-  if (!((i>=start) && (i<start+N))) {
-    std::cout << "Index false: " << i << " -> " 
-	      << start << " - " << start+N<<std::endl;
+  if (!((i>=start) && (i<start+N)))
+  {
+    std::cout << "Index false: " << i << " -> "
+              << start << " - " << start+N<<std::endl;
     assert(false); // aborts a wrong access to data
   }
-  return signal[i-start]; // returns the data 
+  return signal[i-start]; // returns the data
 }
 
-//! \brief returns stored data and zero if not in [start, start + N -1]  
+//! \brief returns stored data and zero if not in [start, start + N -1]
 /*! \param i is equivalent to x[i] */
 template<typename T>
 inline T Large_index_storage<T>::operator()(unsigned i)
 {
   if((i>= start) && (i< start+N))
     return signal[i-start]; // returns data
-  else 
+  else
     return T(0);            // returns zero (or equivalent)
 }
-
-
