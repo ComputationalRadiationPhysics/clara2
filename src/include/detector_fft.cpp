@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Richard Pausch
+ * Copyright 2014-2016 Richard Pausch, Alexander Koehler
  *
  * This file is part of Clara 2.
  *
@@ -22,6 +22,7 @@
 
 
 #include "detector_fft.hpp"
+#include "../settings.hpp"
 
 
 // Constructor and Destructor:
@@ -29,7 +30,7 @@ Detector_fft::Detector_fft(R_vec n_unit, unsigned N_data)
   : n_unit(n_unit.unit_vec()), N_data(N_data), counter(0),
     time(0), data(0), spektrum_mag(0), frequency(0)
 {
-  spek_length = power_of_two(N_data);
+  spek_length = power_of_two(N_data)*fft_length_factor;
 
   //std::cout << "spek_length : " << spek_length << std::endl;
   time = new double[spek_length];
