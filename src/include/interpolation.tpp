@@ -23,74 +23,88 @@
 
 
 template <typename X, typename Y>
-void interpolation(const X* x_old, const Y* y_old, const unsigned N_old, 
-		   const X* x_new,       Y* y_new, const unsigned N_new)
+void interpolation(const X* x_old,
+                   const Y* y_old,
+                   const unsigned N_old,
+                   const X* x_new,
+                   Y* y_new,
+                   const unsigned N_new)
 {
   for(unsigned i_new = 0, i_old = 0; i_new< N_new; ++i_new)
+  {
+    while(x_old[i_old] < x_new[i_new] && i_old < N_old)
+      ++i_old;
+    if(i_old < N_old && i_old > 0)
     {
-      while(x_old[i_old] < x_new[i_new] && i_old < N_old)
-	++i_old;
-      if(i_old < N_old && i_old > 0)
-	{
-	  y_new[i_new] = (Y)((y_old[i_old] - y_old[i_old -1])/(x_old[i_old] - x_old[i_old -1]) * 
-	                    (x_new[i_new] - x_old[i_old -1]) + y_old[i_old -1]);
-	}
-      else 
-	y_new[i_new] = 0;
-    }  
+      y_new[i_new] = (Y)((y_old[i_old] - y_old[i_old -1])/(x_old[i_old] - x_old[i_old -1])
+                         * (x_new[i_new] - x_old[i_old -1]) + y_old[i_old -1]);
+    }
+    else
+    {
+      y_new[i_new] = 0;
+    }
+  }
 }
-
-
 
 
 template <typename X, typename Y>
-void interpolation_on(const X* x_old, const Y* y_old, const unsigned N_old, 
-		      const X* x_new,       Y* y_new, const unsigned N_new)
+void interpolation_on(const X* x_old,
+                      const Y* y_old,
+                      const unsigned N_old,
+                      const X* x_new,
+                      Y* y_new,
+                      const unsigned N_new)
 {
   for(unsigned i_new = 0, i_old = 0; i_new< N_new; ++i_new)
+  {
+    while(x_old[i_old] < x_new[i_new] && i_old < N_old)
+      ++i_old;
+    if(i_old < N_old && i_old > 0)
     {
-      while(x_old[i_old] < x_new[i_new] && i_old < N_old)
-	++i_old;
-      if(i_old < N_old && i_old > 0)
-	{
-	  y_new[i_new] += (Y)((y_old[i_old] - y_old[i_old -1])/(x_old[i_old] - x_old[i_old -1]) * 
-	                    (x_new[i_new] - x_old[i_old -1]) + y_old[i_old -1]);
-	}
-      else 
-	y_new[i_new] += (Y)0;  // could be skipped
-    }  
+      y_new[i_new] += (Y)((y_old[i_old] - y_old[i_old -1])/(x_old[i_old] - x_old[i_old -1])
+                          * (x_new[i_new] - x_old[i_old -1]) + y_old[i_old -1]);
+    }
+    else
+    {
+      y_new[i_new] += (Y)0;  // could be skipped
+    }
+  }
 }
 
 
-
-void interpolation_on(Detector_fft* fft, 
-		      const double* x_new,  double* y_new, const unsigned N_new)
+void interpolation_on(Detector_fft* fft,
+                      const double* x_new,
+                      double* y_new,
+                      const unsigned N_new)
 {
   unsigned N_old = fft->half_frequency();
 
   for(unsigned i_new = 0, i_old = 0; i_new< N_new; ++i_new)
+  {
+    while(fft->get_spectrum(i_old, 0) < x_new[i_new] && i_old < N_old)
+      ++i_old;
+    if(i_old < N_old && i_old > 0)
     {
-      while(fft->get_spectrum(i_old, 0) < x_new[i_new] && i_old < N_old)
-	++i_old;
-      if(i_old < N_old && i_old > 0)
-	{
-	  y_new[i_new] += ((fft->get_spectrum(i_old, 1) - fft->get_spectrum(i_old-1, 1))/(fft->get_spectrum(i_old, 0) - fft->get_spectrum(i_old-1, 0)) * 
-	                    (x_new[i_new] - fft->get_spectrum(i_old-1, 0)) + fft->get_spectrum(i_old-1, 1));
-	}
-      else 
-	y_new[i_new] += 0;  // could be skipped
-    }  
+      y_new[i_new] += ((fft->get_spectrum(i_old, 1) - fft->get_spectrum(i_old-1, 1))/(fft->get_spectrum(i_old, 0) - fft->get_spectrum(i_old-1, 0))
+                       * (x_new[i_new] - fft->get_spectrum(i_old-1, 0)) + fft->get_spectrum(i_old-1, 1));
+    }
+    else
+    {
+      y_new[i_new] += 0;  // could be skipped
+    }
+  }
 }
 
-void interpolation_int(Detector_fft* fft, 
-		       const double* x_new,       double* y_new, const unsigned N_new)
+
+void interpolation_int(Detector_fft* fft,
+                       const double* x_new,
+                       double* y_new,
+                       const unsigned N_new)
 {
   unsigned N_old = fft->half_frequency();
   unsigned total_counter =0;
   unsigned j=0;
 
-  //std::cout << " started integrated interpolation: " << N_old << std::endl;
-    
   //in between:
   for(unsigned  i=0; i<N_new; ++i)
   {
@@ -102,17 +116,17 @@ void interpolation_int(Detector_fft* fft,
       x_low  = x_new[i];
     }
     else if(i==N_new-1)
-	{
-	  x_high = x_new[i];
-	  x_low  = 0.5 * (x_new[i-1] +  x_new[i]);
-	}
+    {
+      x_high = x_new[i];
+      x_low  = 0.5 * (x_new[i-1] +  x_new[i]);
+    }
     else
     {
       x_high = 0.5 * (x_new[i] + x_new[i+1]);
       x_low  = 0.5 * (x_new[i-1] +  x_new[i]);
     }
 
-      
+
     unsigned counter=0;
     double sum = 0.0;
 
@@ -122,7 +136,7 @@ void interpolation_int(Detector_fft* fft,
       counter++;
       sum += fft->get_spectrum(j, 1);
       ++j;
-	}
+    }
 
     if (counter == 0) // this avoids a NaN if the bin does not contain any data
     {
@@ -132,11 +146,8 @@ void interpolation_int(Detector_fft* fft,
     {
       y_new[i] += sum/counter;
     }
-    //std::cout << "  ->" << counter << std::flush;
+
     total_counter += counter;
 
   }
-  //std::cout << std::endl << " total: " << total_counter << std::endl;
-  //std::cout << "omega_max " << "old: " << fft->get_spectrum(N_old-1, 0) 
-  //	    << "  new: " << x_new[N_new-1]  << std::endl;
 }

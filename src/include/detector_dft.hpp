@@ -29,72 +29,63 @@
 #include "physics_units.hpp"
 #include "utilities.hpp"
 
-
-
-#ifndef DETECTOR_DFT_RPAUSCH
-#define DETECTOR_DFT_RPAUSCH
+#pragma once
 
 //! \brief class for a point-like detector storing the signal externally
 class Detector_dft
 {
 public:
     //! \brief constructor for a spectral detector
-    /*! 
+    /*!
        @param n_unit   = unit vector in direction of energy deposition
        @param delta_t  = time step of odint
      */
-  Detector_dft(R_vec n_unit, const unsigned spek_length,
-	       const double omega_max);
+  Detector_dft(R_vec n_unit,
+               const unsigned spek_length,
+               const double omega_max);
 
-  Detector_dft(R_vec n_unit, const unsigned spek_length,
-	       const double* omega);
+  Detector_dft(R_vec n_unit,
+               const unsigned spek_length,
+               const double* omega);
 
 
-  ~Detector_dft();	
-	
-  void add_to_spectrum(const R_vec r_0, 
-		       const R_vec beta_0,
-		       const R_vec dot_beta_0,
-               const double t_part_0,
-               const double delta_t);
-	
-  void add_to_spectrum(const R_vec r_0, 
-		       const R_vec p_0, 
-		       const R_vec dot_p_0,
-		       const R_vec beta_0,
-		       const double gamma_0,
-		       const double dot_gamma_0,
-               const double t_part_0,
-               const double delta_t);
+  ~Detector_dft();
+
+  void add_to_spectrum(const R_vec r_0,
+                       const R_vec beta_0,
+                       const R_vec dot_beta_0,
+                       const double t_part_0,
+                       const double delta_t);
+
+  void add_to_spectrum(const R_vec r_0,
+                       const R_vec p_0,
+                       const R_vec dot_p_0,
+                       const R_vec beta_0,
+                       const double gamma_0,
+                       const double dot_gamma_0,
+                       const double t_part_0,
+                       const double delta_t);
 
   void calc_spectrum();
 
-  double get_spectrum(unsigned a, unsigned b);
+  double get_spectrum(unsigned a,
+                      unsigned b);
 
   double energy();
 
-
-
-private:
-  // data:		
-  const R_vec n_unit;
-  const  unsigned spek_length;
-
-
-public: // debugging
+// debugging
   Vector<std::complex<double>, 3>* spektrum;
 
 private:
+  // data:
+  const R_vec n_unit;
+  const  unsigned spek_length;
+
   double* spektrum_mag;
   double* frequency;
-
 
   // set frequency methods:
   inline void set_frequency(const double omega_max);
   inline void set_frequency(const double* omega);
 
 };
-
-
-#endif
-
