@@ -1,4 +1,4 @@
-# Copyright 2014-2016 Richard Pausch
+# Copyright 2014-2016 Richard Pausch, Alexander Koehler
 #
 # This file is part of Clara 2.
 #
@@ -61,17 +61,17 @@ ARRAY_main:  main.cpp all_directions.hpp
 single_trace.o: single_trace.hpp single_trace.cpp ./include/detector_e_field.hpp ./include/detector_dft.hpp \
              ./include/detector_fft.hpp ./include/vector.hpp ./include/import_from_file.hpp ./include/discrete.hpp \
              ./run_through_data.hpp ./include/load_txt.hpp ./include/analytical_solution.hpp ./include/interpolation.hpp \
-             ./include/interpolation.tpp
+             ./include/interpolation.tpp 
 	$(CC) $(CFLAGS) $(COBJ) $(CFLAGFORTRAN) $(OMP) -I./include/ single_trace.cpp
 
-all_directions.o: all_directions.cpp all_directions.hpp single_trace.hpp ./include/vector.hpp ./include/string_manipulation.hpp
+all_directions.o: all_directions.cpp all_directions.hpp single_trace.hpp ./include/vector.hpp ./include/string_manipulation.hpp settings.hpp
 	$(CC) $(CFLAGS) $(COBJ) $(OMP) $(ZIP) -I./include/ all_directions.cpp
 
 
 # How do I include the detector.hpp <-- vector.hpp dependency
 
 
-process: process_data.cpp
+process: process_data.cpp settings.hpp
 	$(CC) $(CFLAGS) $(ZIP) process_data.cpp -o process_data
 
 convert_to_matrix: convert_to_matrix.cpp
