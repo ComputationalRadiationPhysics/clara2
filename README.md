@@ -7,7 +7,7 @@ Clara2 - a parallel classical radiation calculator based on Liénard-Wiechert po
 Introduction
 ------------
 
-Clara stands for CLAsical RAdiation and is a redevelopment from scratch of [Clara1](https://github.com/ComputationalRadiationPhysics/clara1).
+Clara stands for CLAssical RAdiation and is a redevelopment from scratch of [Clara1](https://github.com/ComputationalRadiationPhysics/clara1).
 It has been developed as part of a [diploma thesis](http://www.hzdr.de/db/Cms?pOid=38997) in 2012.
 In contrast to [Clara1](https://github.com/ComputationalRadiationPhysics/clara1) it is parallelized using MPI and OpenMP to run efficiently on large CPU clusters. 
 
@@ -28,5 +28,5 @@ Software License
 ----------------
 
 *Clara2* is licensed under the **GPLv3+**. You can use any of our *libraries* with
-**GPLv3+ or LGPLv3+** (they are *dual licensed*).
+**GPLv3+ or LGPLv3+** (they are *dual-licensed*).
 Please refer to our [LICENSE](LICENSE)
