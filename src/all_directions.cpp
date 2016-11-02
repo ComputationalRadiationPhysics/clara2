@@ -157,7 +157,7 @@ int all_directions(const unsigned int trace_id, const char arg[])
 
   /* TO DO: SIMPLIFY THIS BY USING SPRINTF() */
   /* set directory where to find the data: */
-  const char directory[] = "/bigdata/hplsim/production/LWFA_betatron/clara2/runs/011-increase-theta_max-traces/";
+  const char directory[] = "/net/cns/projects/HPLsim/xray/debus/ELBEThomson/basicRun2/";
   /* set name of trajectory file before index appears in file name: */
   const char prefix[] = "trace_";
   /* set name of file after index is used */
