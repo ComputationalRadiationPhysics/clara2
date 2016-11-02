@@ -24,14 +24,11 @@
 #include "utilities.hpp"
 #include "physics_units.hpp"
 
-#ifndef ANALYTICAL_SOLUTION_RPAUSCH
-#define ANALYTICAL_SOLUTION_RPAUSCH
-
+#pragma once
 
 
 namespace analy
 {
-
 
 const int N_per = 225;
 const double lambda_u = 0.4E-6;
@@ -47,37 +44,31 @@ using namespace std;
 double L(double x)
 {
   return (util::square(sin(M_PI*x))) / (util::square(N_per*sin(M_PI*x/N_per)));
-	  
 }
 
 double L2(double x)
 {
   return (util::square(sin(M_PI*x))) / (util::square(M_PI*x));
-	  
 }
-
-
 
 double Lambda(double gamma)
 {
   return lambda_u/(2*util::square(gamma)) * (1. + util::square(K)/2.);
 }
 
-double Spectrum(double omega, double gamma)
+double Spectrum(double omega,
+                double gamma)
 {
-  return util::square(phy::q*N_per*gamma)/
-    (4.*M_PI*phy::epsilon_0*phy::c) * 
-    L(N_per*(omega-2.*M_PI*phy::c/Lambda(gamma))/(2.*M_PI*phy::c / 
-						  Lambda(gamma))  )
+  return util::square(phy::q*N_per*gamma)/(4.*M_PI*phy::epsilon_0*phy::c)
+    * L(N_per*(omega-2.*M_PI*phy::c/Lambda(gamma))/(2.*M_PI*phy::c / Lambda(gamma)) )
     * F_approx;
 }
 
-double Spectrum2(double omega, double gamma)
+double Spectrum2(double omega,
+                 double gamma)
 {
-  return util::square(phy::q*N_per*gamma)/
-    (4.*M_PI*phy::epsilon_0*phy::c) * 
-    L2(N_per*(omega-2.*M_PI*phy::c/Lambda(gamma))/(2.*M_PI*phy::c / 
-						  Lambda(gamma))  )
+  return util::square(phy::q*N_per*gamma)/(4.*M_PI*phy::epsilon_0*phy::c)
+    * L2(N_per*(omega-2.*M_PI*phy::c/Lambda(gamma))/(2.*M_PI*phy::c / Lambda(gamma)) )
     * F_approx;
 }
 
@@ -86,12 +77,9 @@ double Spectrum2(double omega, double gamma)
 void calc_K(double gamma)
 {
   K = 0.0569; //phy::q * Bmax * lambda_u / (2. * M_PI * phy::m_e * phy::c);
-  F_approx = util::square(K * n_mode) / util::square(1. + util::square(K)/2.) ;
+  F_approx = util::square(K * n_mode) / util::square(1. + util::square(K)/2.);
 
   std::cout << " K= " << K << "\t F_approx = " << F_approx << std::endl;
 }
 
-
 }
-
-#endif

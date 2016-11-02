@@ -19,32 +19,39 @@
  */
 
 
-
-#ifndef INTERPOLATION_RPAUSCH
-#define INTERPOLATION_RPAUSCH
+#pragma once
 
 #include "detector_fft.hpp"
 
 template <typename X, typename Y>
-void interpolation(const X* x_old, const Y* y_old, const unsigned N_old, 
-		   const X* x_new,       Y* y_new, const unsigned N_new);
-
+void interpolation(const X* x_old,
+                   const Y* y_old,
+                   const unsigned N_old,
+                   const X* x_new,
+                   Y* y_new,
+                   const unsigned N_new);
 
 
 template <typename X, typename Y>
-void interpolation_on(const X* x_old, const Y* y_old, const unsigned N_old, 
-		      const X* x_new,       Y* y_new, const unsigned N_new);
+void interpolation_on(const X* x_old,
+                      const Y* y_old,
+                      const unsigned N_old,
+                      const X* x_new,
+                      Y* y_new,
+                      const unsigned N_new);
+
 
 template <typename X, typename Y>
-void interpolation_on(const Detector_fft* fft, 
-		      const X* x_new,       Y* y_new, const unsigned N_new);
+void interpolation_on(const Detector_fft* fft,
+                      const X* x_new,
+                      Y* y_new,
+                      const unsigned N_new);
 
 
-void interpolation_int(Detector_fft* fft, 
-		       const double* x_new,       double* y_new, const unsigned N_new);
-
+void interpolation_int(Detector_fft* fft,
+                       const double* x_new,
+                       double* y_new,
+                       const unsigned N_new);
 
 
 #include "interpolation.tpp"
-
-#endif

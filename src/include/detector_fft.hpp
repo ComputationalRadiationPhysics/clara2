@@ -31,59 +31,53 @@
 #include "utilities.hpp"
 #include "fft_ned.hpp"
 
-
-
-#ifndef DETECTOR_FFT_RPAUSCH
-#define DETECTOR_FFT_RPAUSCH
+#pragma once
 
 //! \brief class for a point-like detector storing the signal externally
 class Detector_fft
 {
 public:
   //! \brief constructor for a point-like detector
-  /*! 
-     @param n_unit   = unit vector in direction of energy deposition
-     @param delta_t  = time step of odint
+  /*!
+    @param n_unit   = unit vector in direction of energy deposition
+    @param delta_t  = time step of odint
   */
   Detector_fft(R_vec n_unit, unsigned N_data);
 
   ~Detector_fft();
 
-  void add_to_spectrum(const R_vec r_0, 
-		       const R_vec beta_0,
-		       const R_vec dot_beta_0,
-		       const double t_part_0,
-		       const double delta_t);
+  void add_to_spectrum(const R_vec r_0,
+                       const R_vec beta_0,
+                       const R_vec dot_beta_0,
+                       const double t_part_0,
+                       const double delta_t);
 
 
-  void add_to_spectrum(const R_vec r_0, 
-		       const R_vec p_0, 
-		       const R_vec dot_p_0,
-		       const R_vec beta_0,
-		       const double gamma_0,
-		       const double dot_gamma_0,
-		       const double t_part_0,
-		       const double delta_t);
-	
+  void add_to_spectrum(const R_vec r_0,
+                       const R_vec p_0,
+                       const R_vec dot_p_0,
+                       const R_vec beta_0,
+                       const double gamma_0,
+                       const double dot_gamma_0,
+                       const double t_part_0,
+                       const double delta_t);
+
 
   void calc_spectrum();
 
-	
   double get_spectrum(unsigned a, unsigned b);
 
   double energy();
 
   unsigned half_frequency();
 
+//data:
 private:
 
-  //data:
-  
   const R_vec n_unit;
   // delta_t; // necessary for integration
   const unsigned N_data;
 
-  //public:  // --> better to private !!!
   unsigned spek_length;
   unsigned counter;
 
@@ -94,9 +88,5 @@ private:
 
 public:
   double* frequency;
-	
+
 };
-
-
-#endif
-
