@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Richard Pausch
+ * Copyright 2014-2016 Richard Pausch, Alexander Koehler
  *
  * This file is part of Clara 2.
  *
@@ -25,6 +25,7 @@
 #include <fstream>
 #include <sstream>
 #include "gzip_lib.hpp"
+#include "settings.hpp"
 
 template<typename T, unsigned int N>
 struct spectrum
@@ -53,11 +54,6 @@ int main(int argc, char * const argv[])
 
 
   using namespace std;
-  const unsigned int index_files_first = 0;
-  const unsigned int index_files_last = 2000;
-  const unsigned int N_omega = 2048;
-  const unsigned int N_theta = 120;
-  const unsigned int N_phi = 2;
   const unsigned int N_direction = N_theta*N_phi;
   const char input_pattern[] = "my_spectrum_trace%06d.dat";
   const char output_pattern[] = "my_spectrum_all_%03d.dat";
