@@ -158,7 +158,7 @@ inline Vector<T, N> & Vector<T, N>::operator += (const Vector& v)
 
 
 template< typename T, unsigned N>
-inline Vector<T, N> Vector<T, N>::unit_vec()
+inline Vector<T, N> Vector<T, N>::unit_vec() const
 {
   return *this / mag() ;
 }
