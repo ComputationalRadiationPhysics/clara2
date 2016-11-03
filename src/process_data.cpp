@@ -25,6 +25,7 @@
 #include <sstream>
 #include "gzip_lib.hpp"
 #include "settings.hpp"
+#include "setFilename.hpp"
 
 
 template<typename T, unsigned int N>
@@ -55,8 +56,6 @@ int main(int argc, char * const argv[])
 
   using namespace std;
   const unsigned int N_direction = N_theta*N_phi;
-  const char input_pattern[] = "my_spectrum_trace%06d.dat";
-  const char output_pattern[] = "my_spectrum_all_%03d.dat";
   const unsigned int N_split = 8;
 
   spectrum<double, N_omega>* data = new spectrum<double, N_omega>[N_direction];
@@ -86,8 +85,8 @@ int main(int argc, char * const argv[])
   // ----- run through all input files -------
   for(unsigned int index_files = index_files_first; index_files <= index_files_last; ++index_files)
   {
-    char filename[256];
-    sprintf(filename, input_pattern, index_files);
+    char filename[N_char_filename];
+    setFilename(filename, outputFileTemplate, index_files, N_char_filename);
 
     // ------ read input file ------
     if(ascii_input)
@@ -155,8 +154,9 @@ int main(int argc, char * const argv[])
   std::cout << "store data" << std::endl;
   for(unsigned int index_phi = 0; index_phi < N_phi; ++index_phi)
   {
-    char output_filename[256];
-    sprintf(output_filename, output_pattern, index_phi);
+    char output_filename[N_char_filename];
+    setFilename(output_filename, output_pattern, index_phi, N_char_filename);
+
     std::ofstream output(output_filename);
     if(output.is_open())
     {
@@ -183,8 +183,8 @@ int main(int argc, char * const argv[])
   std::cout << "deleting files" << std::endl;
   for(unsigned int index_files = index_files_first; index_files <= index_files_last; ++index_files)
   {
-    char filename[256];
-    sprintf(filename, input_pattern, index_files);
+    char filename[N_char_filename];
+    setFilename(filename, outputFileTemplate, index_files, N_char_filename);
 
     if(remove(filename) == 0)
       std::cout << "removed: " << filename << std::endl;
