@@ -33,22 +33,22 @@ ARRAYFLAG= -D__PARALLEL_SETTING__=2
 MPICC=mpic++
 
 
-CFLAGFORTRAN = #-DCHECK_FOR_FORTRAN_ERROR 
+CFLAGFORTRAN = #-DCHECK_FOR_FORTRAN_ERROR
 # in case one need to check for FORTRAN output errors
 
 
 
 all: subsystem MPI process convert_to_matrix
 
-subsystem: 
+subsystem:
 	$(MAKE) -C ./include/
 
 
 MPI: MPI_main all_directions.o ./include/libDetector.a single_trace.o
-	$(MPICC) $(CFLAGS) $(OMP) $(ZIP) main.o all_directions.o single_trace.o ./include/libDetector.a -o executable
+	$(MPICC) $(CFLAGS) $(OMP) $(ZIP) main.o all_directions.o single_trace.o ./include/libDetector.a ./include/fileExists.o -o executable
 
 ARRAY: ARRAY_main all_directions.o ./include/libDetector.a single_trace.o
-	$(CC) $(CFLAGS) $(OMP) $(ZIP) main.o all_directions.o single_trace.o ./include/libDetector.a -o executable
+	$(CC) $(CFLAGS) $(OMP) $(ZIP) main.o all_directions.o single_trace.o ./include/libDetector.a ./include/fileExists.o -o executable
 
 
 MPI_main: main.cpp all_directions.hpp
@@ -59,9 +59,9 @@ ARRAY_main:  main.cpp all_directions.hpp
 
 # main routine:
 single_trace.o: single_trace.hpp single_trace.cpp ./include/detector_e_field.hpp ./include/detector_dft.hpp \
-             ./include/detector_fft.hpp ./include/vector.hpp ./include/import_from_file.hpp ./include/discrete.hpp \
-             ./run_through_data.hpp ./include/load_txt.hpp ./include/analytical_solution.hpp ./include/interpolation.hpp \
-             ./include/interpolation.tpp 
+			 ./include/detector_fft.hpp ./include/vector.hpp ./include/import_from_file.hpp ./include/discrete.hpp \
+			 ./run_through_data.hpp ./include/load_txt.hpp ./include/analytical_solution.hpp ./include/interpolation.hpp \
+			 ./include/interpolation.tpp ./include/fileExists.hpp ./include/fileExists.cpp
 	$(CC) $(CFLAGS) $(COBJ) $(CFLAGFORTRAN) $(OMP) -I./include/ single_trace.cpp
 
 all_directions.o: all_directions.cpp all_directions.hpp single_trace.hpp ./include/vector.hpp ./include/string_manipulation.hpp settings.hpp setFilename.hpp
@@ -74,8 +74,8 @@ all_directions.o: all_directions.cpp all_directions.hpp single_trace.hpp ./inclu
 process: process_data.cpp settings.hpp setFilename.hpp
 	$(CC) $(CFLAGS) $(ZIP) process_data.cpp -o process_data
 
-convert_to_matrix: convert_to_matrix.cpp
-	$(CC) $(CFLAGS) convert_to_matrix.cpp -o convert_to_matrix
+convert_to_matrix: convert_to_matrix.cpp ./include/fileExists.hpp ./include/fileExists.cpp
+	$(CC) $(CFLAGS) convert_to_matrix.cpp ./include/fileExists.o -o convert_to_matrix
 
 clean:
 	rm -f *o
