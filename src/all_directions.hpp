@@ -18,21 +18,17 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#ifndef ALL_DIRECTIONS_RPAUSCH
-#define ALL_DIRECTIONS_RPAUSCH
+#pragma once
 
 /**
  * function that calculates spectra in different directions for
  * a single particle trace
  *
- * @param trace_id a unique id which which the trajectory file 
- *                  can be identified 
- * @param arg  a string telling whether a "binary" or "ascii" 
+ * @param trace_id a unique id which which the trajectory file
+ *                  can be identified
+ * @param arg  a string telling whether a "binary" or "ascii"
  *              output should be used
  * @return error code
  **/
-int all_directions(const unsigned int trace_id, const char arg[]);
-
-#endif
-
+int all_directions(const unsigned int trace_id,
+                   const char arg[]);
