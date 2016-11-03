@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 Alexander Koehler
+ * Copyright 2016 Alexander Koehler, Richard Pausch
  *
  * This file is part of Clara 2.
  *
@@ -30,7 +30,12 @@ const unsigned int N_trace             = 2000;    /* maximum number of traces */
 
 const unsigned int fft_length_factor   = 1;
 
+const unsigned int N_char_filename=256; // number of characters
+const char traceFileTemplate[] = "/net/cns/projects/HPLsim/xray/debus/ELBEThomson/basicRun2/trace_%04d.txt";
+const char outputFileTemplate[] = "my_spectrum_trace%06d.dat";
+
 // explicit for process_data
 const unsigned int N_omega             = N_spectrum;
 const unsigned int index_files_first   = 0;
 const unsigned int index_files_last    = N_trace;
+const char output_pattern[] = "my_spectrum_all_%03d.dat";

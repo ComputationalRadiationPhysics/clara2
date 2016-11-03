@@ -18,36 +18,26 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 #include "all_directions.hpp"
-
-
-
 
 #include <iostream>
 #include <string>
 #include <cassert>
 #include <cstdlib>
-
 #include <stdlib.h>
 #include <sys/time.h>
 #include <omp.h>  // OpenMP
 
 #include "single_trace.hpp"
-
 #include "vector.hpp"
 #include "analytical_solution.hpp"
 #include "physics_units.hpp"
 #include "string_manipulation.hpp"
-
-
 #include "import_from_file.hpp"
 #include "load_txt.hpp"
 #include "gzip_lib.hpp"
 #include "settings.hpp"
-
-
+#include "setFilename.hpp"
 
 
 /**
@@ -143,45 +133,26 @@ int all_directions(const unsigned int trace_id,
 
   /* ------- location of data ----------------------- */
 
-  /* TO DO: SIMPLIFY THIS BY USING SPRINTF() */
-  /* set directory where to find the data: */
-  const char directory[] = "/net/cns/projects/HPLsim/xray/debus/ELBEThomson/basicRun2/";
-  /* set name of trajectory file before index appears in file name: */
-  const char prefix[] = "trace_";
-  /* set name of file after index is used */
-  const char postfix[] = ".txt";
-
-  /* join all parts together and store path to file in "filename" */
-  char filename[256];
-  if(sprintf(filename,
-         "%s%s%04d%s",
-         directory,
-         prefix,
-         trace_id,
-         postfix) > 254)
-  {
-    /* throw warning when buffer is to small for path name */
-    std::cerr << "buffer  to small!!! " << std::endl;
-    throw "Buffer to small!";
-  }
+  char filenameTrace[N_char_filename];
+  setFilename(filenameTrace, traceFileTemplate, trace_id, N_char_filename);
   /* print out path name in order to check it in output files */
-  std::cout << "check: filename: " << filename << std::endl;
+  std::cout << "check: filename: " << filenameTrace << std::endl;
 
 
   /* -------- load trace from file ------- */
 
   /* check if given file exists */
-  if(!file_exists(filename))
+  if(!file_exists(filenameTrace))
     return 1;
 
   /* output to inform user that file is loaded */
-  std::cout << "load file: " << filename << std::endl;
+  std::cout << "load file: " << filenameTrace << std::endl;
 
   /* create memory */
-  const unsigned linenumber = linecounter(filename); /* get lines of data */
+  const unsigned linenumber = linecounter(filenameTrace); /* get lines of data */
   one_line* data = new one_line[linenumber]; /* get memory for data */
   /* run function that fills data from file into "data": */
-  load_txt(filename, linenumber, data);
+  load_txt(filenameTrace, linenumber, data);
 
 
 
@@ -211,19 +182,10 @@ int all_directions(const unsigned int trace_id,
 
   /* ------- outputfile ------------------------------ */
   /* allocate memory for name of output file */
-  char outputfilename[256];
-
-  /* fill output file for each trace_id based on template */
-  if(sprintf(outputfilename,
-             "my_spectrum_trace%06d.dat",
-             trace_id) > 254)
-  {
-    std::cerr << "buffer  to small!!! " << std::endl;
-    throw "Buffer to small!";
-  }
+  char outputfilename[N_char_filename];
+  setFilename(outputfilename, outputFileTemplate, trace_id, N_char_filename);
   /* print name of output file */
   std::cout << "check: output-filename: " << outputfilename << std::endl;
-
 
 
   /* --- file output ------------- */
