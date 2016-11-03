@@ -38,7 +38,7 @@ CFLAGFORTRAN = #-DCHECK_FOR_FORTRAN_ERROR
 
 
 
-all: subsystem MPI process convert_to_matrix
+all: subsystem MPI process
 
 subsystem:
 	$(MAKE) -C ./include/
@@ -74,11 +74,7 @@ all_directions.o: all_directions.cpp all_directions.hpp single_direction.hpp ./i
 process: process_data.cpp settings.hpp setFilename.hpp
 	$(CC) $(CFLAGS) $(ZIP) process_data.cpp -o process_data
 
-convert_to_matrix: convert_to_matrix.cpp ./include/fileExists.hpp ./include/fileExists.cpp
-	$(CC) $(CFLAGS) convert_to_matrix.cpp ./include/fileExists.o -o convert_to_matrix
-
 clean:
 	rm -f *o
 	rm executable
 	rm process_data
-	rm convert_to_matrix
