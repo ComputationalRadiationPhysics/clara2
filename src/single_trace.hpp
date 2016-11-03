@@ -36,6 +36,7 @@ using namespace std;
 #include "detector_fft.hpp"
 #include "import_from_file.hpp"
 #include "physics_units.hpp"
+#include "fileExists.hpp"
 
 /* only needed for near field calculation
  * REMOVE ? */
@@ -60,13 +61,3 @@ int single_trace(const one_line* data,
                  const unsigned N_all_spec,
                  const double theta_offset = 0.0,
                  const double phi_offset = 0.0);
-
-
-/* TO DO: this should be in a separate file - ISSUE #15 */
-/**
- * check whether a file exists or not
- *
- * @param filename pointer to array containing file location
- * @return Returs true if file exists, otherwise false.
- **/
-bool file_exists(const char *filename);

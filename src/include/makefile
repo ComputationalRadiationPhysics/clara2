@@ -23,7 +23,7 @@ CC = g++
 CFLAGS = -Wall -O3 -c
 
 
-all: libDetector.a
+all: libDetector.a fileExists.o
 
 libDetector.a: detector_e_field.o  detector_dft.o detector_fft.o
 	rm -f libDetector.a
@@ -42,6 +42,8 @@ detector_dft.o: detector_dft.cpp detector_dft.hpp vector.hpp utilities.hpp
 detector_fft.o: detector_fft.cpp detector_fft.hpp vector.hpp utilities.hpp fft_ned.hpp ../settings.hpp
 	$(CC) $(CFLAGS) detector_fft.cpp
 
+fileExists.o: fileExists.hpp fileExists.cpp
+	$(CC) $(CFLAGS) fileExists.cpp
 
 # How do I include the detector.hpp <-- vector.hpp dependency
 
