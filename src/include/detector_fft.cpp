@@ -24,8 +24,8 @@
 
 
 // Constructor and Destructor:
-Detector_fft::Detector_fft(R_vec n_unit,
-                           unsigned N_data)
+Detector_fft::Detector_fft(const R_vec n_unit,
+                           const unsigned N_data)
   : n_unit(n_unit.unit_vec()),
     N_data(N_data),
     counter(0),
