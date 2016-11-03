@@ -90,6 +90,8 @@ int main(void)
     freopen("/dev/tty", "w", stdout);
     freopen("/dev/tty", "w", stderr);
 
+    if(return_value != 0)
+      std::cerr << "error occured in rank " << i << std::endl;
 
     /* this commented-out section is a method to stop the calculation if a certain
      * file is found on the hard drive - currently not used

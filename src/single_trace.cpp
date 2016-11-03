@@ -58,13 +58,6 @@ int single_trace(const one_line* data,
   //////////////////////////////////////////////////////////////
 
 
-  /* ---------- time steps : delta_t ---------------------- */
-
-  /* get time step width "delta_t=stepwidth" from data */
-  /* WARNING: HERE KNOWLEDGE ON DATA STRUCTURE IS REQUIRED - ISSUE #11 */
-  double stepwidth = (data[6].intern_data[6] -data[5].intern_data[6]);
-
-
   /* ----------------------- detectors ------------------------ */
   /* creating the "looking vector" for the "detector class object"
    * that "observes" the emitted radiation in the far field */
