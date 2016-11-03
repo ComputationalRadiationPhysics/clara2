@@ -64,14 +64,14 @@ single_trace.o: single_trace.hpp single_trace.cpp ./include/detector_e_field.hpp
              ./include/interpolation.tpp 
 	$(CC) $(CFLAGS) $(COBJ) $(CFLAGFORTRAN) $(OMP) -I./include/ single_trace.cpp
 
-all_directions.o: all_directions.cpp all_directions.hpp single_trace.hpp ./include/vector.hpp ./include/string_manipulation.hpp settings.hpp
+all_directions.o: all_directions.cpp all_directions.hpp single_trace.hpp ./include/vector.hpp ./include/string_manipulation.hpp settings.hpp setFilename.hpp
 	$(CC) $(CFLAGS) $(COBJ) $(OMP) $(ZIP) -I./include/ all_directions.cpp
 
 
 # How do I include the detector.hpp <-- vector.hpp dependency
 
 
-process: process_data.cpp settings.hpp
+process: process_data.cpp settings.hpp setFilename.hpp
 	$(CC) $(CFLAGS) $(ZIP) process_data.cpp -o process_data
 
 convert_to_matrix: convert_to_matrix.cpp
