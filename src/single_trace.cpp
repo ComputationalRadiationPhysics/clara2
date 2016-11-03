@@ -45,49 +45,23 @@ int single_trace(const one_line* data,
                  const double theta_offset,
                  const double phi_offset)
 {
-  ////////////////////////////////////////////////////////////
-  /* CHANGE THIS: */
-  /* this are the remaining of the old program
-   * structure, where several directions were calculated
-   * right here - ISSUE #12 */
-
-  const unsigned N_angle_theta = 1;
-  const unsigned N_angle_phi   = 1;
-
-
-  //////////////////////////////////////////////////////////////
-
 
   /* ----------------------- detectors ------------------------ */
   /* creating the "looking vector" for the "detector class object"
    * that "observes" the emitted radiation in the far field */
 
-  /* creating different angles: */
-  /* TO DO: SINCE ONLY A SINGLE DIRECTION IS CALCULATED IN THIS FUNCTION
-   * THE ARRAY SETUP IS OBSOLETE  - ISSUE #12 */
-  R_vec looking_vector[N_angle_theta * N_angle_phi];
-  double angle_theta[N_angle_theta];
-  double angle_phi[N_angle_phi];
+  /* setup observation direction: */
+  R_vec looking_vector;
+  double angle_theta;
+  double angle_phi;
 
-  for(unsigned i=0; i< N_angle_theta; ++i)
-  {
-    angle_theta[i] = (double(i)/double(N_angle_theta)) * M_PI * 0.5 + theta_offset/180.0 * M_PI;
-  }
+  angle_theta = theta_offset/180.0 * M_PI;
 
-  for(unsigned i=0; i< N_angle_phi; ++i)
-  {
-    angle_phi[i] = (double(i)/double(N_angle_phi))*1.0 * M_PI + phi_offset/180.0 * M_PI;
-  }
-
-  for (unsigned a=0; a<N_angle_theta; ++a)
-  {
-    for (unsigned b=0; b<N_angle_phi; ++b)
-    {
-      looking_vector[a*N_angle_phi+b] = R_vec(std::cos(angle_theta[a]) ,
-                                              std::sin(angle_theta[a]) * std::cos(angle_phi[b])  ,
-                                              std::sin(angle_theta[a]) * std::sin(angle_phi[b]) );
-    }
-  }
+  angle_phi =  phi_offset/180.0 * M_PI;
+  
+  looking_vector = R_vec(std::cos(angle_theta) ,
+                         std::sin(angle_theta) * std::cos(angle_phi)  ,
+                         std::sin(angle_theta) * std::sin(angle_phi) );
 
 
   /* -------- FFT ------------- */
@@ -97,27 +71,21 @@ int single_trace(const one_line* data,
 
 
   /* create memory for detectors */
-  /* TO DO: SEVERAL DIRECTIONS - ISSUE #12 */
-  Detector_fft* detector_fft[N_angle_theta*N_angle_phi];
+  Detector_fft* detector_fft;
 
   /* create FFT detectors */
-  for(unsigned i=0; i<N_angle_theta*N_angle_phi; ++i)
-  {
-    detector_fft[i] = new Detector_fft((looking_vector[i]), linenumber );
-  }
+  detector_fft = new Detector_fft(looking_vector, linenumber);
+
 
 
   /* convert trajectory data to meaning full values */
   /* TO DO: FUNCTION CALLED FOR EACH DIRECTION - ISSUE #14 */
-  run_through_data(data, linenumber, N_angle_theta*N_angle_phi, detector_fft);
+  run_through_data(data, linenumber, detector_fft);
 
-  /* calculate spectra FFT */
-  for(unsigned k=0; k<N_angle_theta*N_angle_phi; ++k)
-  {
-    (*detector_fft[k]).calc_spectrum();
-  }
+  detector_fft->calc_spectrum();
 
-
+  
+  
   /* this switches off the computation using a DFT method - ISSUE #13 */
 #if 0
 
@@ -128,30 +96,24 @@ int single_trace(const one_line* data,
 
 
   /* create detector objects for radiation */
-  /* TO DO: SEVERAL DIRECTIONS - ISSUE #12 */
-  Detector_dft* detector_dft[N_angle_theta * N_angle_phi];
+  Detector_dft* detector_dft;
 
 
   /* create DFT detectors (using omega[i] from FFT) to be on the exact same frequency */
-  for(unsigned i=0; i<N_angle_theta*N_angle_phi ; ++i)
-  {
-    /* number of (use-full) frequencies from FFT */
-    unsigned dummy_N =  (*detector_fft[i]).half_frequency();
+  /* number of (use-full) frequencies from FFT */
+  unsigned dummy_N =  detector_fft->half_frequency();
 
-    /* get frequencies from FFT */
-    double* dummy_omega = (*detector_fft[i]).frequency;
-    detector_dft[i] = new Detector_dft(looking_vector[i], dummy_N, dummy_omega);
-  }
+  /* get frequencies from FFT */
+  double* dummy_omega = detector_fft->frequency;
+  detector_dft = new Detector_dft(looking_vector, dummy_N, dummy_omega);
 
   /* convert trajectory data to meaningful values */
   /* TO DO: FUNCTION CALLED FOR EACH DIRECTION - ISSUE #14 */
-  run_through_data(data, linenumber, N_angle_theta*N_angle_phi, detector_dft);
+  run_through_data(data, linenumber, detector_dft);
 
   /* calculate spectra using DFT method */
-  for(unsigned k=0; k< N_angle_theta*N_angle_phi ; ++k)
-  {
-    (*detector_dft[k]).calc_spectrum();
-  }
+  detector_dft->calc_spectrum();
+
 
 #endif
   /* end DFT calculation switch - ISSUE #13 */
@@ -160,17 +122,14 @@ int single_trace(const one_line* data,
 
   /* ------ interpolate spectra onto requested frequencies ---------- */
   /* this is the "integrated interpolation" found in interpolate.tpp */
-  interpolation_int(detector_fft[0], all_omega, all_spectrum, N_all_spec);
-
-
+  interpolation_int(detector_fft, all_omega, all_spectrum, N_all_spec);
+  
+  
   /* ----- free memory used for detectors ---- */
-
-  for(unsigned i=0; i<N_angle_theta*N_angle_phi; ++i)
-  {
-    /* TO DO: DFT detectors not used - ISSUE #13 */
-    /* delete detector_dft[i]; */
-    delete detector_fft[i];
-  }
-
+  
+  /* TO DO: DFT detectors not used - ISSUE #13 */
+  /* delete detector_dft; */
+  delete detector_fft;
+  
   return 0;
 }
