@@ -24,10 +24,7 @@
 #include <iostream>
 #include <cstdlib>
 
-
-#ifndef RUN_THROUGH_DATA_RPAUSCH
-#define RUN_THROUGH_DATA_RPAUSCH
-
+#pragma once
 
 #include "discrete.hpp"
 #include "import_from_file.hpp"
@@ -41,105 +38,92 @@ inline R_vec beta_times_gamma(R_vec beta)
 }
 
 
-
-
-
-
 template<typename DET>
-void run_through_data(const one_line* data, const unsigned linenumber, const unsigned N_angle,
-		      DET detector)
+void run_through_data(const one_line* data,
+                      const unsigned linenumber,
+                      const unsigned N_angle,
+                      DET detector)
 {
-    /* ---------- storing data : comparable to real data stream (not like a file here) --- */
-    
-    // USING: SI-UNITS !!!
+  /* ---------- storing data : comparable to real data stream (not like a file here) --- */
 
-    //time s --> s
+  // USING: SI-UNITS !!!
+
+  //time s --> s
   Discrete<double> time_fill(data[0].intern_data[6] /* *1.E-15 */ ,
-			     data[1].intern_data[6] /* *1.E-15 */ ,
-			     data[2].intern_data[6] /* *1.E-15 */ ,
-			     data[3].intern_data[6] /* *1.E-15 */ );
-    
-    //position: in m  --> m
-  Discrete<R_vec> location( R_vec(data[0].intern_data[0] /* *1.E-2 */ , 
-				  data[0].intern_data[1] /* *1.E-2 */ , 
-				  data[0].intern_data[2] /* *1.E-2 */ ),
-			    R_vec(data[1].intern_data[0] /* *1.E-2 */ , 
-				  data[1].intern_data[1] /* *1.E-2 */ , 
-				  data[1].intern_data[2] /* *1.E-2 */ ),
-			    R_vec(data[2].intern_data[0] /* *1.E-2 */ , 
-				  data[2].intern_data[1] /* *1.E-2 */ , 
-				  data[2].intern_data[2] /* *1.E-2 */  ),
-			    R_vec(data[3].intern_data[0] /* *1.E-2 */ , 
-				  data[3].intern_data[1] /* *1.E-2 */ , 
-				  data[3].intern_data[2] /* *1.E-2 */  ),
-                             &time_fill);  
-    
-    //momentum: beta*gamma  --> phy::m_e*beta_times_gamma(beta)*phy:c --> kg*m/s
-	double btom = phy::m_e*phy::c;
-	Discrete<R_vec> momentum( btom*beta_times_gamma(R_vec(data[0].intern_data[3], 
-							  data[0].intern_data[4], 
-							  data[0].intern_data[5]) ),
-				  btom*beta_times_gamma(R_vec(data[1].intern_data[3], 
-							 data[1].intern_data[4], 
-							 data[1].intern_data[5]) ),
-				  btom*beta_times_gamma(R_vec(data[2].intern_data[3], 
-							 data[2].intern_data[4], 
-							 data[2].intern_data[5]) ),
-				  btom*beta_times_gamma(R_vec(data[3].intern_data[3], 
-							 data[3].intern_data[4], 
-							 data[3].intern_data[5]) ),
-                             &time_fill);
-    
-    More_discrete auto_fill(&time_fill);
-    
-    
-    Discrete<R_vec> beta(&time_fill);
-    Discrete<double> gamma(&time_fill);
-    
-    gamma = auto_fill.momentum_to_gamma(momentum);
-    beta  = auto_fill.momentum_to_beta(momentum, gamma);
-  
+                             data[1].intern_data[6] /* *1.E-15 */ ,
+                             data[2].intern_data[6] /* *1.E-15 */ ,
+                             data[3].intern_data[6] /* *1.E-15 */ );
+
+  //position: in m  --> m
+  Discrete<R_vec> location( R_vec(data[0].intern_data[0] /* *1.E-2 */ ,
+                                  data[0].intern_data[1] /* *1.E-2 */ ,
+                                  data[0].intern_data[2] /* *1.E-2 */ ),
+                            R_vec(data[1].intern_data[0] /* *1.E-2 */ ,
+                                  data[1].intern_data[1] /* *1.E-2 */ ,
+                                  data[1].intern_data[2] /* *1.E-2 */ ),
+                            R_vec(data[2].intern_data[0] /* *1.E-2 */ ,
+                                  data[2].intern_data[1] /* *1.E-2 */ ,
+                                  data[2].intern_data[2] /* *1.E-2 */  ),
+                            R_vec(data[3].intern_data[0] /* *1.E-2 */ ,
+                                  data[3].intern_data[1] /* *1.E-2 */ ,
+                                  data[3].intern_data[2] /* *1.E-2 */  ),
+                            &time_fill);
+
+  //momentum: beta*gamma  --> phy::m_e*beta_times_gamma(beta)*phy:c --> kg*m/s
+  double btom = phy::m_e*phy::c;
+  Discrete<R_vec> momentum( btom*beta_times_gamma(R_vec(data[0].intern_data[3],
+                                                        data[0].intern_data[4],
+                                                        data[0].intern_data[5]) ),
+                            btom*beta_times_gamma(R_vec(data[1].intern_data[3],
+                                                        data[1].intern_data[4],
+                                                        data[1].intern_data[5]) ),
+                            btom*beta_times_gamma(R_vec(data[2].intern_data[3],
+                                                        data[2].intern_data[4],
+                                                        data[2].intern_data[5]) ),
+                            btom*beta_times_gamma(R_vec(data[3].intern_data[3],
+                                                        data[3].intern_data[4],
+                                                        data[3].intern_data[5]) ),
+                            &time_fill);
+
+  More_discrete auto_fill(&time_fill);
 
 
+  Discrete<R_vec> beta(&time_fill);
+  Discrete<double> gamma(&time_fill);
 
-    /* -------- streaming the data and sending it to the detectors: ---------- */
+  gamma = auto_fill.momentum_to_gamma(momentum);
+  beta  = auto_fill.momentum_to_beta(momentum, gamma);
 
 
-    //std::cout << "running: ";    
-    for(unsigned i=4; i<linenumber; ++i)
+  /* -------- streaming the data and sending it to the detectors: ---------- */
+
+  for(unsigned i=4; i<linenumber; ++i)
+  {
+    for(unsigned k=0; k<N_angle; ++k)
     {
-      for(unsigned k=0; k<N_angle; ++k)
-	{
-	  (*detector[k]).add_to_spectrum(location.get_old(),
-					 beta.get_old(),
-					 beta.dot_old(),
-					 time_fill.get_old(), 
-					 time_fill.get_delta_old());
-	}
-        
-        
-      // set new to old:
-      time_fill.next(double(data[i].intern_data[6]) /* *1.E-15 */ );
-        
-      location.next( R_vec(data[i].intern_data[0] /* *1.E-2 */ , 
-                           data[i].intern_data[1] /* *1.E-2 */ , 
-                           data[i].intern_data[2] /* *1.E-2 */  ));
-        
-      momentum.next( btom*beta_times_gamma(R_vec(data[i].intern_data[3], 
-						 data[i].intern_data[4], 
-						 data[i].intern_data[5] ) ));
-        
-      gamma.next(auto_fill.gamma(momentum.get_future()));
-        
-      beta.next(auto_fill.beta(momentum.get_future(), gamma.get_future()));
-       
-          
+      (*detector[k]).add_to_spectrum(location.get_old(),
+                                     beta.get_old(),
+                                     beta.dot_old(),
+                                     time_fill.get_old(),
+                                     time_fill.get_delta_old());
     }
 
-    //std::cout << std::endl;
 
-}  
+    // set new to old:
+    time_fill.next(double(data[i].intern_data[6]) /* *1.E-15 */ );
 
+    location.next( R_vec(data[i].intern_data[0] /* *1.E-2 */ ,
+                         data[i].intern_data[1] /* *1.E-2 */ ,
+                         data[i].intern_data[2] /* *1.E-2 */  ));
 
-#endif 
+    momentum.next( btom*beta_times_gamma(R_vec(data[i].intern_data[3],
+                                               data[i].intern_data[4],
+                                               data[i].intern_data[5] ) ));
 
+    gamma.next(auto_fill.gamma(momentum.get_future()));
+
+    beta.next(auto_fill.beta(momentum.get_future(), gamma.get_future()));
+
+  }
+
+}
