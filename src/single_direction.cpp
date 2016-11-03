@@ -19,7 +19,7 @@
  */
 
 
-#include "single_trace.hpp"
+#include "single_direction.hpp"
 
 #include "interpolation.hpp"
 #include "discrete.hpp"
@@ -37,13 +37,13 @@
  * @param theta_offset offset of angle theta (used to set angle)
  * @param phi_offset offset of angle phi (used to set angle)
  **/
-int single_trace(const one_line* data,
-                 const unsigned int linenumber,
-                 const double* all_omega,
-                 double* all_spectrum,
-                 const unsigned N_all_spec,
-                 const double theta_offset,
-                 const double phi_offset)
+int single_direction(const one_line* data,
+                     const unsigned int linenumber,
+                     const double* all_omega,
+                     double* all_spectrum,
+                     const unsigned N_all_spec,
+                     const double theta_offset,
+                     const double phi_offset)
 {
 
   /* ----------------------- detectors ------------------------ */

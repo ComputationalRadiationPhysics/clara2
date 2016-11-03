@@ -44,11 +44,11 @@ subsystem:
 	$(MAKE) -C ./include/
 
 
-MPI: MPI_main all_directions.o ./include/libDetector.a single_trace.o
-	$(MPICC) $(CFLAGS) $(OMP) $(ZIP) main.o all_directions.o single_trace.o ./include/libDetector.a ./include/fileExists.o -o executable
+MPI: MPI_main all_directions.o ./include/libDetector.a single_direction.o
+	$(MPICC) $(CFLAGS) $(OMP) $(ZIP) main.o all_directions.o single_direction.o ./include/libDetector.a ./include/fileExists.o -o executable
 
-ARRAY: ARRAY_main all_directions.o ./include/libDetector.a single_trace.o
-	$(CC) $(CFLAGS) $(OMP) $(ZIP) main.o all_directions.o single_trace.o ./include/libDetector.a ./include/fileExists.o -o executable
+ARRAY: ARRAY_main all_directions.o ./include/libDetector.a single_direction.o
+	$(CC) $(CFLAGS) $(OMP) $(ZIP) main.o all_directions.o single_direction.o ./include/libDetector.a ./include/fileExists.o -o executable
 
 
 MPI_main: main.cpp all_directions.hpp
@@ -58,13 +58,13 @@ ARRAY_main:  main.cpp all_directions.hpp
 	$(CC) $(CFLAGS) $(ARRAYFLAG) $(COBJ) $(OMP) $(ZIP) main.cpp
 
 # main routine:
-single_trace.o: single_trace.hpp single_trace.cpp ./include/detector_e_field.hpp ./include/detector_dft.hpp \
-			 ./include/detector_fft.hpp ./include/vector.hpp ./include/import_from_file.hpp ./include/discrete.hpp \
-			 ./run_through_data.hpp ./include/load_txt.hpp ./include/analytical_solution.hpp ./include/interpolation.hpp \
-			 ./include/interpolation.tpp ./include/fileExists.hpp ./include/fileExists.cpp
-	$(CC) $(CFLAGS) $(COBJ) $(CFLAGFORTRAN) $(OMP) -I./include/ single_trace.cpp
+single_direction.o: single_direction.hpp single_direction.cpp ./include/detector_e_field.hpp ./include/detector_dft.hpp \
+             ./include/detector_fft.hpp ./include/vector.hpp ./include/import_from_file.hpp ./include/discrete.hpp \
+             ./run_through_data.hpp ./include/load_txt.hpp ./include/analytical_solution.hpp ./include/interpolation.hpp \
+             ./include/interpolation.tpp  ./include/fileExists.hpp ./include/fileExists.cpp
+	$(CC) $(CFLAGS) $(COBJ) $(CFLAGFORTRAN) $(OMP) -I./include/ single_direction.cpp
 
-all_directions.o: all_directions.cpp all_directions.hpp single_trace.hpp ./include/vector.hpp ./include/string_manipulation.hpp settings.hpp setFilename.hpp
+all_directions.o: all_directions.cpp all_directions.hpp single_direction.hpp ./include/vector.hpp ./include/string_manipulation.hpp settings.hpp setFilename.hpp
 	$(CC) $(CFLAGS) $(COBJ) $(OMP) $(ZIP) -I./include/ all_directions.cpp
 
 
