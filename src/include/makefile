@@ -1,4 +1,4 @@
-# Copyright 2014-2016 Richard Pausch
+# Copyright 2014-2016 Richard Pausch, Alexander Koehler
 #
 # This file is part of Clara 2.
 #
@@ -39,7 +39,7 @@ detector_dft.o: detector_dft.cpp detector_dft.hpp vector.hpp utilities.hpp
 	$(CC) $(CFLAGS) detector_dft.cpp
 
 # Fast Fourier Transformation detectors:
-detector_fft.o: detector_fft.cpp detector_fft.hpp vector.hpp utilities.hpp fft_ned.hpp
+detector_fft.o: detector_fft.cpp detector_fft.hpp vector.hpp utilities.hpp fft_ned.hpp ../settings.hpp
 	$(CC) $(CFLAGS) detector_fft.cpp
 
 

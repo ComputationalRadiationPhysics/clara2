@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Richard Pausch, Joy
+ * Copyright 2014-2016 Richard Pausch, Joy, Alexander Koehler
  *
  * This file is part of Clara 2.
  *
@@ -45,6 +45,7 @@
 #include "import_from_file.hpp"
 #include "load_txt.hpp"
 #include "gzip_lib.hpp"
+#include "settings.hpp"
 
 
 
@@ -72,12 +73,6 @@ int all_directions(const unsigned int trace_id, const char arg[])
 
 
   /* ------------ constants ------------------------------- */
-  const double omega_max = 3.0e19;      /* maximum of plotted frequency Hz */
-  const double theta_max = 1.14594939;  /* maximum of theta in degree */
-  const unsigned int N_spectrum = 2048; /* number of frequencies "omega"*/
-  const unsigned int N_theta = 120;     /* number of directions in first angle "theta" */
-  const unsigned int N_phi = 2;         /* number of directions in second angle "phi" */
-  const unsigned int N_trace = 2000;    /* maximum number of traces */
   const unsigned int N_direction = N_theta*N_phi; // number of all directions
 
   /* ---------- get trace ID ----------------- */
