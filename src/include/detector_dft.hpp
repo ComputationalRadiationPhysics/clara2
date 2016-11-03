@@ -73,14 +73,12 @@ public:
 
   double energy();
 
-// debugging
-  Vector<std::complex<double>, 3>* spektrum;
 
 private:
   // data:
   const R_vec n_unit;
-  const  unsigned spek_length;
-
+  const unsigned spek_length;
+  Vector<std::complex<double>, 3>* spektrum;
   double* spektrum_mag;
   double* frequency;
 
