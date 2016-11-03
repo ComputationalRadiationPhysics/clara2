@@ -34,5 +34,3 @@ const unsigned int fft_length_factor   = 1;
 const unsigned int N_omega             = N_spectrum;
 const unsigned int index_files_first   = 0;
 const unsigned int index_files_last    = N_trace;
-  
-

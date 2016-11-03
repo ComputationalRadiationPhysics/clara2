@@ -19,32 +19,33 @@
  */
 
 
-#ifndef PARALLELJOBSRPAUSCH
-#define PARALLELJOBSRPAUSCH
+#pragma once
+
 
 #if __PARALLEL_SETTING__ == 1
 #include "mpi.h"
 #endif
 
 
-int start_array(int* numtasks, int* rank)
+int start_array(int* numtasks, 
+                int* rank)
 {
   if(!numtasks)
     return 2;
-
+  
   if(!rank)
     return 3;
-
+  
 #if __PARALLEL_SETTING__ == 1
   // MPI used for parallization
   int rc = MPI_Init(NULL, NULL);
-
+  
   if (rc != MPI_SUCCESS)
-    {
-      printf("Error starting MPI program. Terminating program!\n");
-      MPI_Abort(MPI_COMM_WORLD, rc);
-      return 1;
-    }
+  {
+    printf("Error starting MPI program. Terminating program!\n");
+    MPI_Abort(MPI_COMM_WORLD, rc);
+    return 1;
+  }
 
   MPI_Comm_size(MPI_COMM_WORLD, numtasks);
   MPI_Comm_rank(MPI_COMM_WORLD, rank);
@@ -71,34 +72,33 @@ int end_array(void)
 {
 #if __PARALLEL_SETTING__ == 1
   // MPI used for parallization  
-   MPI_Finalize();
+  MPI_Finalize();
 
 #elif __PARALLEL_SETTING__ == 2
   // Array jobs used for parallization
-
+  
 #else
   // non of the above selected
   #error parallel setting not suported
 #endif
 
-   return 0;
+  return 0;
 }
 
-/*
+
 int check_break(void)
 {
   char stop[] = "break.now";
   FILE* file = fopen(stop, "r");
   if(file != 0)
-    {
-      fclose(file);
-      //perror("breakpoint found \n");
-      return 1;
-    }
-
+  {
+    fclose(file);
+    return 1;
+  }
+  
   return 0;
 }
-*/
 
-#endif
+
+
 
