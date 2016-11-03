@@ -174,18 +174,3 @@ int single_trace(const one_line* data,
 
   return 0;
 }
-
-
-
-/* TO DO: this should be in a separate file - ISSUE #15 */
-/**
- * check whether a file exists or not
- *
- * @param filename pointer to array containing file location
- * @return Returs true if file exists, otherwise false.
- **/
-bool file_exists(const char *filename)
-{
-  ifstream ifile(filename);
-  return ifile;
-}
