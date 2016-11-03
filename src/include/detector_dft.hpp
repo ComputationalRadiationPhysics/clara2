@@ -40,11 +40,11 @@ public:
        @param n_unit   = unit vector in direction of energy deposition
        @param delta_t  = time step of odint
      */
-  Detector_dft(R_vec n_unit,
+  Detector_dft(const R_vec n_unit,
                const unsigned spek_length,
                const double omega_max);
 
-  Detector_dft(R_vec n_unit,
+  Detector_dft(const R_vec n_unit,
                const unsigned spek_length,
                const double* omega);
 

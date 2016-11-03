@@ -25,7 +25,7 @@
 
 // Constructors and Destructors:
 
-Detector_dft::Detector_dft(R_vec n_unit,
+Detector_dft::Detector_dft(const R_vec n_unit,
                            const unsigned spek_length,
                            const double omega_max)
   : n_unit(n_unit.unit_vec()),
@@ -41,7 +41,7 @@ Detector_dft::Detector_dft(R_vec n_unit,
   set_frequency(omega_max);
 }
 
-Detector_dft::Detector_dft(R_vec n_unit,
+Detector_dft::Detector_dft(const R_vec n_unit,
                            const unsigned spek_length,
                            const double* omega)
   : n_unit(n_unit.unit_vec()),

@@ -89,7 +89,7 @@ public:
   /// assign addition
   inline Vector & operator += (const Vector& v);
 
-  inline Vector unit_vec();
+  inline Vector unit_vec() const;
 
 
   ////////////
