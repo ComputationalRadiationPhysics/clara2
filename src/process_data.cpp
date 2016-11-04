@@ -46,40 +46,11 @@ struct spectrum
 int main(int argc, char * const argv[])
 {
 
-  if(argc != 2)
-  {
-    std::cout << "wrong usage: needs 1 parameters not " << argc -1 << std::endl;
-    std::cout << "give: encoding" << std::endl;
-    return 1;
-  }
-
-
   using namespace std;
   const unsigned int N_direction = N_theta*N_phi;
   const unsigned int N_split = 8;
 
   spectrum<double, N_omega>* data = new spectrum<double, N_omega>[N_direction];
-
-
-  // -------- get store info -----------
-  bool ascii_input;
-  std::string store_str = argv[1];
-  if(!store_str.compare("ascii"))
-  {
-    ascii_input = true;
-    std::cout << "ASCII input" << std::endl;
-  }
-  else if(!store_str.compare("binary"))
-  {
-    ascii_input = false;
-    std::cout << "binary input" << std::endl;
-  }
-  else
-  {
-    std::cerr << "2nd argument needs to be binary or ascii" << std::endl;
-    throw "bin_ascii";
-  }
-
 
 
   // ----- run through all input files -------
@@ -89,7 +60,7 @@ int main(int argc, char * const argv[])
     setFilename(filename, outputFileTemplate, index_files, N_char_filename);
 
     // ------ read input file ------
-    if(ascii_input)
+    if(param::ascii_output)
     {
       // ---- files loaded have ASCII  format -------
       FILE* pFile = fopen(filename, "r");
