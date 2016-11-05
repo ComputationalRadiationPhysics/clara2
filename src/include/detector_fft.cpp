@@ -34,7 +34,7 @@ Detector_fft::Detector_fft(const R_vec n_unit,
     spektrum_mag(0),
     frequency(0)
 {
-  spek_length = power_of_two(N_data)*fft_length_factor;
+  spek_length = power_of_two(N_data) * param::fft_length_factor;
 
   //std::cout << "spek_length : " << spek_length << std::endl;
   time = new double[spek_length];

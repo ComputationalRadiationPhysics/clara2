@@ -63,14 +63,14 @@ int all_directions(const unsigned int trace_id,
 
 
   /* ------------ constants ------------------------------- */
-  const unsigned int N_direction = N_theta*N_phi; // number of all directions
+  const unsigned int N_direction = param::N_theta * param::N_phi; // number of all directions
 
   /* ---------- get trace ID ----------------- */
 
   /* check whether the id of the trace "trace_id" is larger than the given N_trace value */
-  if(!(trace_id <= N_trace))
+  if(!(trace_id <= param::N_trace))
   {
-    std::cout << "trace-ID is out of range (MAX = " << N_trace << ")" << std::endl;
+    std::cout << "trace-ID is out of range (MAX = " << param::N_trace << ")" << std::endl;
     return 1;
   }
 
@@ -97,30 +97,30 @@ int all_directions(const unsigned int trace_id,
 
 
   /* ------- set up/compute all angles thetas ------------------ */
-  double theta[N_theta];
-  for(unsigned i=0; i< N_theta; ++i)
+  double theta[param::N_theta];
+  for(unsigned i=0; i< param::N_theta; ++i)
   {
-    theta[i] = (double)i / N_theta * theta_max;
+    theta[i] = (double)i / param::N_theta * param::theta_max;
   }
 
 
   /* ------- set up/compute all angles phis ---------------------- */
-  double phi[N_phi] = {0.0, 90.0};
+  double phi[param::N_phi] = {0.0, 90.0};
 
 
 
   /* allocate memory for all spectra */
   struct spectrum_container
   {
-    double spectrum[N_spectrum];
+    double spectrum[param::N_spectrum];
   };
-  spectrum_container* all_spec = new spectrum_container[N_theta*N_phi];
+  spectrum_container* all_spec = new spectrum_container[N_direction];
 
 
   /* compute the frequency array "omega" and fill spectra with zeros */
-  double omega[N_spectrum];
-  const double my_delta_omega = omega_max/N_spectrum;
-  for(unsigned i=0; i<N_spectrum; ++i)
+  double omega[param::N_spectrum];
+  const double my_delta_omega = param::omega_max/param::N_spectrum;
+  for(unsigned i=0; i<param::N_spectrum; ++i)
   {
     /* compute frequency */
     omega[i] = i * my_delta_omega;
@@ -133,8 +133,8 @@ int all_directions(const unsigned int trace_id,
 
   /* ------- location of data ----------------------- */
 
-  char filenameTrace[N_char_filename];
-  setFilename(filenameTrace, traceFileTemplate, trace_id, N_char_filename);
+  char filenameTrace[param::N_char_filename];
+  setFilename(filenameTrace, param::traceFileTemplate, trace_id, param::N_char_filename);
   /* print out path name in order to check it in output files */
   std::cout << "check: filename: " << filenameTrace << std::endl;
 
@@ -163,15 +163,15 @@ int all_directions(const unsigned int trace_id,
   /* #pragma omp parallel for num_threads(4) schedule(dynamic, 1) */
   for(unsigned direction_index = 0; direction_index< N_direction; ++direction_index)
   {
-    const double my_theta = theta[direction_index % N_theta];
-    const double my_phi   = phi[direction_index/N_theta];
+    const double my_theta = theta[direction_index % param::N_theta];
+    const double my_phi   = phi[direction_index/param::N_theta];
     printf("calculate direction: %4d -> theta: %3.5f , phi: %3.5f \n", direction_index, my_theta, my_phi);
 
     /*
      * compute the spectra for a single direction
      * and trow an error if something goes wrong
      */
-    if((single_trace(data, linenumber, omega, all_spec[direction_index].spectrum, N_spectrum, my_theta, my_phi))!=0)
+    if((single_trace(data, linenumber, omega, all_spec[direction_index].spectrum, param::N_spectrum, my_theta, my_phi))!=0)
     {
       std::cerr << "error occured in single_trace function" << std::endl;
       throw "error in single_trace function";
@@ -182,8 +182,8 @@ int all_directions(const unsigned int trace_id,
 
   /* ------- outputfile ------------------------------ */
   /* allocate memory for name of output file */
-  char outputfilename[N_char_filename];
-  setFilename(outputfilename, outputFileTemplate, trace_id, N_char_filename);
+  char outputfilename[param::N_char_filename];
+  setFilename(outputfilename, param::outputFileTemplate, trace_id, param::N_char_filename);
   /* print name of output file */
   std::cout << "check: output-filename: " << outputfilename << std::endl;
 
@@ -199,7 +199,7 @@ int all_directions(const unsigned int trace_id,
     {
       for(unsigned j=0; j<N_direction; ++j) /* for all directions */
       {
-        for(unsigned i=0; i<N_spectrum; ++i) /* for all frequencies */
+        for(unsigned i=0; i<param::N_spectrum; ++i) /* for all frequencies */
         {
           /* print spectral data separated by tabs */
           my_output << all_spec[j].spectrum[i] << " \t";
@@ -220,7 +220,7 @@ int all_directions(const unsigned int trace_id,
   {
     /* ----- binary output file -------- */
     /* allocate memory to store spectral and directional data at once */
-    double* output_data = new double[N_spectrum*N_direction];
+    double* output_data = new double[param::N_spectrum*N_direction];
 
     /*
      * "output_index" is the counter for the array behind "output_data"
@@ -228,7 +228,7 @@ int all_directions(const unsigned int trace_id,
      */
     for(unsigned j=0, output_index=0; j<N_direction; ++j) /* for all directions */
     {
-      for(unsigned i=0; i<N_spectrum; ++i) /* fora ll frequencies */
+      for(unsigned i=0; i<param::N_spectrum; ++i) /* fora ll frequencies */
       {
         /* fill output-data-container with computed spectral data */
         output_data[output_index] = all_spec[j].spectrum[i];
@@ -240,7 +240,7 @@ int all_directions(const unsigned int trace_id,
     }
     /* store (uncompressed) collected data using clara2's gzib_lib.hpp */
     store_data(output_data,
-               N_spectrum*N_direction*sizeof(double),
+               param::N_spectrum*N_direction*sizeof(double),
                outputfilename);
 
     delete[] output_data; /* free allocated memory after output */
@@ -260,7 +260,7 @@ int all_directions(const unsigned int trace_id,
             << (double)runtime * 1.0e-6
             << " sec" << std::endl;
   std::cout << "time per direction (and trace): "
-            << (double)runtime / (double)(N_theta*N_phi) * 1.0e-6
+            << (double)runtime / (double)(N_direction) * 1.0e-6
             << " sec" << std::endl;
 
 

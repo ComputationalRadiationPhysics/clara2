@@ -21,6 +21,8 @@
 
 #pragma once
 
+namespace param
+{
 const double omega_max                 = 3.0e19;      /* maximum of plotted frequency Hz */
 const double theta_max                 = 1.14594939;  /* maximum of theta in degree */
 const unsigned int N_spectrum          = 2048; /* number of frequencies "omega"*/
@@ -28,7 +30,7 @@ const unsigned int N_theta             = 120;     /* number of directions in fir
 const unsigned int N_phi               = 2;         /* number of directions in second angle "phi" */
 const unsigned int N_trace             = 2000;    /* maximum number of traces */
 
-const unsigned int fft_length_factor   = 1;
+const unsigned int fft_length_factor   = 1; /* needs to be a power of two */
 
 const unsigned int N_char_filename=256; // number of characters
 const char traceFileTemplate[] = "/net/cns/projects/HPLsim/xray/debus/ELBEThomson/basicRun2/trace_%04d.txt";
@@ -39,3 +41,5 @@ const unsigned int N_omega             = N_spectrum;
 const unsigned int index_files_first   = 0;
 const unsigned int index_files_last    = N_trace;
 const char output_pattern[] = "my_spectrum_all_%03d.dat";
+
+} // end namespace param
