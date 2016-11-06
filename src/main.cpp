@@ -80,7 +80,7 @@ int main(void)
 
     /* calculate the radiation of a single trajectory for all
      * directions of interest */
-    return_value = all_directions(i, "binary");
+    return_value = all_directions(i);
 
     /* set output back to stdout stderr
      * ISSUE: THIS DOES NOT WORK !!!

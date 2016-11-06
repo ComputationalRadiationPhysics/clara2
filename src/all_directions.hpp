@@ -26,9 +26,6 @@
  *
  * @param trace_id a unique id which which the trajectory file
  *                  can be identified
- * @param arg  a string telling whether a "binary" or "ascii"
- *              output should be used
  * @return error code
  **/
-int all_directions(const unsigned int trace_id,
-                   const char arg[]);
+int all_directions(const unsigned int trace_id);
