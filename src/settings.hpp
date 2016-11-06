@@ -32,6 +32,8 @@ const unsigned int N_trace             = 2000;    /* maximum number of traces */
 
 const unsigned int fft_length_factor   = 1; /* needs to be a power of two */
 
+const bool ascii_output = false; /* output spectra as ascii text */
+
 const unsigned int N_char_filename=256; // number of characters
 const char traceFileTemplate[] = "/net/cns/projects/HPLsim/xray/debus/ELBEThomson/basicRun2/trace_%04d.txt";
 const char outputFileTemplate[] = "my_spectrum_trace%06d.dat";

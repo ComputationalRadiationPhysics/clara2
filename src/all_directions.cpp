@@ -46,12 +46,9 @@
  *
  * @param trace_id a unique id which which the trajectory file
  *                 can be identified
- * @param arg  a string telling whether a "binary" or "ascii"
- *             output should be used
  * @return error code
  **/
-int all_directions(const unsigned int trace_id,
-                   const char arg[])
+int all_directions(const unsigned int trace_id)
 {
 
   using namespace std;
@@ -72,27 +69,6 @@ int all_directions(const unsigned int trace_id,
   {
     std::cout << "trace-ID is out of range (MAX = " << param::N_trace << ")" << std::endl;
     return 1;
-  }
-
-  /* -------- get store info ----------- */
-  /* since output can be stored as binary file or as ascii file, here the selected option
-   * is checked or an error is thrown in case the selection was wrong */
-  bool ascii_output;
-  std::string store_str = arg;
-  if(!store_str.compare("ascii"))
-  {
-    ascii_output = true;
-    std::cout << "ASCII output" << std::endl;
-  }
-  else if(!store_str.compare("binary"))
-  {
-    ascii_output = false;
-    std::cout << "binary output" << std::endl;
-  }
-  else
-  {
-    std::cerr << "2nd argument needs to be binary or ascii" << std::endl;
-    throw "bin_ascii";
   }
 
 
@@ -191,7 +167,7 @@ int all_directions(const unsigned int trace_id,
   /* --- file output ------------- */
 
   /* store spectral data either as binary or as ascii data */
-  if(ascii_output)
+  if(param::ascii_output)
   {
     /* ---- ASCII output file ------------------------ */
     ofstream my_output(outputfilename); /* create file */
