@@ -41,7 +41,6 @@ inline R_vec beta_times_gamma(R_vec beta)
 template<typename DET>
 void run_through_data(const one_line* data,
                       const unsigned linenumber,
-                      const unsigned N_angle,
                       DET detector)
 {
   /* ---------- storing data : comparable to real data stream (not like a file here) --- */
@@ -74,7 +73,7 @@ void run_through_data(const one_line* data,
   Discrete<R_vec> momentum( btom*beta_times_gamma(R_vec(data[0].intern_data[3],
                                                         data[0].intern_data[4],
                                                         data[0].intern_data[5]) ),
-                            btom*beta_times_gamma(R_vec(data[1].intern_data[3],
+                           btom*beta_times_gamma(R_vec(data[1].intern_data[3],
                                                         data[1].intern_data[4],
                                                         data[1].intern_data[5]) ),
                             btom*beta_times_gamma(R_vec(data[2].intern_data[3],
@@ -99,15 +98,11 @@ void run_through_data(const one_line* data,
 
   for(unsigned i=4; i<linenumber; ++i)
   {
-    for(unsigned k=0; k<N_angle; ++k)
-    {
-      (*detector[k]).add_to_spectrum(location.get_old(),
-                                     beta.get_old(),
-                                     beta.dot_old(),
-                                     time_fill.get_old(),
-                                     time_fill.get_delta_old());
-    }
-
+    detector->add_to_spectrum(location.get_old(),
+                              beta.get_old(),
+                              beta.dot_old(),
+                              time_fill.get_old(),
+                              time_fill.get_delta_old());
 
     // set new to old:
     time_fill.next(double(data[i].intern_data[6]) /* *1.E-15 */ );
