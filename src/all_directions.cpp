@@ -28,7 +28,7 @@
 #include <sys/time.h>
 #include <omp.h>  // OpenMP
 
-#include "single_trace.hpp"
+#include "single_direction.hpp"
 #include "vector.hpp"
 #include "analytical_solution.hpp"
 #include "physics_units.hpp"
@@ -147,10 +147,10 @@ int all_directions(const unsigned int trace_id)
      * compute the spectra for a single direction
      * and trow an error if something goes wrong
      */
-    if((single_trace(data, linenumber, omega, all_spec[direction_index].spectrum, param::N_spectrum, my_theta, my_phi))!=0)
+      if((single_direction(data, linenumber, omega, all_spec[direction_index].spectrum, param::N_spectrum, my_theta, my_phi))!=0)
     {
-      std::cerr << "error occured in single_trace function" << std::endl;
-      throw "error in single_trace function";
+      std::cerr << "error occured in single_direction function" << std::endl;
+      throw "error in single_direction function";
     }
   }
 
