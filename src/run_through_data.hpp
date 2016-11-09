@@ -30,6 +30,7 @@
 #include "import_from_file.hpp"
 #include "physics_units.hpp"
 #include "vector.hpp"
+#include "settings.hpp"
 
 
 inline R_vec beta_times_gamma(R_vec beta)
@@ -46,43 +47,43 @@ void run_through_data(const one_line* data,
   /* ---------- storing data : comparable to real data stream (not like a file here) --- */
 
   // USING: SI-UNITS !!!
-
+  namespace in = param::input;
   //time s --> s
-  Discrete<double> time_fill(data[0].intern_data[6] /* *1.E-15 */ ,
-                             data[1].intern_data[6] /* *1.E-15 */ ,
-                             data[2].intern_data[6] /* *1.E-15 */ ,
-                             data[3].intern_data[6] /* *1.E-15 */ );
+  Discrete<double> time_fill(data[0].intern_data[in::index_time] * in::convert_time ,
+                             data[1].intern_data[in::index_time] * in::convert_time ,
+                             data[2].intern_data[in::index_time] * in::convert_time ,
+                             data[3].intern_data[in::index_time] * in::convert_time  );
 
   //position: in m  --> m
-  Discrete<R_vec> location( R_vec(data[0].intern_data[0] /* *1.E-2 */ ,
-                                  data[0].intern_data[1] /* *1.E-2 */ ,
-                                  data[0].intern_data[2] /* *1.E-2 */ ),
-                            R_vec(data[1].intern_data[0] /* *1.E-2 */ ,
-                                  data[1].intern_data[1] /* *1.E-2 */ ,
-                                  data[1].intern_data[2] /* *1.E-2 */ ),
-                            R_vec(data[2].intern_data[0] /* *1.E-2 */ ,
-                                  data[2].intern_data[1] /* *1.E-2 */ ,
-                                  data[2].intern_data[2] /* *1.E-2 */  ),
-                            R_vec(data[3].intern_data[0] /* *1.E-2 */ ,
-                                  data[3].intern_data[1] /* *1.E-2 */ ,
-                                  data[3].intern_data[2] /* *1.E-2 */  ),
+  Discrete<R_vec> location( R_vec(data[0].intern_data[in::index_pos_x] * in::convert_pos ,
+                                  data[0].intern_data[in::index_pos_y] * in::convert_pos ,
+                                  data[0].intern_data[in::index_pos_z] * in::convert_pos ),
+                            R_vec(data[1].intern_data[in::index_pos_x] * in::convert_pos ,
+                                  data[1].intern_data[in::index_pos_y] * in::convert_pos ,
+                                  data[1].intern_data[in::index_pos_z] * in::convert_pos ),
+                            R_vec(data[2].intern_data[in::index_pos_x] * in::convert_pos ,
+                                  data[2].intern_data[in::index_pos_y] * in::convert_pos ,
+                                  data[2].intern_data[in::index_pos_z] * in::convert_pos ),
+                            R_vec(data[3].intern_data[in::index_pos_x] * in::convert_pos ,
+                                  data[3].intern_data[in::index_pos_y] * in::convert_pos ,
+                                  data[3].intern_data[in::index_pos_z] * in::convert_pos ),
                             &time_fill);
 
   //momentum: beta*gamma  --> phy::m_e*beta_times_gamma(beta)*phy:c --> kg*m/s
   double btom = phy::m_e*phy::c;
-  Discrete<R_vec> momentum( btom*beta_times_gamma(R_vec(data[0].intern_data[3],
-                                                        data[0].intern_data[4],
-                                                        data[0].intern_data[5]) ),
-                           btom*beta_times_gamma(R_vec(data[1].intern_data[3],
-                                                        data[1].intern_data[4],
-                                                        data[1].intern_data[5]) ),
-                            btom*beta_times_gamma(R_vec(data[2].intern_data[3],
-                                                        data[2].intern_data[4],
-                                                        data[2].intern_data[5]) ),
-                            btom*beta_times_gamma(R_vec(data[3].intern_data[3],
-                                                        data[3].intern_data[4],
-                                                        data[3].intern_data[5]) ),
-                            &time_fill);
+  Discrete<R_vec> momentum(btom*beta_times_gamma(R_vec(data[0].intern_data[in::index_beta_x] * in::convert_beta,
+                                                       data[0].intern_data[in::index_beta_y] * in::convert_beta ,
+                                                       data[0].intern_data[in::index_beta_z] * in::convert_beta ) ),
+                           btom*beta_times_gamma(R_vec(data[1].intern_data[in::index_beta_x] * in::convert_beta ,
+                                                       data[1].intern_data[in::index_beta_y] * in::convert_beta ,
+                                                       data[1].intern_data[in::index_beta_z] * in::convert_beta ) ),
+                           btom*beta_times_gamma(R_vec(data[2].intern_data[in::index_beta_x] * in::convert_beta ,
+                                                       data[2].intern_data[in::index_beta_y] * in::convert_beta ,
+                                                       data[2].intern_data[in::index_beta_z] * in::convert_beta ) ),
+                           btom*beta_times_gamma(R_vec(data[3].intern_data[in::index_beta_x] * in::convert_beta ,
+                                                       data[3].intern_data[in::index_beta_y] * in::convert_beta ,
+                                                       data[3].intern_data[in::index_beta_z] * in::convert_beta ) ),
+                           &time_fill);
 
   More_discrete auto_fill(&time_fill);
 
@@ -105,15 +106,15 @@ void run_through_data(const one_line* data,
                               time_fill.get_delta_old());
 
     // set new to old:
-    time_fill.next(double(data[i].intern_data[6]) /* *1.E-15 */ );
+    time_fill.next(double(data[i].intern_data[in::index_time]) * in::convert_time );
 
-    location.next( R_vec(data[i].intern_data[0] /* *1.E-2 */ ,
-                         data[i].intern_data[1] /* *1.E-2 */ ,
-                         data[i].intern_data[2] /* *1.E-2 */  ));
+    location.next( R_vec(data[i].intern_data[in::index_pos_x] * in::convert_pos ,
+                         data[i].intern_data[in::index_pos_y] * in::convert_pos ,
+                         data[i].intern_data[in::index_pos_z] * in::convert_pos ));
 
-    momentum.next( btom*beta_times_gamma(R_vec(data[i].intern_data[3],
-                                               data[i].intern_data[4],
-                                               data[i].intern_data[5] ) ));
+    momentum.next( btom*beta_times_gamma(R_vec(data[i].intern_data[in::index_beta_x] * in::convert_beta ,
+                                               data[i].intern_data[in::index_beta_y] * in::convert_beta ,
+                                               data[i].intern_data[in::index_beta_z] * in::convert_beta ) ));
 
     gamma.next(auto_fill.gamma(momentum.get_future()));
 
