@@ -38,6 +38,24 @@ const unsigned int N_char_filename=256; // number of characters
 const char traceFileTemplate[] = "/net/cns/projects/HPLsim/xray/debus/ELBEThomson/basicRun2/trace_%04d.txt";
 const char outputFileTemplate[] = "my_spectrum_trace%06d.dat";
 
+namespace input
+{
+  const unsigned int index_time = 6; /* column id of time */
+
+  const unsigned int index_pos_x = 0; /* column id of x */
+  const unsigned int index_pos_y = 1; /* column id of y */
+  const unsigned int index_pos_z = 2; /* column id of z */
+
+  const unsigned int index_beta_x = 3; /* column id of beta_x */
+  const unsigned int index_beta_y = 4; /* column id of beta_y */
+  const unsigned int index_beta_z = 5; /* column id of beta_z */
+
+  /* unit conversion to SI units */
+  const double convert_time = 1.0; /* s -> s */
+  const double convert_pos = 1.0; /* m -> m */
+  const double convert_beta = 1.0; /* None -> None */
+}
+
 // explicit for process_data
 const unsigned int N_omega             = N_spectrum;
 const unsigned int index_files_first   = 0;
