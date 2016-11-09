@@ -64,14 +64,15 @@ single_direction.o: single_direction.hpp single_direction.cpp ./include/detector
              ./include/interpolation.tpp  ./include/fileExists.hpp ./include/fileExists.cpp
 	$(CC) $(CFLAGS) $(COBJ) $(CFLAGFORTRAN) $(OMP) -I./include/ single_direction.cpp
 
-all_directions.o: all_directions.cpp all_directions.hpp single_direction.hpp ./include/vector.hpp ./include/string_manipulation.hpp settings.hpp setFilename.hpp
+all_directions.o: all_directions.cpp all_directions.hpp single_direction.hpp ./include/vector.hpp ./include/string_manipulation.hpp settings.hpp \
+			 setFilename.hpp ./include/input_output.hpp
 	$(CC) $(CFLAGS) $(COBJ) $(OMP) $(ZIP) -I./include/ all_directions.cpp
 
 
 # How do I include the detector.hpp <-- vector.hpp dependency
 
 
-process: process_data.cpp settings.hpp setFilename.hpp
+process: process_data.cpp settings.hpp setFilename.hpp ./include/input_output.hpp
 	$(CC) $(CFLAGS) $(ZIP) process_data.cpp -o process_data
 
 clean:

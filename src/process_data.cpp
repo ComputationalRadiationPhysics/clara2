@@ -23,7 +23,7 @@
 #include <cstdio>
 #include <fstream>
 #include <sstream>
-#include "gzip_lib.hpp"
+#include "include/input_output.hpp"
 #include "settings.hpp"
 #include "setFilename.hpp"
 
