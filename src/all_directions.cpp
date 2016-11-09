@@ -35,7 +35,7 @@
 #include "string_manipulation.hpp"
 #include "import_from_file.hpp"
 #include "load_txt.hpp"
-#include "gzip_lib.hpp"
+#include "include/input_output.hpp"
 #include "settings.hpp"
 #include "setFilename.hpp"
 
