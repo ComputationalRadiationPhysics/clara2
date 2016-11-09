@@ -58,7 +58,7 @@ public:
 
   //! \brief constructor without filling data
   /*! @param h difference between time steps */
-  Discrete(const Discrete<double>* h)
+  Discrete(const Discrete<double>* h = 0)
     : h(h)
   { }
 
@@ -150,7 +150,7 @@ public:
   //! \brief constructor
   /*! @param Det is a reference to a detector class from which one gets:
        -> step width: the length of the time step between to steps */
-  More_discrete(Discrete<double>* h)
+  More_discrete(const Discrete<double>* h)
     : stepwidth(h) {}
 
 
