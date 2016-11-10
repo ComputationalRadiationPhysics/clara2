@@ -33,37 +33,50 @@
 #include "settings.hpp"
 
 
+
+/** function calculating beta * gamma from beta
+  *
+  * @param R_vec beta (speed normalized to the speed of light
+  * @retun R_vec beta times relativistic gamma factor
+  *              = momentum / (mass * speed of light)
+  */
 inline R_vec beta_times_gamma(R_vec beta)
 {
   return std::sqrt(1./(1.-util::square<R_vec, double>(beta))) * beta;
 }
 
 
+/** function to step through loaded data and add radiation amplitude to
+  * a given detector
+  *
+  * @param data (one_line type pointer) pointing to trajectory data
+  * @param linenumber number of time steps in data
+  * @param detector Clara detector for one specific direction
+  */
 template<typename DET>
 void run_through_data(const one_line* data,
                       const unsigned linenumber,
                       DET detector)
 {
-  /* ---------- storing data : comparable to real data stream (not like a file here) --- */
-
-  //time
+  /* set up data containers using Discrete class that allows derivatives */
+  /* time */
   Discrete<double> time_fill;
   const Discrete<double> *time_fill_ref = &time_fill;
-  //position
+  /* position */
   Discrete<R_vec> location( time_fill_ref );
-  //momentum
+  /* momentum */
   Discrete<R_vec> momentum( time_fill_ref );
 
-  // decrived quantities
+  /* decrived quantities */
   More_discrete auto_fill( time_fill_ref );
-  // beta
+  /* beta */
   Discrete<R_vec> beta( time_fill_ref );
-  // gamma
+  /* gamma */
   Discrete<double> gamma( time_fill_ref );
 
-  /* -------- streaming the data and sending it to the detectors: ---------- */
 
   namespace in = param::input;
+  /* step through data for each time step: streaming approach used (future option?) */
   for(unsigned i=0; i<linenumber; ++i)
   {
     // fill Discrete class with values:
