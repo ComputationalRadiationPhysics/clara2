@@ -23,19 +23,26 @@
 #include "settings.hpp"
 
 
-void setFilename(char* filename, 
+/** function to set file name with index based on template
+  *
+  * @param filename char pointer to char array where file name
+  *                 should be stored
+  * @param templateString pointer to char array with template
+  * @param index unsigned int with id number
+  * @param N_char number of characters available in filename array
+  */
+void setFilename(char* filename,
                  const char* templateString,
-                 const unsigned int trace_id, 
+                 const unsigned int index,
                  const unsigned int N_char_filename)
 {
   if(sprintf(filename,
              templateString,
-             trace_id)
-     > int(N_char_filename))
+             index)
+     > int(N_char_filename)) /* check if name fits in filename array */
   {
     /* throw warning when buffer is to small for path name */
     std::cerr << "filename buffer too small!!! " << std::endl;
     throw "Buffer to small!";
   }
 }
-
