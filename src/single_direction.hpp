@@ -46,7 +46,7 @@ using namespace std;
 /**
  * calculates a single spectra for only one trace and one direction
  *
- * @param one_line pointer to trajectory data
+ * @param data pointer to trajectory data
  * @param linenumber number of data points
  * @param all_omega pointer to frequency values
  * @param all_spectrum pointer to memory for spectra

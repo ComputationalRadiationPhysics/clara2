@@ -44,8 +44,8 @@
  * function that calculates spectra in different directions for
  * a single particle trace
  *
- * @param trace_id a unique id which which the trajectory file
- *                 can be identified
+ * @param trace_id a unique id which identifies the trajectory file
+ *
  * @return error code
  **/
 int all_directions(const unsigned int trace_id)
@@ -135,7 +135,7 @@ int all_directions(const unsigned int trace_id)
   /* --------- calculate spectrum of one trace for all direction ---------- */
 
 
-  /* in case of additional parallelization using OpenMP uncomment this: */
+  /* in case of additional parallelization using OpenMP remove comment: */
   /* #pragma omp parallel for num_threads(4) schedule(dynamic, 1) */
   for(unsigned direction_index = 0; direction_index< N_direction; ++direction_index)
   {
@@ -147,9 +147,9 @@ int all_directions(const unsigned int trace_id)
      * compute the spectra for a single direction
      * and trow an error if something goes wrong
      */
-      if((single_direction(data, linenumber, omega, all_spec[direction_index].spectrum, param::N_spectrum, my_theta, my_phi))!=0)
+    if((single_direction(data, linenumber, omega, all_spec[direction_index].spectrum, param::N_spectrum, my_theta, my_phi))!=0)
     {
-      std::cerr << "error occured in single_direction function" << std::endl;
+      std::cerr << "error occurred in single_direction function" << std::endl;
       throw "error in single_direction function";
     }
   }
@@ -204,7 +204,7 @@ int all_directions(const unsigned int trace_id)
      */
     for(unsigned j=0, output_index=0; j<N_direction; ++j) /* for all directions */
     {
-      for(unsigned i=0; i<param::N_spectrum; ++i) /* fora ll frequencies */
+      for(unsigned i=0; i<param::N_spectrum; ++i) /* for all frequencies */
       {
         /* fill output-data-container with computed spectral data */
         output_data[output_index] = all_spec[j].spectrum[i];
@@ -214,7 +214,7 @@ int all_directions(const unsigned int trace_id)
         output_index++;
       }
     }
-    /* store (uncompressed) collected data using clara2's gzib_lib.hpp */
+    /* store (uncompressed) collected data using clara2's input_output.hpp */
     store_data(output_data,
                param::N_spectrum*N_direction*sizeof(double),
                outputfilename);
