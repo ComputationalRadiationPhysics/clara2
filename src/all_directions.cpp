@@ -30,9 +30,7 @@
 
 #include "single_direction.hpp"
 #include "vector.hpp"
-#include "analytical_solution.hpp"
 #include "physics_units.hpp"
-#include "string_manipulation.hpp"
 #include "import_from_file.hpp"
 #include "load_txt.hpp"
 #include "include/input_output.hpp"
