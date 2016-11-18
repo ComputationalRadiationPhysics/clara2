@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include "detector_fft.hpp"
 
 template <typename X, typename Y>
 void interpolation(const X* x_old,

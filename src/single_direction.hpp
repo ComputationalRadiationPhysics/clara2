@@ -19,28 +19,9 @@
  */
 
 
-
-
-#include <iostream>
-#include <string>
-#include <cassert>
-#include <cstdlib>
-
 #pragma once
 
-using namespace std;
-
-#include "vector.hpp"
-#include "detector_e_field.hpp"
-#include "detector_dft.hpp"
-#include "detector_fft.hpp"
 #include "import_from_file.hpp"
-#include "physics_units.hpp"
-#include "fileExists.hpp"
-
-/* only needed for near field calculation
- * REMOVE ? */
-/* #include"large_index_storage.hpp" */
 
 
 /**

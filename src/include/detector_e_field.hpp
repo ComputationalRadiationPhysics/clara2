@@ -19,20 +19,10 @@
  */
 
 
-
-
-#include <iostream>
-#include <cassert>
-#include <complex>
-#include <cmath>
+#pragma once
 
 #include "vector.hpp"
 #include "large_index_storage.hpp"
-#include "physics_units.hpp"
-#include "utilities.hpp"
-
-
-#pragma once
 
 
 /** \brief class for a point-like detector storing the electric field (signal) externally */

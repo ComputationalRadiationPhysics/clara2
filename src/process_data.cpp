@@ -19,10 +19,7 @@
  */
 
 
-#include <iostream>
-#include <cstdio>
 #include <fstream>
-#include <sstream>
 #include "include/input_output.hpp"
 #include "settings.hpp"
 #include "setFilename.hpp"

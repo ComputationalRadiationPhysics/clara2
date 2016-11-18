@@ -19,8 +19,6 @@
  */
 
 
-#include "large_index_storage.hpp"
-
 
 template< typename T>
 inline Large_index_storage<T>::Large_index_storage(const unsigned N,

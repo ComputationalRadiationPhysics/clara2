@@ -19,16 +19,9 @@
  */
 
 
-
-
-#include <iostream>
-#include <cstdlib>
-
 #pragma once
 
 #include "discrete.hpp"
-#include "import_from_file.hpp"
-#include "physics_units.hpp"
 #include "vector.hpp"
 #include "settings.hpp"
 
