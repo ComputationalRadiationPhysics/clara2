@@ -20,16 +20,10 @@
 
 
 
-#include <iostream>
-#include <cassert>
-#include <complex>
-#include <cmath>
+#pragma once
 
 #include "vector.hpp"
-#include "physics_units.hpp"
-#include "utilities.hpp"
 
-#pragma once
 
 /** Detector class that computes the spectra via a
   * (non-equidistat) discrete Fourier transform

@@ -21,6 +21,10 @@
 
 #include "detector_e_field.hpp"
 
+#include "physics_units.hpp"
+#include "utilities.hpp"
+
+
 /** constructor for electric field detector (at position in space)
   *
   * @param detector  = R_vec with observation position

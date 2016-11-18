@@ -20,7 +20,11 @@
 
 
 #include "detector_fft.hpp"
+
 #include "../settings.hpp"
+#include "physics_units.hpp"
+#include "utilities.hpp"
+#include "fft_ned.hpp"
 
 
 // Constructor and Destructor:

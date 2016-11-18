@@ -22,6 +22,9 @@
 
 #include "detector_dft.hpp"
 
+#include "physics_units.hpp"
+#include "utilities.hpp"
+
 
 // Constructors and Destructors:
 
