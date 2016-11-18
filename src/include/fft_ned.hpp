@@ -19,18 +19,9 @@
  */
 
 
-
-
-
-#include <iostream>
-#include <fstream>
-#include <cmath>
-#include <time.h>
-#include <stdio.h>
-#include <complex>
-
-
 #pragma once
+
+
 
 inline unsigned power_of_two(unsigned N)
 {

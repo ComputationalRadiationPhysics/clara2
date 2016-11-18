@@ -19,19 +19,10 @@
  */
 
 
-
-
-#include <iostream>
-#include <cassert>
-#include <complex>
-#include <cmath>
+#pragma once
 
 #include "vector.hpp"
-#include "physics_units.hpp"
-#include "utilities.hpp"
-#include "fft_ned.hpp"
 
-#pragma once
 
 //! \brief class for a point-like detector storing the signal externally
 class Detector_fft

@@ -19,11 +19,9 @@
  */
 
 
-
-#include <stdio.h>
-#include <iostream>
-
 #pragma once
+
+#include <iostream>
 
 
 /**
