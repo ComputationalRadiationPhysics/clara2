@@ -19,11 +19,9 @@
  */
 
 
-
-
-#include <fstream>
-
 #pragma once
+
+
 
 //! \brief simple container to store data from the Clara trace
 /*! usage: one_line x[number of data lines]; then x[i].intern_data[0-6] */

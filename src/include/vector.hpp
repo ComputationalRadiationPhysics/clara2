@@ -19,13 +19,14 @@
  */
 
 
+#pragma once
 
 #include <iostream>
 #include <cmath>
 #include <cassert>
 #include <complex>
 
-#pragma once
+
 
 /**
  * \brief  Vector class by Richard

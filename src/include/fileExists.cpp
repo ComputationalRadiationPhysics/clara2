@@ -20,6 +20,9 @@
 
 #include "fileExists.hpp"
 
+#include <fstream>
+
+
 /**
  * check whether a file exists or not
  *

@@ -20,23 +20,15 @@
 
 #include "all_directions.hpp"
 
-#include <iostream>
-#include <string>
-#include <cassert>
-#include <cstdlib>
-#include <stdlib.h>
+
 #include <sys/time.h>
-#include <omp.h>  // OpenMP
 
 #include "single_direction.hpp"
-#include "vector.hpp"
-#include "physics_units.hpp"
-#include "import_from_file.hpp"
 #include "load_txt.hpp"
 #include "include/input_output.hpp"
 #include "settings.hpp"
 #include "setFilename.hpp"
-
+#include "fileExists.hpp"
 
 /**
  * function that calculates spectra in different directions for

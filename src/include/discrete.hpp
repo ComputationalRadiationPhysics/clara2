@@ -19,13 +19,10 @@
  */
 
 
-
-
+#pragma once
 
 #include "utilities.hpp"
 #include "physics_units.hpp"
-
-#pragma once
 
 
 /**

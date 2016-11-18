@@ -21,8 +21,17 @@
 
 #include "single_direction.hpp"
 
+
+#include "vector.hpp"
+//#include "detector_e_field.hpp" /* currently not used */
+#include "detector_dft.hpp"
+#include "detector_fft.hpp"
+
+/* only needed for near field calculation
+ * REMOVE ? */
+/* #include"large_index_storage.hpp" */
+
 #include "interpolation.hpp"
-#include "discrete.hpp"
 #include "run_through_data.hpp"
 
 
