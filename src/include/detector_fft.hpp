@@ -24,20 +24,30 @@
 #include "vector.hpp"
 
 
-//! \brief class for a point-like detector storing the signal externally
+/** \brief class for a point-like detector storing the signal externally */
 class Detector_fft
 {
 public:
-  //! \brief constructor for a point-like detector
-  /*!
-    @param n_unit   = unit vector in direction of energy deposition
-    @param delta_t  = time step of odint
-  */
+  /** constructor for a point-like detector using a Fast Fourier Transform
+    * to calculate the radiation spectra
+    *
+    *  @param n_unit   = unit vector in direction of energy deposition
+    *  @param N_data   = number of time step in trace
+    */
   Detector_fft(const R_vec n_unit, 
                const unsigned N_data);
 
+  /** destructor */
   ~Detector_fft();
 
+  /** method to add an radiation amplitude for one time step
+    *
+    * @param r = position
+    * @param beta = speed / speed_of_light
+    * @param dot_beta = time derivative of beta
+    * @param t_part = time
+    * @param delta_t = time step width
+    */
   void add_to_spectrum(const R_vec r_0,
                        const R_vec beta_0,
                        const R_vec dot_beta_0,
@@ -45,6 +55,18 @@ public:
                        const double delta_t);
 
 
+  /* ISSUE # 74 - interface too crowded */
+  /** method to add an radiation amplitude for one time step
+    *
+    * @param r = position
+    * @param p = momentum
+    * @param dot_p = time derivative of p
+    * @param beta = speed / speed_of_light
+    * @param gamma = relativistic gamma factor
+    * @param dot_gamma = time derivative of gamma
+    * @param t_part = time
+    * @param delta_t = time step width
+    */
   void add_to_spectrum(const R_vec r_0,
                        const R_vec p_0,
                        const R_vec dot_p_0,
@@ -54,31 +76,40 @@ public:
                        const double t_part_0,
                        const double delta_t);
 
-
+  /** calculate the spectrum from all added amplitudes */
   void calc_spectrum();
 
+  /* ISSUE #75 - separate get spectrum and get frequency */
+  /** get spectrum or frequency
+    *
+    * @param a = id between [0, number of frequencies]
+    * @param b = int return 0->frequency, 1->spectra in Js
+    */
   double get_spectrum(unsigned a, unsigned b);
 
+  /** return total energy (in calculated spectral range) */
   double energy();
 
+  /** return the number of frequencies till the Nyquist frequency
+    * (number of half of all frequency bins)
+    */
   unsigned half_frequency();
 
 //data:
 private:
 
-  const R_vec n_unit;
-  // delta_t; // necessary for integration
-  const unsigned N_data;
+  const R_vec n_unit; /* observation direction */
+  const unsigned N_data; /* number of time steps in trace */
 
-  unsigned spek_length;
-  unsigned counter;
+  unsigned spec_length; /* number of frequencies for spectra */
+  unsigned counter; /* number of time steps analyzed */
 
-  double* time;
-  R_vec* data;
+  double* time; /* pointer to retarded time */
+  R_vec* data; /* pointer to real vector amplitudes */
 
-  double* spektrum_mag;
+  double* spectrum_mag; /* pointer to absolute spectra */
 
 public:
-  double* frequency;
+  double* frequency; /* pointer to frequencies */
 
 };
