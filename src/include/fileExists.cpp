@@ -23,12 +23,11 @@
 #include <fstream>
 
 
-/**
- * check whether a file exists or not
- *
- * @param filename pointer to array containing file location
- * @return Returs true if file exists, otherwise false.
- **/
+/** \brief check whether a file exists or not
+  *
+  * @param filename pointer to array containing file location
+  * @return Returs true if file exists, otherwise false.
+  */
 bool file_exists(const char *filename)
 {
   std::ifstream ifile(filename);
