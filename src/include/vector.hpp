@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Richard Pausch
+ * Copyright 2014-2016 Richard Pausch
  *
  * This file is part of Clara 2.
  *
@@ -19,6 +19,7 @@
  */
 
 
+#pragma once
 
 #include <iostream>
 #include <cmath>
@@ -26,13 +27,11 @@
 #include <complex>
 
 
-#ifndef VECTOR_RPAUSCH
-#define VECTOR_RPAUSCH
 
 /**
- * \brief  Vector class by Richard 
- *  
- *  This class provied operations like: +, -, *, %, /, =, +=, [], mag() \n
+ * \brief  Vector class by Richard
+ *
+ *  This class provides operations like: +, -, *, %, /, =, +=, [], mag() \n
  *  usage: Vector<datatype, size> \n
  *  short for Vector<double, 3> --> R_vec
  */
@@ -41,55 +40,57 @@ template< typename T, unsigned N>
 class Vector{
 
 public:
-// constructor, destructor:
-    /// basic constructor settting everything to zero
-    inline Vector();     
-    
-    //! \brief special constructor for 3D
-    /*! @param x first coordinate 
-        @param y second coordinate 
-        @param z third coordinate */
-    inline Vector(double x, double y=0., double z=0.);
+  // constructor, destructor:
+  /// basic constructor setting everything to zero
+  inline Vector();
 
-    /// copy constructor --> not neccesairy
-    
-    /// destructor
-    inline ~Vector() {}  // not neccesary
-    
+  //! \brief special constructor for 3D
+  /*! @param x first coordinate
+      @param y second coordinate
+      @param z third coordinate */
+  inline Vector(double x,
+                double y=0.,
+                double z=0.);
 
-// Getters and Setters: 
-    /// access data
-    inline T & operator[](unsigned i); 
-    
-    /// access data
-    const inline T & operator[](unsigned i) const;
+  /// copy constructor --> not necessary
+
+  /// destructor
+  inline ~Vector() {}  // not necessary
 
 
-   
-// Calculations:
-    
-    /// addition
+  // Getters and Setters:
+  /// access data
+  inline T & operator[](unsigned i);
+
+  /// access data
+  const inline T & operator[](unsigned i) const;
+
+
+
+  // Calculations:
+
+  /// addition
   inline Vector operator+ (const  Vector& v) const;
 
-    /// subtraction
+  /// subtraction
   inline Vector operator- (const Vector& v) const;
-    
-    /// magnitude
+
+  /// magnitude
   inline T mag() const;
 
-    /// scalar product
+  /// scalar product
   inline T dot(const Vector& v) const;
-    
-    ///  multiplication with scalar
+
+  ///  multiplication with scalar
   inline Vector dot(const T a) const;
-    
-    /// cross-product-warning
+
+  /// cross-product-warning
   inline Vector cross(const Vector& v) const;
-        
-    /// assign addition
+
+  /// assign addition
   inline Vector & operator += (const Vector& v);
 
-  inline Vector unit_vec();
+  inline Vector unit_vec() const;
 
 
   ////////////
@@ -99,59 +100,63 @@ public:
 
   /// make complex vector real (absolute value of complex number)
   Vector<double, N> abs() const;
-    
-  
-      
+
+
+
 private:
-    /// stored data
-    T data[N];      
+  /// stored data
+  T data[N];
 
 };
 
 
-// Member function spezialization:
+// Member function specialization:
 
 
 /// 3D cross product
 template<>
-inline Vector<double, 3> Vector<double, 3>::cross(const Vector<double, 3>& v) const;    
+inline Vector<double, 3> Vector<double, 3>::cross(const Vector<double, 3>& v) const;
 
 
 
 // global methods --> symbols for calculations and printing
 
 template< typename T, unsigned N>  /// Vector * Vector --> scalar product
-inline double operator * (const Vector<T, N>& a , const Vector<double, 3>& b );
+inline double operator * (const Vector<T, N>& a ,
+                          const Vector<double, 3>& b );
 
 template< typename T, unsigned N>  /// Vector * scalar
-inline Vector<T,N> operator * (const Vector<T, N> & v, const double a);
+inline Vector<T,N> operator * (const Vector<T, N> & v,
+                               const double a);
 
 template< typename T, unsigned N>  /// scalar * Vector
-inline Vector<T,N> operator * (const double a, const Vector<T, N> & v);
+inline Vector<T,N> operator * (const double a,
+                               const Vector<T, N> & v);
 
 template< typename T, unsigned N>  /// Vector / scalar
-inline Vector<T,N> operator / (const Vector<T, N> & v, const double a);
+inline Vector<T,N> operator / (const Vector<T, N> & v,
+                               const double a);
 
 template< typename T, unsigned N>  /// cross product --> Vector % Vector
-inline Vector<T,N> operator % (const Vector<T,N> & a, const Vector<T,N> & b);
+inline Vector<T,N> operator % (const Vector<T,N> & a,
+                               const Vector<T,N> & b);
 
 
 //! \brief output stream used on vector object
-/*! @param os output stream 
- @param v vector  */
+/*! @param os output stream
+    @param v vector  */
 template< typename T, unsigned N>  /// print Vector
-inline std::ostream & operator << (std::ostream & os, const Vector<T,N> & v);
+inline std::ostream & operator << (std::ostream & os,
+                                   const Vector<T,N> & v);
 
 
 /*! \var typedef Vector<double, 3> R_vec
- \brief A type definition for a 3D double vector.
- 
- Because in physics this is the most widly used vector, there is a special 
- typedef for it.
- */
+  \brief A type definition for a 3D double vector.
+
+  Because in physics this is the most widely used vector, there is a special
+  typedef for it.
+*/
 
 #include "vector.tpp"
 
 typedef Vector<double, 3> R_vec;
-
-#endif

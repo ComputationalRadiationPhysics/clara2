@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Richard Pausch
+ * Copyright 2014-2016 Richard Pausch, Alexander Koehler
  *
  * This file is part of Clara 2.
  *
@@ -19,194 +19,203 @@
  */
 
 
-
-#include <iostream>
-#include <cstdio>
 #include <fstream>
-#include <sstream>
-#include "gzip_lib.hpp"
+#include "include/input_output.hpp"
+#include "settings.hpp"
+#include "setFilename.hpp"
 
+
+/** data structure to hold spectral data
+  * that is automatically initialized with zeros
+  */
 template<typename T, unsigned int N>
 struct spectrum
 {
+  /** constructor
+    * initialize data with zeros
+    */
   spectrum(void)
   {
+    /* initialize all spectral data with zeros */
     for(unsigned int i=0; i<N; ++i)
       spec[i] = (T) 0.0;
   }
 
-  T spec[N];
+  T spec[N]; /* data */
 };
 
 
 
-
-int main(int argc, char * const argv[])
+/** process all spectra and generate total (incoherent) spectra
+  *
+  * Reads all spectra from each trace and combines them incoherently
+  * to a total spectra for each phi value.
+  *
+  * @return int error code: 0 -> successful
+  */
+int main()
 {
-
-  if(argc != 2)
-    {
-      std::cout << "wrong usage: needs 1 parameters not " << argc -1 << std::endl;
-      std::cout << "give: encoding" << std::endl;
-      return 1;
-    }
-
-
   using namespace std;
-  const unsigned int index_files_first = 0;
-  const unsigned int index_files_last = 2000;
-  const unsigned int N_omega = 2048;
-  const unsigned int N_theta = 120;
-  const unsigned int N_phi = 2;
-  const unsigned int N_direction = N_theta*N_phi;
-  const char input_pattern[] = "my_spectrum_trace%06d.dat";
-  const char output_pattern[] = "my_spectrum_all_%03d.dat";
-  const unsigned int N_split = 8;
 
-  spectrum<double, N_omega>* data = new spectrum<double, N_omega>[N_direction];
+  /* compute total number of observation direction */
+  const unsigned int N_direction = param::N_theta * param::N_phi;
+
+  /* spectral container to hold total spectrum (for each direction) */
+  spectrum<double, param::N_omega>* data = new spectrum<double, param::N_omega>[N_direction];
 
 
+  /* -----------------------------
+     READ SPECTRA FROM INPUT FILES
+     -----------------------------*/
+  for(unsigned int index_files = param::index_files_first; index_files <= param::index_files_last; ++index_files)
+  {
+    /* set file name for spectra from trace with id index_files */
+    char filename[param::N_char_filename];
+    setFilename(filename, param::outputFileTemplate, index_files, param::N_char_filename);
 
-
-
-  // -------- get store info -----------
-  bool asci_input;
-  std::string store_str = argv[1];
-  if(!store_str.compare("asci"))
+    /* ----- read input file ------ */
+    if(param::ascii_output) /* if files loaded have ASCII format */
     {
-      asci_input = true;
-      std::cout << "ASCI input" << std::endl;
+      FILE* pFile = fopen(filename, "r"); /* file handler */
+
+      if(pFile == NULL) /* file handler doe not point to file - abort this file */
+      {
+        std::cout << "abort ascii file " << index_files
+                  << "/" << param::index_files_last << std::endl;
+        continue;
+      }
+      else /* file handler points to valid file */
+      {
+        std::cout << "load ascii file " << index_files
+                  << "/" << param::index_files_last << std::endl;
+      }
+
+      /* process all directions */
+      for(unsigned int j=0; j<N_direction; ++j)
+      {
+        /* chunk size (in doubles) for data loading for ascii files */
+        const unsigned int N_split = 8;
+        double data_dump[N_split]; /* temporal data container */
+
+        /* go through all frequencies */
+        for(unsigned int i=0; i< param::N_omega; i+=N_split)
+        {
+          /* read data from ascii file and convert to double */
+          if(fscanf(pFile, "%lf \t%lf \t%lf \t%lf \t%lf \t%lf \t%lf \t%lf",
+                    &(data_dump[0]), &(data_dump[1]), &(data_dump[2]), &(data_dump[3]),
+                    &(data_dump[4]), &(data_dump[5]), &(data_dump[6]), &(data_dump[7]))
+             == (int)N_split)
+          {
+            for(unsigned int a =0; a<N_split; ++a)
+              data[j].spec[i+a] += data_dump[a]; /* add spectral data to container */
+          }
+          else
+            throw "data"; /* in case data reading fails - throw error */
+        }
+      }
+      fclose(pFile);  /* close file handler */
     }
-  else if(!store_str.compare("binary"))
-    {    
-      asci_input = false;
-      std::cout << "binary input" << std::endl;
-    }
-  else
+    else /* if files loaded have binary format */
     {
-      std::cerr << "2nd argument needs to be binary or asci" << std::endl;
-      throw "bin_asci";  
+      /* create double array for entire spectra (of one file) */
+      const unsigned int N_double = param::N_omega * N_direction;
+      double* data_input = new double[N_double];
+
+      /* read binary data at once */
+      if(read_data(data_input, N_double*sizeof(double), filename) == 1)
+      {
+        /* if read failed - abort this file */
+        std::cout << "abort binary file " << index_files
+                  << "/" << param::index_files_last << std::endl;
+        continue;
+      }
+      else /* if read was successful - print verbose output */
+      {
+        std::cout << "load binary file " << index_files
+                  << "/" << param::index_files_last << std::endl;
+      }
+
+      /* add entire spectrum to all spectrum container
+         (for all directions and frequencies) */
+      for(unsigned int i=0; i<N_double; ++i)
+        data[i/param::N_omega].spec[i%param::N_omega] += data_input[i];
+
+      delete[] data_input; /* delete allocated memory */
     }
 
+  }
+  /* ---------------------------------
+     END READ SPECTRA FROM INPUT FILES
+     ---------------------------------*/
 
 
+  /* ----------------------------------
+     STORE INCOHERENT RADIATION SPECTRA
+     ----------------------------------*/
 
+  std::cout << "store data" << std::endl; /* verbose output */
 
-  // ----- run through all input files -------
-  for(unsigned int index_files = index_files_first; index_files <= index_files_last; ++index_files)
+  /* store spectra over theta  for each phi */
+  for(unsigned int index_phi = 0; index_phi < param::N_phi; ++index_phi)
+  {
+    /* set output file name */
+    char output_filename[param::N_char_filename];
+    setFilename(output_filename, param::output_pattern, index_phi, param::N_char_filename);
+
+    std::ofstream output(output_filename); /* file handler */
+    if(output.is_open()) /* file successfully created */
     {
-
-      char filename[256];
-      sprintf(filename, input_pattern, index_files);
-
-      // ------ read input file ------
-      if(asci_input)
-	{
-	  // ---- files loaded have ASCI  format -------
-	  FILE* pFile = fopen(filename, "r");
-	  if(pFile == NULL)
-	    {
-	      std::cout << "abort asci file " << index_files 
-			<< "/" << index_files_last << std::endl; 
-	      continue;
-	    }
-	  else
-	    {
-	      std::cout << "load asci file " << index_files 
-			<< "/" << index_files_last << std::endl;
-	    }
-
-	  for(unsigned int j=0; j<N_direction; ++j)
-	    {
-	      double data_dump[N_split];
-	      for(unsigned int i=0; i< N_omega; i+=N_split)
-		{
-		  if(fscanf(pFile, "%lf \t%lf \t%lf \t%lf \t%lf \t%lf \t%lf \t%lf", 
-			    &(data_dump[0]), &(data_dump[1]), &(data_dump[2]), &(data_dump[3]),
-			    &(data_dump[4]), &(data_dump[5]), &(data_dump[6]), &(data_dump[7])) 
-		     == (int)N_split)
-		    {
-		      for(unsigned int a =0; a<N_split; ++a)
-			data[j].spec[i+a] += data_dump[a];
-		    }
-		  else
-		    throw "data"; 
-		} 
-	    }
-	  fclose(pFile);
-	}
-      else
-	{
-	  // ---- binary input ---------
-	  const unsigned int N_double = N_omega*N_direction;
-	  double* data_input = new double[N_double];
-
-	  if(read_data(data_input, N_double*sizeof(double), filename) == 1)
-	    {
-	      std::cout << "abort binary file " << index_files 
-			<< "/" << index_files_last << std::endl; 
-	      continue;
-	    }
-	  else
-	    {
-	      std::cout << "load binary file " << index_files 
-			<< "/" << index_files_last << std::endl;
-	    }
-
-	  for(unsigned int i=0; i<N_double; ++i)
-	    data[i/N_omega].spec[i%N_omega] += data_input[i];
-
-	  delete[] data_input;
-	}
-    
+      /* for each theta do: */
+      for(unsigned j=index_phi*param::N_theta; j< (param::N_theta*(index_phi+1)); ++j)
+      {
+        /* for each omega do: */
+        for(unsigned i=0; i<param::N_omega; ++i)
+        {
+          output << data[j].spec[i] << " \t";
+        }
+        output << std::endl;
+      }
+      output.close();
     }
-
-
-  std::cout << "store data" << std::endl;
-  for(unsigned int index_phi = 0; index_phi < N_phi; ++index_phi)
+    else /* file creation failed - throw error */
     {
-      char output_filename[256];
-      sprintf(output_filename, output_pattern, index_phi);
-      std::ofstream output(output_filename);
-      if(output.is_open())
-	{
-	  for(unsigned j=index_phi*N_theta; j< (N_theta*(index_phi+1)); ++j)
-	    {
-	      for(unsigned i=0; i<N_omega; ++i)
-		{
-		  output << data[j].spec[i] << " \t";
-		}
-	      output << std::endl;
-	    }
-	  output.close();
-	}
-      else
-	{
-	  std::cerr << "error: could not write output-file --> phi-index:" << index_phi << std::endl;
-	  throw "error output";
-	}
+      std::cerr << "error: could not write output-file --> phi-index:" << index_phi << std::endl;
+      throw "error output";
     }
-
-
-
+  }
 
   delete[] data;
 
+  /* --------------------------------------
+     END STORE INCOHERENT RADIATION SPECTRA
+     --------------------------------------*/
 
 
-  std::cout << "deleting files" << std::endl;
-  for(unsigned int index_files = index_files_first; index_files <= index_files_last; ++index_files)
-    {
-      char filename[256];
-      sprintf(filename, input_pattern, index_files);
+  /* -------------------------------------
+     REMOVE SPECTRA FROM INDIVIDUAL TRACES
+     -------------------------------------*/
 
-      if(remove(filename) == 0)
-	std::cout << "removed: " << filename << std::endl;
-      else
-	std::cerr << "error removing: " << filename << std::endl;
-    }
+  std::cout << "deleting files" << std::endl; /* verbose output */
 
+  /* for each file previously loaded: */
+  for(unsigned int index_files = param::index_files_first;
+      index_files <= param::index_files_last;
+      ++index_files)
+  {
+    /* set file name */
+    char filename[param::N_char_filename];
+    setFilename(filename, param::outputFileTemplate, index_files, param::N_char_filename);
 
+    /* try deleting and give verbose output about success or failure */
+    if(remove(filename) == 0)
+      std::cout << "removed: " << filename << std::endl;
+    else
+      std::cerr << "error removing: " << filename << std::endl;
+  }
+
+  /* -----------------------------------------
+     END REMOVE SPECTRA FROM INDIVIDUAL TRACES
+     -----------------------------------------*/
 
   return 0;
 }

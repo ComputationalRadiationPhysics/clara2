@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Richard Pausch
+ * Copyright 2014-2016 Richard Pausch
  *
  * This file is part of Clara 2.
  *
@@ -18,21 +18,14 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#ifndef ALL_DIRECTIONS_RPAUSCH
-#define ALL_DIRECTIONS_RPAUSCH
+#pragma once
 
 /**
  * function that calculates spectra in different directions for
  * a single particle trace
  *
- * @param trace_id a unique id which which the trajctopry file 
- *                  can be identified 
- * @param arg  a string telling wether a "binary" or "asci" 
- *              output should be used
+ * @param trace_id a unique id which which the trajectory file
+ *                  can be identified
  * @return error code
  **/
-int all_directions(const unsigned int trace_id, const char arg[]);
-
-#endif
-
+int all_directions(const unsigned int trace_id);

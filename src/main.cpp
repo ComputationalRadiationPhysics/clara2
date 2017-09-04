@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Richard Pausch
+ * Copyright 2014-2016 Richard Pausch
  *
  * This file is part of Clara 2.
  *
@@ -19,13 +19,12 @@
  */
 
 
-
-
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "parallel_jobs.h"
 #include "all_directions.hpp"
+
 
 int main(void)
 {
@@ -35,7 +34,7 @@ int main(void)
 
   /** the function 'start_array()' calls the parallelization procedure
    * defined in 'parallel_jobs.h'. The variables 'numtasks' and 'rank'
-   * are set by this function and allow to use the parallel distrubuted 
+   * are set by this function and allow to use the parallel distributed
    * indexes to be used.
    **/
   if(start_array(&numtasks, &rank) != 0)
@@ -44,9 +43,9 @@ int main(void)
   //////////////////////////////////////////////////
   //    do some work here
   //////////////////////////////////////////////////
-  
+
   /* hostname of the machine this task is running on */
-  char * pHost; 
+  char * pHost;
   pHost = getenv("MYHOSTNAME");
 
 
@@ -61,60 +60,62 @@ int main(void)
   const unsigned int N_max = 2001; /* max number of trajectories */
   unsigned int i; /* index */
   for(i=rank; i<N_max; i += numtasks)
-    {
-      /** this for loop runs over all tasks assigned to the mpi/array process
-       * it starts with its first assigned id which is its rank. Then it 
-       * comnplets more tasks by going in strides of the total number of 
-       * processes to the next task. This is done untill N_max is reached.
-       **/
+  {
+    /** this for loop runs over all tasks assigned to the mpi/array process
+     * it starts with its first assigned id which is its rank. Then it
+     * completes more tasks by going in strides of the total number of
+     * processes to the next task. This is done until N_max is reached.
+     **/
 
-      /* print info on tasks performed to stdout */
-      printf("this is job %5d of %5d jobs in the array (on %s = rank: %d)\n", i, N_max, pHost, rank);
-      
-      /* redirect output stdout to file */
-      sprintf(dump, output_file, i);
-      freopen(dump, "w", stdout);
-      /* redirect output stderr to file */
-      sprintf(dump, error_file, i);
-      freopen(dump, "w", stderr);
+    /* print info on tasks performed to stdout */
+    printf("this is job %5d of %5d jobs in the array (on %s = rank: %d)\n", i, N_max, pHost, rank);
 
-
-      /* calculate the radiation of a single trajectory for all 
-       * directions of interest */
-      return_value = all_directions(i, "binary");
-      
-      /* set output back to stdout stderr 
-      * ISSUE: THIS DOES NOT WORK !!! 
-      */
-      fclose(stdout);
-      fclose(stderr);
-      freopen("/dev/tty", "w", stdout);
-      freopen("/dev/tty", "w", stderr);
+    /* redirect output stdout to file */
+    sprintf(dump, output_file, i);
+    freopen(dump, "w", stdout);
+    /* redirect output stderr to file */
+    sprintf(dump, error_file, i);
+    freopen(dump, "w", stderr);
 
 
-      /* this commented-out section is a method to stop the calculation if a certain 
-       * file is found on the hard drive - currently not used
-       */
+    /* calculate the radiation of a single trajectory for all
+     * directions of interest */
+    return_value = all_directions(i);
 
-      /*
+    /* set output back to stdout stderr
+     * ISSUE: THIS DOES NOT WORK !!!
+     */
+    fclose(stdout);
+    fclose(stderr);
+    freopen("/dev/tty", "w", stdout);
+    freopen("/dev/tty", "w", stderr);
+
+    if(return_value != 0)
+      std::cerr << "error occured in rank " << i << std::endl;
+
+    /* this commented-out section is a method to stop the calculation if a certain
+     * file is found on the hard drive - currently not used
+     */
+
+    /*
       if(check_break())
-	{
-	  printf("break point was set: i= %d  rank=%d  numtasks=%d \n", i, rank,  numtasks);
-	  break;
-	}
-      */
+      {
+        printf("break point was set: i= %d  rank=%d  numtasks=%d \n", i, rank,  numtasks);
+        break;
+      }
+    */
 
-    }
+  }
 
 
 
   ///////////////////////////////////////////////////
   //    work is done
   //////////////////////////////////////////////////
-  
-  /* clean up parallization if needed */
+
+  /* clean up parallelization if needed */
   end_array();
- 
+
 
   return 0;
 }

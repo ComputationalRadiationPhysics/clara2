@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Richard Pausch
+ * Copyright 2014-2016 Richard Pausch
  *
  * This file is part of Clara 2.
  *
@@ -19,39 +19,15 @@
  */
 
 
-
-
-#include <iostream>
-#include <string>
-#include <cassert>
-#include <cstdlib>
-
-
-
-#ifndef SINGLE_TRACE_RPAUSCH
-#define SINGLE_TRACE_RPAUSCH
-
-using namespace std;
-
-#include "vector.hpp"
-
-#include "detector_e_field.hpp"
-#include "detector_dft.hpp"
-#include "detector_fft.hpp"
+#pragma once
 
 #include "import_from_file.hpp"
-
-/* only needed for near field calculation 
- * REMOVE ? */
-/* #include"large_index_storage.hpp" */
-
-#include "physics_units.hpp"
 
 
 /**
  * calculates a single spectra for only one trace and one direction
  *
- * @param one_line pointer to trajectory data
+ * @param data pointer to trajectory data
  * @param linenumber number of data points
  * @param all_omega pointer to frequency values
  * @param all_spectrum pointer to memory for spectra
@@ -59,23 +35,11 @@ using namespace std;
  * @param theta_offset offset of angle theta (used to set angle)
  * @param phi_offset offset of angle phi (used to set angle)
  **/
-int single_trace(const one_line* data, 
-                 const unsigned int linenumber,
-                 const double* all_omega, 
-                 double* all_spectrum, 
-                 const unsigned N_all_spec,
-                 const double theta_offset = 0.0, 
-                 const double phi_offset = 0.0);
 
-
-
-/* TO DO: this should be in a separate file - ISSUE #15 */
-/**
- * check whether a file exists or not 
- *
- * @param filename pointer to array containing file location
- * @return Returs true if file exists, otherwise false.
- **/
-bool file_exists(const char *filename);
-
-#endif
+int single_direction(const one_line* data,
+                     const unsigned int linenumber,
+                     const double* all_omega,
+                     double* all_spectrum,
+                     const unsigned N_all_spec,
+                     const double theta_offset = 0.0,
+                     const double phi_offset = 0.0);

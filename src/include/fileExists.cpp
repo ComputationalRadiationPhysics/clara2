@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Richard Pausch
+ * Copyright 2016 Richard Pausch
  *
  * This file is part of Clara 2.
  *
@@ -18,7 +18,18 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-int main()
+#include "fileExists.hpp"
+
+#include <fstream>
+
+
+/** \brief check whether a file exists or not
+  *
+  * @param filename pointer to array containing file location
+  * @return Returs true if file exists, otherwise false.
+  */
+bool file_exists(const char *filename)
 {
-  return 0;
+  std::ifstream ifile(filename);
+  return ifile;
 }
