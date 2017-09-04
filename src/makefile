@@ -22,6 +22,8 @@
 
 CC = g++
 CFLAGS = -Wall -O3
+# compile against fftw library
+# http://www.fftw.org/ - an open source FFT library under GPL 2.0 license
 CFFT = -lfftw3 -lm
 COBJ = -c
 OMP = -fopenmp

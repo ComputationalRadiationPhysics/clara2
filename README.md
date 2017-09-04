@@ -30,3 +30,12 @@ Software License
 *Clara2* is licensed under the **GPLv3+**. You can use any of our *libraries* with
 **GPLv3+ or LGPLv3+** (they are *dual-licensed*).
 Please refer to our [LICENSE](LICENSE)
+
+
+Dependency
+----------
+
+*Clara2* uses the FFTW library when used with the (faster) fft detector.
+If you install *Clara2*, you need to install FFTW as well. You can finde 
+compiled code at: http://www.fftw.org/ or the source code at 
+https://github.com/FFTW/fftw3. FFTW3 is under GNU General Public License v2.0.
