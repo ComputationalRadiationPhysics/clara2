@@ -24,7 +24,7 @@
 #include "../settings.hpp"
 #include "physics_units.hpp"
 #include "utilities.hpp"
-#include "fft_ned.hpp"
+#include "ned_fft.hpp"
 
 
 // Constructor and Destructor:
