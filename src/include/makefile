@@ -1,4 +1,4 @@
-# Copyright 2014 Richard Pausch
+# Copyright 2014-2016 Richard Pausch, Alexander Koehler
 #
 # This file is part of Clara 2.
 #
@@ -17,20 +17,19 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #
 
-# make the detectorclass correctly
+# make the detector class correctly
 
 CC = g++
 CFLAGS = -Wall -O3 -c
+# compile against fftw library
+# http://www.fftw.org/ - an open source FFT library under GPL 2.0 license
+CFFT = -lfftw3 -lm
 
+all: libDetector.a fileExists.o
 
-all: libDetector.a 
-
-libDetector.a: detector_e_field.o  detector_dft.o detector_fft.o 
+libDetector.a: detector_e_field.o  detector_dft.o detector_fft.o
 	rm -f libDetector.a
-	ar cr libDetector.a detector_e_field.o detector_dft.o detector_fft.o 
-
-#copy: libDetector.a
-#	cp libDetector.a ..
+	ar cr libDetector.a detector_e_field.o detector_dft.o detector_fft.o
 
 
 # E_field detector:
@@ -42,10 +41,11 @@ detector_dft.o: detector_dft.cpp detector_dft.hpp vector.hpp utilities.hpp
 	$(CC) $(CFLAGS) detector_dft.cpp
 
 # Fast Fourier Transformation detectors:
-detector_fft.o: detector_fft.cpp detector_fft.hpp vector.hpp utilities.hpp fft_ned.hpp
-	$(CC) $(CFLAGS) detector_fft.cpp
+detector_fft.o: detector_fft.cpp detector_fft.hpp vector.hpp utilities.hpp ned_fft.hpp ../settings.hpp
+	$(CC) $(CFLAGS) $(CFFT) detector_fft.cpp
 
-
+fileExists.o: fileExists.hpp fileExists.cpp
+	$(CC) $(CFLAGS) fileExists.cpp
 
 # How do I include the detector.hpp <-- vector.hpp dependency
 

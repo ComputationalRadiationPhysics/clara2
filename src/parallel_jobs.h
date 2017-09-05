@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Richard Pausch
+ * Copyright 2014-2016 Richard Pausch
  *
  * This file is part of Clara 2.
  *
@@ -19,46 +19,79 @@
  */
 
 
-#ifndef PARALLELJOBSRPAUSCH
-#define PARALLELJOBSRPAUSCH
+#pragma once
 
+
+/* pre-compiler variable determines whether parallelization is done via
+ * PBS (parallel batch system) on the cluster and used the cluster
+ * scheduler or via MPI (message passing interface).
+ * PBS is best use if you want to fill the cluster as best as possible
+ * but as a overhead due to the time PBS needs to schedule each task.
+ * If enough resources are available, MPI is faster and puts less load
+ * an the PBS scheduler
+ *
+ * __PARALLEL_SETTING__ == 1 --> MPI
+ * __PARALLEL_SETTING__ == 2 --> PBS array job
+ */
 #if __PARALLEL_SETTING__ == 1
+/* only include mpi header only if MPI was selected */
 #include "mpi.h"
 #endif
 
 
-int start_array(int* numtasks, int* rank)
+/** this function emulates a PBS Array job task and either runs it
+  * in a PBS array environment or in an MPI environment
+  *
+  * @param numtasks pointer to int where number of total parallel
+  *                 tasks should be stored
+  * @param rank pointer to int where the rank/task-id of a specific
+  *             task should be stored
+  * @return int with error code: 0 - >successful
+  *                              1 -> MPI error
+  *                              2 -> numtask not allocated
+  *                              3 -> rank not allocated
+  */
+int start_array(int* numtasks,
+                int* rank)
 {
+  /* check if numtask is a valid pointer */
   if(!numtasks)
     return 2;
 
+  /* check if rank is a valid pointer */
   if(!rank)
     return 3;
 
+/* in case MPI is used for parallelization */
 #if __PARALLEL_SETTING__ == 1
-  // MPI used for parallization
+  /* init MPI on this core */
   int rc = MPI_Init(NULL, NULL);
 
+  /* check if MPI init was successful */
   if (rc != MPI_SUCCESS)
-    {
-      printf("Error starting MPI program. Terminating program!\n");
-      MPI_Abort(MPI_COMM_WORLD, rc);
-      return 1;
-    }
+  {
+    printf("Error starting MPI program. Terminating program!\n");
+    MPI_Abort(MPI_COMM_WORLD, rc);
+    return 1;
+  }
 
+  /* get MPI numtasks and rank */
   MPI_Comm_size(MPI_COMM_WORLD, numtasks);
   MPI_Comm_rank(MPI_COMM_WORLD, rank);
 
+/*in case  PBS array jobs are used for parallelization */
 #elif __PARALLEL_SETTING__ == 2
-  // Array jobs used for parallization
-  char* dump;
+  char* dump; /* temporary memory pointer for reading bash
+                 environment variables */
+  /* get rank = PBS_ARRAYID */
   dump = getenv("PBS_ARRAYID");
   *rank = atoi(dump);
+  /* get numtask = ARRAYMAX */
   dump = getenv("ARRAYMAX");
   *numtasks = atoi(dump);
 
+/* throw compile time error if neither MPI nor PBS array jobs are selected */
 #else
-  // non of the above selected
   #error parallel setting not suported
 #endif
 
@@ -67,38 +100,42 @@ int start_array(int* numtasks, int* rank)
   return 0;
 }
 
+
+/** function to clean up after parallel job (if needed)
+  * @return int error code: 0 -> successful
+  */
 int end_array(void)
 {
+/* in case MPI is used for parallelization */
 #if __PARALLEL_SETTING__ == 1
-  // MPI used for parallization  
-   MPI_Finalize();
-
+  MPI_Finalize();
+/* in case PBS array jobs are used for paralellization */
 #elif __PARALLEL_SETTING__ == 2
-  // Array jobs used for parallization
-
+  /* nothing needs to be done */
+/* throw compile time error if neither MPI nor PBS array jobs are selected */
 #else
-  // non of the above selected
   #error parallel setting not suported
 #endif
 
-   return 0;
-}
-
-/*
-int check_break(void)
-{
-  char stop[] = "break.now";
-  FILE* file = fopen(stop, "r");
-  if(file != 0)
-    {
-      fclose(file);
-      //perror("breakpoint found \n");
-      return 1;
-    }
-
   return 0;
 }
-*/
 
-#endif
 
+/** function to check if a specific file is found in the working
+  * directory that forces a soft stop
+  *
+  * @return int 0 -> file not found (continue)
+  *             1 -> file found (stop running)
+  */
+int check_break(void)
+{
+  char stop[] = "break.now"; /* file name that causes a stop */
+  FILE* file = fopen(stop, "r"); /* try read access to file */
+  if(file != 0) /* file found */
+  {
+    fclose(file); /* close file handler again */
+    return 1; /* return 1 = file found */
+  }
+
+  return 0; /* file not found - return 0 */
+}

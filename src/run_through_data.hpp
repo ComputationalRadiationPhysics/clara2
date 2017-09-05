@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Richard Pausch
+ * Copyright 2014-2016 Richard Pausch
  *
  * This file is part of Clara 2.
  *
@@ -19,127 +19,86 @@
  */
 
 
-
-
-#include <iostream>
-#include <cstdlib>
-
-
-#ifndef RUN_THROUGH_DATA_RPAUSCH
-#define RUN_THROUGH_DATA_RPAUSCH
-
+#pragma once
 
 #include "discrete.hpp"
-#include "import_from_file.hpp"
-#include "physics_units.hpp"
 #include "vector.hpp"
+#include "settings.hpp"
 
 
+
+/** function calculating beta * gamma from beta
+  *
+  * @param R_vec beta (speed normalized to the speed of light
+  * @retun R_vec beta times relativistic gamma factor
+  *              = momentum / (mass * speed of light)
+  */
 inline R_vec beta_times_gamma(R_vec beta)
 {
   return std::sqrt(1./(1.-util::square<R_vec, double>(beta))) * beta;
 }
 
 
-
-
-
-
+/** function to step through loaded data and add radiation amplitude to
+  * a given detector
+  *
+  * @param data (one_line type pointer) pointing to trajectory data
+  * @param linenumber number of time steps in data
+  * @param detector Clara detector for one specific direction
+  */
 template<typename DET>
-void run_through_data(const one_line* data, const unsigned linenumber, const unsigned N_angle,
-		      DET detector)
+void run_through_data(const one_line* data,
+                      const unsigned linenumber,
+                      DET detector)
 {
-    /* ---------- storing data : comparable to real data stream (not loke a file here) --- */
-    
-    // USING: SI-UNITS !!!
+  /* set up data containers using Discrete class that allows derivatives */
+  /* time */
+  Discrete<double> time_fill;
+  const Discrete<double> *time_fill_ref = &time_fill;
+  /* position */
+  Discrete<R_vec> location( time_fill_ref );
+  /* momentum */
+  Discrete<R_vec> momentum( time_fill_ref );
 
-    //Zeiten s --> s
-  Discrete<double> time_fill(data[0].intern_data[6] /* *1.E-15 */ ,
-			     data[1].intern_data[6] /* *1.E-15 */ ,
-			     data[2].intern_data[6] /* *1.E-15 */ ,
-			     data[3].intern_data[6] /* *1.E-15 */ );
-    
-    //Ort: in m  --> m
-  Discrete<R_vec> location( R_vec(data[0].intern_data[0] /* *1.E-2 */ , 
-				  data[0].intern_data[1] /* *1.E-2 */ , 
-				  data[0].intern_data[2] /* *1.E-2 */ ),
-			    R_vec(data[1].intern_data[0] /* *1.E-2 */ , 
-				  data[1].intern_data[1] /* *1.E-2 */ , 
-				  data[1].intern_data[2] /* *1.E-2 */ ),
-			    R_vec(data[2].intern_data[0] /* *1.E-2 */ , 
-				  data[2].intern_data[1] /* *1.E-2 */ , 
-				  data[2].intern_data[2] /* *1.E-2 */  ),
-			    R_vec(data[3].intern_data[0] /* *1.E-2 */ , 
-				  data[3].intern_data[1] /* *1.E-2 */ , 
-				  data[3].intern_data[2] /* *1.E-2 */  ),
-                             &time_fill);  
-    
-    //Impuls: beta*gamma  --> phy::m_e*beta_times_gamma(beta)*phy:c --> kg*m/s
-	double btom = phy::m_e*phy::c;
-	Discrete<R_vec> momentum( btom*beta_times_gamma(R_vec(data[0].intern_data[3], 
-							  data[0].intern_data[4], 
-							  data[0].intern_data[5]) ),
-				  btom*beta_times_gamma(R_vec(data[1].intern_data[3], 
-							 data[1].intern_data[4], 
-							 data[1].intern_data[5]) ),
-				  btom*beta_times_gamma(R_vec(data[2].intern_data[3], 
-							 data[2].intern_data[4], 
-							 data[2].intern_data[5]) ),
-				  btom*beta_times_gamma(R_vec(data[3].intern_data[3], 
-							 data[3].intern_data[4], 
-							 data[3].intern_data[5]) ),
-                             &time_fill);
-    
-    More_discrete auto_fill(&time_fill);
-    
-    
-    Discrete<R_vec> beta(&time_fill);
-    Discrete<double> gamma(&time_fill);
-    
-    gamma = auto_fill.momentum_to_gamma(momentum);
-    beta  = auto_fill.momentum_to_beta(momentum, gamma);
-  
+  /* decrived quantities */
+  More_discrete auto_fill( time_fill_ref );
+  /* beta */
+  Discrete<R_vec> beta( time_fill_ref );
+  /* gamma */
+  Discrete<double> gamma( time_fill_ref );
 
 
+  namespace in = param::input;
+  /* step through data for each time step: streaming approach used (future option?) */
+  for(unsigned i=0; i<linenumber; ++i)
+  {
+    // fill Discrete class with values:
+    // time: to seconds
+    time_fill.next(double(data[i].intern_data[in::index_time]) * in::convert_time );
+    // position: to meter
+    location.next( R_vec(data[i].intern_data[in::index_pos_x] * in::convert_pos ,
+                         data[i].intern_data[in::index_pos_y] * in::convert_pos ,
+                         data[i].intern_data[in::index_pos_z] * in::convert_pos ));
+    // momentum: to beta*gamma  --> phy::m_e*beta_times_gamma(beta)*phy:c --> kg*m/s
+    const double btom = phy::m_e*phy::c;
+    momentum.next( btom*beta_times_gamma(R_vec(data[i].intern_data[in::index_beta_x] * in::convert_beta ,
+                                               data[i].intern_data[in::index_beta_y] * in::convert_beta ,
+                                               data[i].intern_data[in::index_beta_z] * in::convert_beta ) ));
 
-    /* -------- streaming the data and sending it to the detectors: ---------- */
+    gamma.next(auto_fill.gamma(momentum.get_future()));
+    beta.next(auto_fill.beta(momentum.get_future(), gamma.get_future()));
 
-
-    //std::cout << "running: ";    
-    for(unsigned i=4; i<linenumber; ++i)
+    /* if all 4 entries of the Discrete class are filed with values
+       the radiation amplitude can be calculated */
+    if(i >=3 )
     {
-      for(unsigned k=0; k<N_angle; ++k)
-	{
-	  (*detector[k]).add_to_spectrum(location.get_old(),
-					 beta.get_old(),
-					 beta.dot_old(),
-					 time_fill.get_old(), 
-					 time_fill.get_delta_old());
-	}
-        
-        
-      // set new to old:
-      time_fill.next(double(data[i].intern_data[6]) /* *1.E-15 */ );
-        
-      location.next( R_vec(data[i].intern_data[0] /* *1.E-2 */ , 
-                           data[i].intern_data[1] /* *1.E-2 */ , 
-                           data[i].intern_data[2] /* *1.E-2 */  ));
-        
-      momentum.next( btom*beta_times_gamma(R_vec(data[i].intern_data[3], 
-						 data[i].intern_data[4], 
-						 data[i].intern_data[5] ) ));
-        
-      gamma.next(auto_fill.gamma(momentum.get_future()));
-        
-      beta.next(auto_fill.beta(momentum.get_future(), gamma.get_future()));
-       
-          
+      detector->add_to_spectrum(location.get_old(),
+                                beta.get_old(),
+                                beta.dot_old(),
+                                time_fill.get_old(),
+                                time_fill.get_delta_old());
     }
 
-    //std::cout << std::endl;
+  }
 
-}  
-
-
-#endif 
-
+}

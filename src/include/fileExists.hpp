@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Richard Pausch
+ * Copyright 2016 Richard Pausch
  *
  * This file is part of Clara 2.
  *
@@ -21,33 +21,10 @@
 
 #pragma once
 
-namespace util
-{
 
-  //goal: to increase readability of code
-
-  template<typename A> /// a generic square function
-  inline A square(A a )
-  {
-    return a*a;
-  }
-
-  template<typename A, typename R> /// a more generic square function
-  inline R square(A a )
-  {
-    return a*a;
-  }
-
-  template<typename A> /// a generic cube function
-  inline A cube(A a)
-  {
-    return a*a*a;
-  }
-
-  template<typename A, typename R> /// a more generic cube function
-  inline R cube(A a)
-  {
-    return a*a*a;
-  }
-
-}
+/** \brief check whether a file exists or not
+  *
+  * @param filename pointer to array containing file location
+  * @return Returs true if file exists, otherwise false.
+  */
+bool file_exists(const char *filename);

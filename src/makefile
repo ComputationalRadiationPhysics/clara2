@@ -1,4 +1,4 @@
-# Copyright 2014 Richard Pausch
+# Copyright 2014-2016 Richard Pausch, Alexander Koehler
 #
 # This file is part of Clara 2.
 #
@@ -18,10 +18,13 @@
 #
 
 
-# make the detectorclass correctly
+# make the detector class correctly
 
 CC = g++
 CFLAGS = -Wall -O3
+# compile against fftw library
+# http://www.fftw.org/ - an open source FFT library under GPL 2.0 license
+CFFT = -lfftw3 -lm
 COBJ = -c
 OMP = -fopenmp
 ZIP = -lz
@@ -33,52 +36,49 @@ ARRAYFLAG= -D__PARALLEL_SETTING__=2
 MPICC=mpic++
 
 
-CFLAGFORTRAN = #-DCHECK_FOR_FORTRAN_ERROR 
+CFLAGFORTRAN = #-DCHECK_FOR_FORTRAN_ERROR
 # in case one need to check for FORTRAN output errors
 
 
 
-all: subsystem MPI process convert_to_matrix
+all: subsystem MPI process
 
-subsystem: 
+subsystem:
 	$(MAKE) -C ./include/
 
 
-MPI: MPI_main all_directions.o ./include/libDetector.a single_trace.o
-	$(MPICC) $(CFLAGS) $(OMP) $(ZIP) main.o all_directions.o single_trace.o ./include/libDetector.a -o executable
+MPI: MPI_main all_directions.o ./include/libDetector.a single_direction.o
+	$(MPICC) $(CFLAGS) $(CFFT) $(OMP) $(ZIP) main.o all_directions.o single_direction.o ./include/libDetector.a ./include/fileExists.o -o executable
 
-ARRAY: ARRAY_main all_directions.o ./include/libDetector.a single_trace.o
-	$(CC) $(CFLAGS) $(OMP) $(ZIP) main.o all_directions.o single_trace.o ./include/libDetector.a -o executable
+ARRAY: ARRAY_main all_directions.o ./include/libDetector.a single_direction.o
+	$(CC) $(CFLAGS) $(CFFT) $(OMP) $(ZIP) main.o all_directions.o single_direction.o ./include/libDetector.a ./include/fileExists.o -o executable
 
 
 MPI_main: main.cpp all_directions.hpp
-	$(MPICC) $(CFLAGS) $(MPIFLAG) $(COBJ) $(OMP) $(ZIP) main.cpp
+	$(MPICC) $(CFLAGS) $(CFFT) $(MPIFLAG) $(COBJ) $(OMP) $(ZIP) main.cpp
 
 ARRAY_main:  main.cpp all_directions.hpp
-	$(CC) $(CFLAGS) $(ARRAYFLAG) $(COBJ) $(OMP) $(ZIP) main.cpp
+	$(CC) $(CFLAGS) $(CFFT) $(ARRAYFLAG) $(COBJ) $(OMP) $(ZIP) main.cpp
 
 # main routine:
-single_trace.o: single_trace.hpp single_trace.cpp ./include/detector_e_field.hpp ./include/detector_dft.hpp \
+single_direction.o: single_direction.hpp single_direction.cpp ./include/detector_e_field.hpp ./include/detector_dft.hpp \
              ./include/detector_fft.hpp ./include/vector.hpp ./include/import_from_file.hpp ./include/discrete.hpp \
-             ./run_through_data.hpp ./include/load_txt.hpp ./include/analytical_solution.hpp ./include/interpolation.hpp \
-             ./include/interpolation.tpp
-	$(CC) $(CFLAGS) $(COBJ) $(CFLAGFORTRAN) $(OMP) -I./include/ single_trace.cpp
+             ./run_through_data.hpp ./include/load_txt.hpp ./include/interpolation.hpp \
+             ./include/interpolation.tpp  ./include/fileExists.hpp ./include/fileExists.cpp
+	$(CC) $(CFLAGS) $(CFFT) $(COBJ) $(CFLAGFORTRAN) $(OMP) -I./include/ single_direction.cpp
 
-all_directions.o: all_directions.cpp all_directions.hpp single_trace.hpp ./include/vector.hpp ./include/string_manipulation.hpp
-	$(CC) $(CFLAGS) $(COBJ) $(OMP) $(ZIP) -I./include/ all_directions.cpp
+all_directions.o: all_directions.cpp all_directions.hpp single_direction.hpp ./include/vector.hpp settings.hpp \
+			 setFilename.hpp ./include/input_output.hpp
+	$(CC) $(CFLAGS) $(CFFT) $(COBJ) $(OMP) $(ZIP) -I./include/ all_directions.cpp
 
 
 # How do I include the detector.hpp <-- vector.hpp dependency
 
 
-process: process_data.cpp
+process: process_data.cpp settings.hpp setFilename.hpp ./include/input_output.hpp
 	$(CC) $(CFLAGS) $(ZIP) process_data.cpp -o process_data
-
-convert_to_matrix: convert_to_matrix.cpp
-	$(CC) $(CFLAGS) convert_to_matrix.cpp -o convert_to_matrix
 
 clean:
 	rm -f *o
 	rm executable
 	rm process_data
-	rm convert_to_matrix

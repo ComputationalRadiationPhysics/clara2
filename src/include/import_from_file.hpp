@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Richard Pausch
+ * Copyright 2014-2016 Richard Pausch
  *
  * This file is part of Clara 2.
  *
@@ -19,19 +19,14 @@
  */
 
 
+#pragma once
 
 
-#include <fstream>
-
-#ifndef IMPORT_FROM_FILE_RPAUSCH
-#define IMPORT_FROM_FILE_RPAUSCH
-
-
-//! \brief simple container to store data from the Clara trace
-/*! usage: one_line x[number of data lines]; then x[i].intern_data[0-6] */
+/* ISSUE #84 - re-factor this struct */
+/** \brief simple container to store data from the loaded traces
+  * usage: one_line x[number of data lines]; then x[i].intern_data[0-6]
+  * e.g. x[time_step].intern_data[0] = position_x;
+  */
 struct one_line {
-    double intern_data[7]; // simple data structur two handel 7 doubles per line
+  double intern_data[7]; /* simple data structure to handle 7 doubles per line */
 };
-
-#endif
-

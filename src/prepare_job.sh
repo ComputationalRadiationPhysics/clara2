@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014 Richard Pausch
+# Copyright 2014-2016 Richard Pausch
 #
 # This file is part of Clara 2.
 #
@@ -24,26 +24,47 @@
 #---------------------------------------------------------------
 # INFO:
 # Running this shell script generates a submit file either
-# for a MPI parallelsation or a PBS-Array-Job parallelsation.
+# for a MPI parallelization or a PBS-Array-Job parallelization.
 #---------------------------------------------------------------
 
 
+#------------
+# USER SETUP:
+#------------
 
+# name of cluster job:
 JOBNAME=MPI_lib1
+
+# name of submit file:
 SUBMITFILE=submit.sh
+
+# name of queue to submit job to:
 QUEUE=laser
+
+# name of file with environment setup:
 MODULES2LOAD=clara2_hypnos.modules
 
+# maximum simulation time
 WALLTIME=02:00:00
 
-# Jobstructure:
-# for MPI:
+# Job parallel structure:
+# for MPI (number of node with (each) number of cores):
 NUMBERNODES=4
 NUMBERCORES=32
 # for Array Jobs:
+# set number of parallel tasks to the same as with MPI
 ARRAYMAX=$(echo $NUMBERNODES " * " $NUMBERCORES " - 1 " | bc )
 
-# User interaction required
+#---------------
+# END USER SETUP
+#---------------
+
+
+#-------------------------
+# RUN TIME USE INTERACTION
+#-------------------------
+
+# user interaction required to select parallelization
 # present options:
 echo "for MPI enter 1"
 echo "for PBS-Array jobs enter 2"
@@ -57,11 +78,16 @@ case  $DECISION in
        exit 1 ;;
 esac
 
+#--------------------
+# END USE INTERACTION
+#--------------------
 
-source $MODULES2LOAD
 
+#-----------------------
+# GENERATE SUBMIT SCRIPT
+#-----------------------
 
-# generate submit file (the same for MPI and PBS-array jobs)
+# generate submit file (here the same for MPI and PBS-array jobs)
 echo "#PBS -q "$QUEUE > $SUBMITFILE
 echo "#PBS -l walltime="$WALLTIME >> $SUBMITFILE
 echo "#PBS -N "$JOBNAME >> $SUBMITFILE
@@ -71,7 +97,7 @@ echo "#PBS -e ./error.txt" >> $SUBMITFILE
 echo "#PBS -o ./output.txt" >> $SUBMITFILE
 echo  "" >> $SUBMITFILE
 
-# in case of a MPI parallelisation:
+# in case of a MPI parallelization:
 if [ $DECISION -eq 1 ]
 then
     echo "#PBS -l nodes="$NUMBERNODES":ppn="$NUMBERCORES >> $SUBMITFILE
@@ -93,18 +119,35 @@ if [ $DECISION -eq 1 ]
 then
     echo -n "mpiexec --prefix $MPIHOME -tag-output --display-map -x LIBRARY_PATH -x LD_LIBRARY_PATH -n " >> $SUBMITFILE
     echo  $(echo $NUMBERNODES " * " $NUMBERCORES | bc )" ./executable  |  tee output.log" >> $SUBMITFILE
-    make
-    make MPI
 else
-    # in case of PBS-array paparllelisation
-    echo  " ./executable" >> $SUBMITFILE    
-    make
-    make ARRAY
+    # in case of PBS-array parallelization
+    echo  " ./executable" >> $SUBMITFILE
 fi
 
 # add newline to submit file
 echo  "" >> $SUBMITFILE
 
+#---------------------------
+# END GENERATE SUBMIT SCRIPT
+#---------------------------
 
 
+#-------------
+# COMPILE CODE
+#-------------
 
+# load bash environment for compilation
+source $MODULES2LOAD
+
+# ISSUE #65 why is make required twice?
+make
+if [ $DECISION -eq 1 ]
+then
+    make MPI
+else
+    make ARRAY
+fi
+
+#-----------------
+# END COMPILE CODE
+#-----------------
