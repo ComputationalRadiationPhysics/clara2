@@ -41,16 +41,16 @@ CFLAGFORTRAN = #-DCHECK_FOR_FORTRAN_ERROR
 
 
 
-all: subsystem MPI process
+all: MPI process
 
 subsystem:
 	$(MAKE) -C ./include/
 
 
-MPI: MPI_main all_directions.o ./include/libDetector.a single_direction.o
+MPI: subsystem MPI_main all_directions.o ./include/libDetector.a single_direction.o 
 	$(MPICC) $(CFLAGS) $(CFFT) $(OMP) $(ZIP) main.o all_directions.o single_direction.o ./include/libDetector.a ./include/fileExists.o -o executable
 
-ARRAY: ARRAY_main all_directions.o ./include/libDetector.a single_direction.o
+ARRAY: subsystem ARRAY_main all_directions.o ./include/libDetector.a single_direction.o
 	$(CC) $(CFLAGS) $(CFFT) $(OMP) $(ZIP) main.o all_directions.o single_direction.o ./include/libDetector.a ./include/fileExists.o -o executable
 
 
