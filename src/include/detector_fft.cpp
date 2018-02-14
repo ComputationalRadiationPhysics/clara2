@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Richard Pausch, Alexander Koehler
+ * Copyright 2014-2018 Richard Pausch, Alexander Koehler
  *
  * This file is part of Clara 2.
  *
