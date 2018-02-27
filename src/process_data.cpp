@@ -55,8 +55,6 @@ struct spectrum
   */
 int main()
 {
-  using namespace std;
-
   /* compute total number of observation direction */
   const unsigned int N_direction = param::N_theta * param::N_phi;
 

@@ -24,8 +24,6 @@
 #include <fstream>
 
 
-using namespace std;
-
 
 //! \brief function returning the number of lines of a file
 /*! @param target a 'const char*' containing file location */
@@ -48,9 +46,9 @@ void load_txt( const char target[],
                const unsigned linenumber,
                one_line* data)
 {
-  ifstream file(target); // file to load
+  std::ifstream file(target); // file to load
 
-  string storage; // storage of short strings
+  std::string storage; // storage of short strings
   for (unsigned i=0; !file.eof(); ++i)
   {
     // check for FORTRAN error: 1.234e-123 is stored wrongly as 1.234-123 !
