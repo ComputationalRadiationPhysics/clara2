@@ -26,8 +26,6 @@ CFLAGS = -Wall -O3
 # http://www.fftw.org/ - an open source FFT library under GPL 2.0 license
 CFFT = -lfftw3 -lm
 COBJ = -c
-OMP = -fopenmp
-ZIP = -lz
 
 MPIFLAG= -D__PARALLEL_SETTING__=1
 ARRAYFLAG= -D__PARALLEL_SETTING__=2
@@ -48,35 +46,35 @@ subsystem:
 
 
 MPI: subsystem MPI_main all_directions.o ./include/libDetector.a single_direction.o
-	$(MPICC) $(CFLAGS) $(CFFT) $(OMP) $(ZIP) main.o all_directions.o single_direction.o ./include/libDetector.a ./include/fileExists.o -o executable
+	$(MPICC) $(CFLAGS) $(CFFT) main.o all_directions.o single_direction.o ./include/libDetector.a ./include/fileExists.o -o executable
 
 ARRAY: subsystem ARRAY_main all_directions.o ./include/libDetector.a single_direction.o
-	$(CXX) $(CFLAGS) $(CFFT) $(OMP) $(ZIP) main.o all_directions.o single_direction.o ./include/libDetector.a ./include/fileExists.o -o executable
+	$(CXX) $(CFLAGS) $(CFFT) main.o all_directions.o single_direction.o ./include/libDetector.a ./include/fileExists.o -o executable
 
 
 MPI_main: main.cpp all_directions.hpp
-	$(MPICC) $(CFLAGS) $(CFFT) $(MPIFLAG) $(COBJ) $(OMP) $(ZIP) main.cpp
+	$(MPICC) $(CFLAGS) $(CFFT) $(MPIFLAG) $(COBJ) main.cpp
 
 ARRAY_main:  main.cpp all_directions.hpp
-	$(CXX) $(CFLAGS) $(CFFT) $(ARRAYFLAG) $(COBJ) $(OMP) $(ZIP) main.cpp
+	$(CXX) $(CFLAGS) $(CFFT) $(ARRAYFLAG) $(COBJ) main.cpp
 
 # main routine:
 single_direction.o: single_direction.hpp single_direction.cpp ./include/detector_e_field.hpp ./include/detector_dft.hpp \
              ./include/detector_fft.hpp ./include/vector.hpp ./include/import_from_file.hpp ./include/discrete.hpp \
              ./run_through_data.hpp ./include/load_txt.hpp ./include/interpolation.hpp \
              ./include/interpolation.tpp  ./include/fileExists.hpp ./include/fileExists.cpp
-	$(CXX) $(CFLAGS) $(CFFT) $(COBJ) $(CFLAGFORTRAN) $(OMP) -I./include/ single_direction.cpp
+	$(CXX) $(CFLAGS) $(CFFT) $(COBJ) $(CFLAGFORTRAN) -I./include/ single_direction.cpp
 
 all_directions.o: all_directions.cpp all_directions.hpp single_direction.hpp ./include/vector.hpp settings.hpp \
 			 setFilename.hpp ./include/input_output.hpp
-	$(CXX) $(CFLAGS) $(CFFT) $(COBJ) $(OMP) $(ZIP) -I./include/ all_directions.cpp
+	$(CXX) $(CFLAGS) $(CFFT) $(COBJ) -I./include/ all_directions.cpp
 
 
 # How do I include the detector.hpp <-- vector.hpp dependency
 
 
 process: process_data.cpp settings.hpp setFilename.hpp ./include/input_output.hpp
-	$(CXX) $(CFLAGS) $(ZIP) process_data.cpp -o process_data
+	$(CXX) $(CFLAGS) process_data.cpp -o process_data
 
 clean:
 	rm -f *o
