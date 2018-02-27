@@ -41,9 +41,6 @@
 int all_directions(const unsigned int trace_id)
 {
 
-  using namespace std;
-
-
   /* ------ start time measurement ------------------ */
   struct timeval t1, t2;
   gettimeofday(&t1, NULL);
@@ -160,7 +157,7 @@ int all_directions(const unsigned int trace_id)
   if(param::ascii_output)
   {
     /* ---- ASCII output file ------------------------ */
-    ofstream my_output(outputfilename); /* create file */
+    std::ofstream my_output(outputfilename); /* create file */
     if(my_output.is_open()) /* check if it is open */
     {
       for(unsigned j=0; j<N_direction; ++j) /* for all directions */
