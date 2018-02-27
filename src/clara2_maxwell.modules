@@ -1,0 +1,3 @@
+module purge
+module load intel.2018
+module load mpi/openmpi-x86_64-intel
