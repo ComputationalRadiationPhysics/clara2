@@ -46,6 +46,11 @@ void interpolation_on(const Detector_fft* fft,
                       Y* y_new,
                       const unsigned N_new);
 
+/* Modified by PENGHAO */
+void interpolation_on_uop(Detector_uop* efield,
+                      const double* x_new,
+                      R_vec* y_new,
+                      const unsigned N_new);
 
 void interpolation_int(Detector_fft* fft,
                        const double* x_new,

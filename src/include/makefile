@@ -27,14 +27,18 @@ CFFT = -lfftw3 -lm
 
 all: libDetector.a fileExists.o
 
-libDetector.a: detector_e_field.o  detector_dft.o detector_fft.o
+libDetector.a: detector_e_field.o  detector_dft.o detector_fft.o detector_uop.o
 	rm -f libDetector.a
-	ar cr libDetector.a detector_e_field.o detector_dft.o detector_fft.o
+	ar cr libDetector.a detector_e_field.o detector_dft.o detector_fft.o detector_uop.o
 
 
 # E_field detector:
 detector_e_field.o: detector_e_field.cpp detector_e_field.hpp vector.hpp utilities.hpp large_index_storage.hpp
 	$(CC) $(CFLAGS) detector_e_field.cpp
+
+# E_field detector modified by PENGHAO
+detector_uop.o: detector_uop.cpp detector_uop.hpp vector.hpp utilities.hpp ../settings.hpp
+	$(CC) $(CFLAGS) detector_uop.cpp
 
 # Discrete Fourier Transformation detectors:
 detector_dft.o: detector_dft.cpp detector_dft.hpp vector.hpp utilities.hpp

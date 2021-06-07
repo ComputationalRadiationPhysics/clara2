@@ -29,3 +29,15 @@
  * @return error code
  **/
 int all_directions(const unsigned int trace_id);
+
+/////////////////// modified by PENGHAO////////////////////
+/**
+ * function that calculates electrical field on the user-defined
+ * observation plane in different directions for a single particle
+ *  trace
+ *
+ * @param trace_id a unique id which identifies the trajectory file
+ *
+ * @return error code
+ **/
+int all_directions_uop(const unsigned int trace_id);

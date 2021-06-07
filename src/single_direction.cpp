@@ -22,10 +22,13 @@
 #include "single_direction.hpp"
 
 
-#include "vector.hpp"
 //#include "detector_e_field.hpp" /* currently not used */
 #include "detector_dft.hpp"
 #include "detector_fft.hpp"
+
+// Modified by PENG HAO 
+#include "detector_uop.hpp"
+// Modified by PENG HAO 
 
 /* only needed for near field calculation
  * REMOVE ? */
@@ -140,5 +143,59 @@ int single_direction(const one_line* data,
   /* delete detector_dft; */
   delete detector_fft;
   
+  return 0;
+}
+
+/**
+ * calculates a single electrical filed for only one trace and one direction
+ *
+ * @param data pointer to trajectory data
+ * @param linenumber number of data points
+ * @param all_t_obs pointer to time values
+ * @param all_eField pointer to memory for eField
+ * @param N_all_eField maximum number of observation time allocated
+ * @param x_offset x offset of observation plane (used to set
+ * observation direction)
+ * @param y_offset y offset of observation plane (used to set
+ * observation direction)
+ * @param z_offset z offset of observation plane (used to set
+ * observation direction)
+ **/
+int single_direction_uop(const one_line* data,
+                     const unsigned int linenumber,
+                     const double* all_t_obs,
+                     R_vec* all_eField,
+                     const unsigned N_all_eField,
+                     const double x_offset, 
+                     const double y_offset,
+                     const double z_offset)
+{
+
+  /* ----------------------- detectors ------------------------ */
+  /* creating the "observation vector" for the "detector_uop class
+   * object" that "observes" the emitted radiation in the user-defined observation plane */
+
+  /* setup observation vector: */
+  R_vec observ_vector;
+  observ_vector = R_vec(x_offset, y_offset, z_offset);
+
+  /* -------- calculate eField ------------- */
+  /* this performs the radiation calculation
+   * (for a single trace and a single direction)
+   */
+
+  /* create memory for detectors */
+  Detector_uop* detector_uop;
+
+  /* create user-defined detectors */
+  detector_uop = new Detector_uop(observ_vector, linenumber);
+
+  /* convert trajectory data to meaning full values */
+  /* TO DO: FUNCTION CALLED FOR EACH DIRECTION - ISSUE #14 */
+  run_through_data_uop(data, linenumber, detector_uop);
+
+  interpolation_on_uop(detector_uop, all_t_obs, all_eField, N_all_eField);
+
+  delete detector_uop;
   return 0;
 }
