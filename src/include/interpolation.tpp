@@ -18,7 +18,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#include <stdio.h>
 
 
 template <typename X, typename Y>
@@ -94,6 +94,33 @@ void interpolation_on(Detector_fft* fft,
   }
 }
 
+/* Modified by PENGHAO */
+void interpolation_on_uop(Detector_uop* efield,
+                      const double* x_new,
+                      R_vec* y_new,
+                      const unsigned N_new)
+{
+  unsigned N_old = efield->get_number_data();
+
+  for(unsigned i_new = 0, i_old = 0; i_new< N_new; ++i_new)
+  {
+    while(efield->get_timestep(i_old) < x_new[i_new] && i_old < N_old)
+      ++i_old;
+
+    if(i_old < N_old && i_old > 0)
+    {
+      y_new[i_new] += (efield->get_data(i_old) - efield->get_data(i_old-1))
+      /(efield->get_timestep(i_old) - efield->get_timestep(i_old-1))
+      * (x_new[i_new] - efield->get_timestep(i_old-1)) 
+      + efield->get_data(i_old-1);
+    }
+    else
+    {
+      y_new[i_new] += R_vec(0.0);  // could be skipped
+    }
+  }
+}
+/* Modified by PENGHAO */
 
 void interpolation_int(Detector_fft* fft,
                        const double* x_new,

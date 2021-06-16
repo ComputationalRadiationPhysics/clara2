@@ -21,15 +21,20 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 
 #include "parallel_jobs.h"
 #include "all_directions.hpp"
+
+/////////////////// modified by PENGHAO////////////////////
+#include "settings.hpp"
+/////////////////// modified by PENGHAO////////////////////
 
 
 int main(void)
 {
   printf("start\n");
-
+  using namespace std;
   int numtasks, rank;
 
   /** the function 'start_array()' calls the parallelization procedure
@@ -54,10 +59,10 @@ int main(void)
   const char error_file[] = "my_error.txt-%d";
 
 
-  int return_value; /* return value for 'all_directions()' */
+  int return_value; /* return value for 'all_directions()' or 'all_directions_uop()' */
   char dump[1024] ={0}; /* used for final filenames stderr stdout */
 
-  const unsigned int N_max = 2001; /* max number of trajectories */
+  const unsigned int N_max = 1; /* max number of trajectories */
   unsigned int i; /* index */
   for(i=rank; i<N_max; i += numtasks)
   {
@@ -77,10 +82,19 @@ int main(void)
     sprintf(dump, error_file, i);
     freopen(dump, "w", stderr);
 
-
+/////////////////// modified by PENGHAO////////////////////
     /* calculate the radiation of a single trajectory for all
-     * directions of interest */
-    return_value = all_directions(i);
+     * directions of interest 
+     * if USE_uop == false, calculate the far-field spectrum
+     * else calculate the electrical field on the user-defined
+     * observation plane
+     */
+    // return_value = all_directions(i);
+    if (!param::USE_uop)
+      return_value = all_directions(i);
+    else
+      return_value = all_directions_uop(i);
+/////////////////// modified by PENGHAO////////////////////
 
     /* set output back to stdout stderr
      * ISSUE: THIS DOES NOT WORK !!!

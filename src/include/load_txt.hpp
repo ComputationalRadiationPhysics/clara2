@@ -23,7 +23,6 @@
 
 #include <fstream>
 
-
 using namespace std;
 
 
@@ -56,6 +55,8 @@ void load_txt( const char target[],
     // check for FORTRAN error: 1.234e-123 is stored wrongly as 1.234-123 !
 #ifndef CHECK_FOR_FORTRAN_ERROR
     file >> data[i/7].intern_data[i%7];
+    //if(i/7==(linenumber-1) && i%7==6)
+    //  printf("the last timestep is: %3.8e\n", data[i/7].intern_data[i%7]);
 #else
     file >> storage;
     // going through the string and checking if the Mathematica output
@@ -71,6 +72,7 @@ void load_txt( const char target[],
       }
     }
     data[i/7].intern_data[i%7] = atof(storage.data());
+    
     // storing data (7 doubles per line) (string to  double)
 #endif
   }

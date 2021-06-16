@@ -32,7 +32,7 @@ inline unsigned power_of_two(unsigned N)
 
 
 // non equal distant FFT
-template< typename A, typename T >  // A...time,   T...data
+template< typename A, typename T >  // A...time,   T...data                                                                                                                           
 class ned_FFT
 {
 
@@ -99,7 +99,7 @@ private:
     // for now not, to keep fft independent to allow later
     // use of liFFT
     // https://github.com/ComputationalRadiationPhysics/liFFT
-    fftw_complex *in, *out;
+    fftw_complex *input, *output;
     input = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
     output = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
 

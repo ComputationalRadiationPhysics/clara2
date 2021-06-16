@@ -22,6 +22,7 @@
 #pragma once
 
 #include "import_from_file.hpp"
+#include "vector.hpp"
 
 
 /**
@@ -43,3 +44,28 @@ int single_direction(const one_line* data,
                      const unsigned N_all_spec,
                      const double theta_offset = 0.0,
                      const double phi_offset = 0.0);
+
+
+/**
+ * calculates a single electrical filed for only one trace and one direction
+ *
+ * @param data pointer to trajectory data
+ * @param linenumber number of data points
+ * @param all_t_obs pointer to time values
+ * @param all_eField pointer to memory for eField
+ * @param N_all_eField maximum number of observation time allocated
+ * @param x_offset x offset of observation plane (used to set
+ * observation direction)
+ * @param y_offset y offset of observation plane (used to set
+ * observation direction)
+ * @param z_offset z offset of observation plane (used to set
+ * observation direction)
+ **/
+int single_direction_uop(const one_line* data,
+                     const unsigned int linenumber,
+                     const double* all_t_obs,
+                     R_vec* all_eField,
+                     const unsigned N_all_eField,
+                     const double x_offset = 0.0, 
+                     const double y_offset = 0.0,
+                     const double z_offset = 0.0);
